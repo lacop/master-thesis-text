@@ -1,0 +1,52 @@
+\makeatletter
+
+\newlength{\numberheight}
+\setlength{\numberheight}{\beforechapskip}
+
+\newlength{\barlength}
+\newlength{\chnumwidth}
+
+\newlength{\namenumsep}
+\setlength{\namenumsep}{0.5em}
+
+\newlength{\numbarsep}
+%\setlength{\numbarsep}{1em}
+\setlength{\numbarsep}{10em}
+
+% Modified from 'veelo' style in memoir and
+% https://tex.stackexchange.com/questions/69656/right-align-chapter-number-to-the-chapter-name-when-using-memoir-with-veelo-styl
+
+\makechapterstyle{myveelo}{%
+    \setlength{\afterchapskip}{40pt}
+    \renewcommand*{\chapterheadstart}{\vspace*{40pt}}
+    \renewcommand*{\afterchapternum}{\par\nobreak\vskip 25pt}
+    \renewcommand*{\chapnamefont}{\normalfont\LARGE\flushright}
+    \renewcommand*{\chapnumfont}{\normalfont\HUGE}
+    \renewcommand*{\chaptitlefont}{\normalfont\HUGE\bfseries\flushright}
+    \renewcommand*{\chapternamenum}{}
+    
+    \setlength{\midchapskip}{\paperwidth}
+    \addtolength{\midchapskip}{-\textwidth}
+    \addtolength{\midchapskip}{-\spinemargin}
+    
+    \setlength{\barlength}{\midchapskip}
+    \addtolength{\barlength}{-\numbarsep}
+        
+    \renewcommand*{\printchaptername}{%
+        \settowidth{\chnumwidth}{\resizebox{!}{\numberheight}{\chapnumfont \thechapter}}%
+        \chapnamefont\MakeUppercase{\@chapapp}%
+        \hspace*{\chnumwidth}%
+        \hspace*{\namenumsep}%
+    }
+    
+    \renewcommand*{\printchapternum}{%
+        \makebox[0pt][l]{
+            \settowidth{\chnumwidth}{\resizebox{!}{\numberheight}{\chapnumfont \thechapter}}%
+            \hspace*{-\chnumwidth}%
+            \resizebox{!}{\numberheight}{\chapnumfont \thechapter}%
+            \hspace*{\numbarsep}%
+            \rule{\barlength}{\numberheight}%
+    }}%
+}
+
+\makeatother

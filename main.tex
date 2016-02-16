@@ -1,0 +1,230 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Univerzita Komenskeho - Thesis template
+% Based on "Vnutorny predpis c. 12/2013"
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Global document settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cl.7/2 - font size 12pt, portrait, A4
+% Cl.7/6 - single side printing
+\documentclass[a4paper,12pt,oneside,final]{memoir}
+% Cl.7/2 - 1.5x line spacing
+\OnehalfSpacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page geometry
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\setstocksize{297mm}{210mm}
+%\settrimmedsize{297mm}{210mm}{*}
+\settypeblocksize{247mm}{155mm}{*}
+% Cl.7/3 - 3.5cm left, 2cm right
+% Cl.7/3 - 2.5cm top, 2.5cm bottom
+\setlrmarginsandblock{3.5cm}{2cm}{*}
+\setulmarginsandblock{2.5cm}{2.5cm}{*}
+\checkandfixthelayout
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Language, encoding, fonts
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TODO pick fonts
+%\usepackage{charter}
+
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+\usepackage{csquotes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{microtype} % Typographical improvements
+\usepackage{booktabs} % Better looking tables
+\usepackage{pdfpages} % Include PDFs
+\usepackage[bottom]{footmisc} % Move footnotes to the bottom
+
+\usepackage[binary-units=true]{siunitx} % SI units + binary prefix (Mi, Gi, ...)
+\usepackage{xspace} % Smart space for macros
+
+% Figures
+\newsubfloat{figure} % Allow subfigures
+\usepackage{graphicx} % Images
+\usepackage{threeparttable} % Tables
+\usepackage{rotating} % Sideways figures
+
+% TikZ illustrations
+\usepackage{tikz}
+%\usepackage{tikz-qtree}
+%\input{tikz-settings}
+
+% Math related
+\usepackage{amsmath,amsthm}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{bm, mathrsfs}
+
+% Custom symbols imported from fonts
+%\input{symbols}
+
+% TODO? remove amsfonts, use unicode-math
+% TODO? but change the ugly fonts
+%\usepackage[]{unicode-math}
+
+% Algoritms / pseudo-code
+\usepackage[chapter]{algorithm}
+\makeatletter \renewcommand{\ALG@name}{Algoritmus}
+\usepackage[noend]{algpseudocode} % No explicit "end function" line
+\newcommand*\AlgLet[2]{\State #1 $\gets$ #2} % X <- Y assignment 
+
+% Code syntax highlighting
+%\usepackage[chapter]{minted}
+%\usemintedstyle{tango}
+%\renewcommand\listingscaption{Zdrojový kód}
+
+\usepackage{multirow}
+\usepackage{arydshln}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[backend=bibtex, natbib=true]{biblatex}
+\addbibresource{research.bib}
+
+% Style tweaks
+\renewcommand*{\finalnamedelim}{\addcomma\addspace}
+\renewcommand*{\labelnamepunct}{\addcolon\addspace}
+\renewcommand*{\newunitpunct}{\addcomma\addspace}
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,patent,thesis,unpublished]{title}{\textit{#1}}
+% Add all bibliography uncited in text
+\nocite{*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Misc packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{lipsum} % Lorem ipsum (for testing)
+
+%\usepackage[color=white]{todonotes} % print mode
+\usepackage{todonotes}
+
+% XeLaTeX and BibTex
+\usepackage{metalogo}
+\usepackage{dtklogos}
+
+\usepackage{ccicons}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Setup document preferences
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Chapter style
+\input{chapterstyle}
+\chapterstyle{myveelo} % TODO pick - veelo, madsen, ?
+
+% Subsections and higher - numbered and in TOC
+\setsecnumdepth{subsection}
+\maxtocdepth{subsection}
+
+% Headers / footers
+\pagestyle{ruled}
+% https://tex.stackexchange.com/questions/176472/identical-marks-in-header-with-onesided-memoir/176484?noredirect=1#176484
+% https://tex.stackexchange.com/questions/59565/on-testing-two-fully-expanded-character-strings-for-equality
+\usepackage{pdftexcmds} 
+\makeatletter
+\newcommand*{\test}[2]{%
+  \ifnum\pdf@strcmp{#1}{#2}=\z@ \relax \else #2 \fi
+}
+\makeatother
+\makeoddhead{ruled}{\sffamily\leftmark}{}{\sffamily\test{\leftmark}{\rightmark}}
+
+% Create custom plain page style with pagenumbers on right instead of centered
+\makepagestyle{plainright}
+\makeoddfoot{plainright}{}{}{\thepage}
+\aliaspagestyle{chapter}{plainright}
+
+% Custom caption rules
+\newfixedcaption{\figcaption}{figure}
+\newfixedcaption{\algcaption}{algorithm}
+
+% Custom theorem enviroments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lema}[theorem]{Lema}
+
+\setlength{\epigraphwidth}{6cm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\unnumberedchapter}[1]{
+    \chapter*[#1]{#1}
+    \addcontentsline{toc}{chapter}{#1}
+}
+
+% Generic shortcuts
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}(#1)}}
+\newcommand{\inlcode}[1]{\texttt{#1}\xspace}
+
+% Shortcuts specific to this document
+\newcommand{\cache}{\emph{cache}\xspace}
+\newcommand{\Cache}{\emph{Cache}\xspace}
+\newcommand{\disk}{\emph{disk}\xspace}
+\newcommand{\aware}{\emph{cache-aware}\xspace}
+\newcommand{\Aware}{\emph{Cache-aware}\xspace}
+\newcommand{\obliv}{\emph{cache-oblivious}\xspace}
+\newcommand{\extmem}{\emph{external-memory}\xspace}
+\newcommand{\RAM}{\emph{RAM model}\xspace}
+\newcommand{\vEB}[1]{\emph{van Emde Boas#1}\xspace}
+\newcommand{\hit}{\emph{cache hit}\xspace}
+\newcommand{\miss}{\emph{cache miss}\xspace}
+\newcommand{\etal}{et al.\@\xspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Include document settings (title, name, ...)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{settings}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hyperref setup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    unicode=true,
+    pdftitle={\settingsTitle},
+    pdfauthor={\settingsAuthor},
+    bookmarksnumbered=true,     
+    bookmarksopen=true,         
+    bookmarksopenlevel=1,       
+    pdfpagemode=UseOutlines
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start of document
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\frontmatter
+    %\input{cover}
+
+    %\includepdf[pages=1]{\settingsAISfile}
+    %\newpage
+    
+    %\thispagestyle{plainright}
+    %\input{thanks}
+    %\newpage
+    %\thispagestyle{plainright}
+    %\input{disclaimer}
+    %\newpage
+    
+    
+    %\input{abstracts}
+    %\newpage
+    
+    %\tableofcontents*
+    %\newpage
+    %\listoffigures*
+    
+\mainmatter
+    \input{contents}
+
+\backmatter
+    \printbibliography
+    
+    %\input{colophon}
+\end{document}
