@@ -93,11 +93,15 @@ This time we generate the clauses which model the operator behavior.
 The number of clauses required depends on the operator and the bit width of the \emph{BitVector} node.
 %TODO small example for some nodes, or at least some sample numbers of clauses required
 
-~\\
-
-The next step is to run a SAT solver on this generated list of clauses and wait for it to terminate.
+\subsubsection{Solving and working with solution}
+After the model has been turned into an instance we can run a SAT solver on this generated list of clauses and wait for it to terminate.
 If the instance is satisfiable the solver will find a satisfying truth assignment and output it as truth values for all the variables.
 The library will load, parse and store this data for later use.
 
 We can then easily query any of the \emph{BitVector} variables for its value.
 The mapping from variables to integer labels will be used to find the appropriate assignment and to reconstruct the value of the node.
+
+\subsection{Usage example}
+To demonstrate the ease of use of our library we will use it to model the well-known \emph{SHA-1} hash function.
+\subsubsection{Reference implementation}
+%TODO code samples, nice syntax highlighting
