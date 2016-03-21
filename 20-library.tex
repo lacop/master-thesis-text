@@ -1,29 +1,31 @@
-\chapter{Modeling library}
+%\chapter{Modeling library}
+\section{Modeling library}
+%TODO after SVK change section to chapters, subsections to sections etc (commands and text references)
 
-The works mentioned in previous chapter created their models for various cryptographic problems mostly by hand.
+The works mentioned in previous section created their models for various cryptographic problems mostly by hand.
 While the results obtained are interesting, they are hard to reproduce by others.
-Also it does not help other in solving similar problems (like using a different hash function instead), as they would have to create their own model from scratch.
+Also this approach does not help to solve similar problems (like using a different hash function instead), as a new model would have to bre created from scratch.
 
 To address these issues we provide an easy to use and reusable library for modeling cryptographic problems as SAT instances.
 In this chapter we will state our goals for this library, describe its design and inner functionality.
-We will also show samples of its use.
+We will also show examples of its use.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Goals}
+\subsection{Goals}
 The main goals of our library are as follows:
 
-\subsection{Existing implementation reuse}
+\textbf{Existing implementation reuse:}
 In order to simplify the modeling of cryptographic primitives as much as possible we want to allow reuse of existing implementations.
-Most commonly used primitives - such as hash functions, block and stream ciphers and others - have widely available implementations in all popular programming languages.
+Most commonly used primitives -- such as hash functions, block and stream ciphers and others -- have widely available implementations in all popular programming languages.
 
 The library should therefore allow using these implementations with only minor changes.
 In addition to saving time this also makes the modeling less error-prone as we can build upon a well tested implementation.
 
-\subsection{Output abstraction}
+\textbf{Output abstraction:}
 The library should take care of generating the output in proper format for some SAT solver.
-With solvers that support advanced features, such as \emph{XOR} clauses, it should be possible to take advantage of them if the user so wishes.
+With solvers that support advanced features, such as \emph{XOR} clauses, it should be possible to take advantage of them.
 
-\subsection{Model parsing}
+\textbf{Model parsing:}
 After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
 The library should be able to load this model and map the truth assignment back to variables defined by the user.
 This makes it easy to extract for example the colliding messages out of the model.
@@ -34,7 +36,7 @@ This makes it easy to extract for example the colliding messages out of the mode
 To achieve the goals stated in previous section we take advantage of a technique called \emph{operator overloading}.
 This is a feature present in many programming languages.
 For our library we have decided to use the \emph{Python} language which also supports it.
-Python also has the additional advantage that it is very popular and therefore has a large amount of implementations of virtually all commonly used cryptographic primitives.
+\emph{Python} has the additional advantage that it is very popular and therefore has implementations of virtually all commonly used cryptographic primitives.
 
 \subsection{Operator overloading}
 As the name suggests, \emph{operator overloading} allows us to overload (override) existing behavior of operators in some programming language.
@@ -43,7 +45,7 @@ While the feature is only \emph{syntactic sugar} (which means it does not allow 
 As an example use of operator overloading we can take multiplication of complex numbers.
 In a language which does not support operator overloading like \emph{C} we would have to call a function, which takes two complex numbers and returns their product such as \texttt{C = complex\_multiply(A, B)}.
 In this example \texttt{A}, \texttt{B} and \texttt{C} are variable of some not built-in type.
-%% TODO minted code here
+%TODO minted code here
 
 On the other hand in a language such as \emph{C++} which does support operator overloading we can simply write \texttt{C = A*B} as we would with any built-in numeric type.
 If the appropriate operator override is provided by the complex number type the corresponding multiplication function will be substituted by the compiler.
@@ -52,17 +54,17 @@ If the appropriate operator override is provided by the complex number type the 
 
 The reason this feature is useful in our library is that we can change the type of some variables in existing code without needing to change anything else.
 For example, we can take an implementation of some hash function and change the type of all variables from the built-in integers to our new data type.
-If we change nothing else and without operator overloading this could would not compile, since operators such as addition or bit shift are not defined for our new type by the language.
+Without operator overloading this could would not compile, since operators such as addition or bit shift would not be defined for our new type by the language.
 With operator overloading however we can provide these definitions ourselves.
 
-This is precisely the approach we use in our library.
+This is the approach we use in our library.
 It provides a new data type \emph{BitVector} that supports all the operations as the built-in integer type.
-Since Python uses \emph{dynamic typing} it is sufficient to change the types of the constants used by the cryptographic primitive implementation.
+Since \emph{Python} uses \emph{dynamic typing} it is sufficient to change the types of the constants used by the cryptographic primitive implementation.
 All other variables are a result of operations on these constants and will therefore have the proper type.
 
 \subsection{Boolean circuit creation}
 The difference between the built-in integer type and \emph{BitVector} is that while the integer variable only holds one given value, our type instead stores how its value can be obtained from other variables.
 That means that the output of some cryptographic primitive is not a single value but instead a boolean circuit representation.
 
-We can then take this representation and output a SAT instance using the \emph{Tseitin transform} described in previous section.
-
+We can then take this representation and output a SAT instance using the \emph{Tseitin transform} described in section \ref{sec-tseitin}.
+%TODO tseitin section reference

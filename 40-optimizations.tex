@@ -1,20 +1,20 @@
-\chapter{Optimizations}
+\section{Optimizations}
 
 Modern SAT solvers use many advanced optimizations and heuristics to improve the solving time.
 However these are usually designed for general problem instances.
-With additional knowledge about the problem we are solving we can try to come up with better rules which lead to faster solving time.
+With additional knowledge about a specific problem we can try to come up with better rules which lead to faster solving time.
 
 In this chapter we will describe several optimizations that we implemented and evaluated.
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
 
-%% TODO: vsetko poriadne odmerat, otestovat a spisat
-%% TODO: sem dat: xor klauzule, xor arita
-%% TODO: spravit este: espresso minimizer
-%% TODO: nech je toho dost, povymyslat dalsie?
+%TODO vsetko poriadne odmerat, otestovat a spisat
+%TODO sem dat: xor klauzule, xor arita
+%TODO spravit este: espresso minimizer
+%TODO nech je toho dost, povymyslat dalsie?
 
-\section{Branching order}
+\subsection{Branching order}
 
-% TODO nossum/soos mailing list cite; is it in text?; more references to literature
+%TODO nossum/soos mailing list cite; is it in text?; more references to literature
 
 The most important heuristic in a SAT solver is the decision which unassigned variable to pick next.
 A bad order might assign randomly picked values to many variables before some conflict is found and the search tree depth will be quite high.
@@ -24,10 +24,12 @@ On the other hand a good heuristic would pick variables in an order that causes 
 The branching order is picked by a heuristic in the SAT solver, which does not have additional knowledge about what these variables represent and how they relate to each other.
 By extending the input file format and the variable picking algorithm we can provide our own (partial) variable branching order.
 
-\subsection{Implementation}
+\subsubsection{Implementation}
 
-We added a new input line type to the \emph{DIMAC CNF} file format used by most SAT solvers, including \emph{CryptoMiniSAT} which is the one we chose to modify.
+We added a new input line type to the \emph{DIMACS CNF} file format used by most SAT solvers, including \emph{CryptoMiniSAT} which is the one we chose to modify.
 Using this we can list any number of variables in the order we would like them to be picked for assignment.
+
+%TODO Dimacs example + semantics
 
 Then we modified the selection of next branching candidate to first pick all these variables in the specified order.
 Once all have been assigned we fall back to the standard branching order algorithm.
@@ -35,11 +37,11 @@ Once all have been assigned we fall back to the standard branching order algorit
 We have also added support for this to our modeling library.
 Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the cryptographic primitive.
 
-\subsection{Example}
+\subsubsection{Example}
 A possible branch ordering would be based on the rounds of a hash function.
-Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the n-th round of the compression function.
+Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
 
-By trying various orders we obtain the results show in figure \ref{fig:opt-branchorder-example-sha1}.
+By trying various orders we obtain the results shown in Figure \ref{fig:opt-branchorder-example-sha1}.
 The numbers in the \emph{order} column refer to the rounds of the compression function.
 For example \emph{20, 19} means that first all variables from the 20th round get assigned, then all variables from 19th round and then the original heuristic takes over.
 
@@ -65,7 +67,8 @@ Order & Time [s] & Conflicts \\ \hline
 1, 4 & 0.24 & 119
 \end{tabular}
 \end{figure}
-%% TODO rerun these numbers with more rounds? with more trials for better averages? and (!!!) with equal seed distributions (generate ~1k seeds, run each order with the same ones)
+%TODO nicer table, new numbers with averages
+%TODO rerun these numbers with more rounds? with more trials for better averages? and (!!!) with equal seed distributions (generate ~1k seeds, run each order with the same ones)
 
-%% TODO proper systematic evaluation
-%% TODO implement groups for branch ordering? might be slower due to complex selection...
+%TODO proper systematic evaluation
+%TODO implement groups for branch ordering? might be slower due to complex selection...
