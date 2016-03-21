@@ -1,0 +1,43 @@
+\section{Introduction}
+
+\subsection{SAT solvers}
+\emph{SAT solvers} (shortened from \emph{satisfiability}) are programs which take a boolean satisfiability problem and find solution or solutions to this problem.
+The problem, which we will call an \emph{instance}, consists of a number of variables and boolean clauses composed of these variables.
+The solution, if it exists, is an assignment of truth values to the variables such that the clauses are satisfied.
+If no such assignment exists the instance is called \emph{unsatisfiable}.
+
+Most modern SAT solvers expect input in \emph{conjunctive normal form} in which all clauses are disjunctions of literals (at least one literal must be true) and the instance is a conjunction of such clauses (all clauses must be true).
+Since this is a normal form we will from now on only consider such instances without loss of generality.
+
+By modeling a decision problem as a SAT instance we can take advantage of the advanced optimizations and heuristics employed by modern SAT solvers.
+Examples of such uses in practice include formal program verification, model checking or even routing of connections in microchips.
+%TODO refs for use cases
+
+\subsection{Cryptographic problems}
+In our work we make use of SAT solvers to find solutions to instances which represent a cryptographic primitive.
+By placing additional restrictions on the possible solutions (by introducing more clauses) we can find a truth assignment that gives us the desired inputs and outputs to the cryptographic primitive.
+With a stream cipher this can mean finding the secret key (input) by restricting the output to observed keystream.
+In our work we focus specifically on hash functions.
+
+\subsubsection{Hash functions}
+%TODO copy from old text?
+%A \emph{hash function} is a function 
+
+% sat solvers
+%  - solve any decision problem
+%  - input usualy as cnf
+%  - DIMACS format example and semantics (move here?)
+%  - advanced heuristics etc
+%  - DPLL / ... ? if too short
+%
+% crypto problems
+%  - decision problems as well, can use sat
+%  - will focus on hash functions
+%
+% hash functions
+%  - basic idea
+%  - attacks
+%  - reduced rounds
+%  - relevant functions for us (sha family)
+% 
+% existing work survey
