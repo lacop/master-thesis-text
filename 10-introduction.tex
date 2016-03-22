@@ -38,11 +38,15 @@ TODO ~0.5pgs
 %TODO copy from old text?
 %A \emph{hash function} is a function 
 
-\subsection{Related work}
-TODO ~1.5gs + tabulka
-%TODO nice summary + large table + references
+\subsection{Encoding}
+The most important step when using SAT solvers for any problem is the encoding of the model to a suitable instance.
+In case of cryptographic problems this previously (see section \ref{sec:related-work}) required significant effort of either generating the SAT instance by hand, or by first translating the model to a more suitable form and then using existing tools to generate the instance.
 
-\subsection{Boolean circuits}
+In our work we created a library which automates large parts of this process.
+This makes it easier, faster and less error-prone.
+To achieve this goal we made of \emph{boolean circuit} representation to translate almost unmodified implementations of cryptographic primitives to SAT instances transparently.
+
+\subsubsection{Boolean circuits}
 The cryptographic primitive we want to encode into a SAT instance can be thought of as a \emph{boolean circuit} -- a \emph{DAG} (directed acyclic graph) in which vertices are boolean operators (\emph{gates}, such as the \emph{AND gate}, \emph{XOR gate} and so on).
 The edges represent flow of values from one gate to another.
 \emph{Inputs} are special vertices that have no incoming edges.
@@ -98,6 +102,28 @@ However, for simplicity we extend our model of boolean circuits to support modul
 When encoding these nodes to CNF we then use the additional carry variables and output the clauses required to model a binary adder.
 
 %TODO adders, xor clauses ...
+
+\subsection{Related work}
+\label{sec:related-work}
+The idea of using SAT solvers for cryptographic problems was first introduced in \cite{massacci2000logical}.
+There the authors designed an encoding of the \emph{DES} (\emph{Data Encryption Standard}) symmetric cipher and created a program to generate instances.
+However the work is very specific to \emph{DES} and modifying the tool for a different cipher would require significant changes.
+
+The first attempt to simplify this process can be found in \cite{jovanovic2005logical} where \emph{operator overloading} (see section \ref{sec:operator-overloading}) in the \emph{C++} language is used.
+Our library also makes use of this feature with the additional advantage that we use a \emph{dynamic} programming language (\emph{Python}) and therefore require smaller changes to existing code.
+Additionally their work uses only simple Tseitin transform without additional optimizations, and the code for the tool is not available.
+%TODO verify again not available...
+
+Another work which automates the generation of instances makes use of the \emph{Verilog} hardware description language\footnote{HDLs describe the behavior of logic circuits. They are used for programming FPGAs or designing ICs.} \cite{morawiecki2013sat}.
+After writing the cryptographic primitive in this language a free, but proprietary, compiler is used to generate equations which are then turned to a CNF instance.
+Since \emph{Verilog} is quite a niche language most cryptographic primitives do not have implementations available.
+Additionally the toolkit itself is also not available.
+
+TODO nossum sha1
+
+TODO dalsie refs/tabulka? ~0.25pgs
+%TODO nice summary + large table + references
+
 
 % sat solvers
 %  - solve any decision problem
