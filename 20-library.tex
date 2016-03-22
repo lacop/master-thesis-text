@@ -77,7 +77,7 @@ Once we have the boolean circuit for a model we can then take this representatio
 
 The order of clauses in the output is irrelevant, however since the circuit forms a DAG we can process it in topological order.
 For every node (representing an operator applied to one or more operands) we first assign numbers to all required variables.
-This is because the \emph{DIMACS} input format (described in section \ref{sec:dimacs}) used by most SAT solvers uses positive integers to refer to variables.
+This is because the \emph{DIMACS} input format (described in section \ref{sec:dimacs}) used by most SAT solvers uses integers to refer to variables.
 
 In most cases we have one variable for every bit of the vector.
 However, an addition node needs additional carry variables.

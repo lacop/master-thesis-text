@@ -26,49 +26,48 @@ By extending the input file format and the variable picking algorithm we can pro
 
 \subsubsection{Implementation}
 
-We added a new input line type to the \emph{DIMACS CNF} file format used by most SAT solvers, including \emph{CryptoMiniSAT} which is the one we chose to modify.
-Using this we can list any number of variables in the order we would like them to be picked for assignment.
+We added a new input line type to the \emph{DIMACS CNF} file format (see section \ref{sec:dimacs}).
+Using this we can provide a list of any number of variables in the order we want them to be picked for assignment.
 
-%TODO Dimacs example + semantics -> move to intro, rewrite prev paragraph to reference it
-
+We modified the popular \emph{CryptoMiniSAT} solver to be able to parse and store this list.
 Then we modified the selection of next branching candidate to first pick all these variables in the specified order.
 Once all have been assigned we fall back to the standard branching order algorithm.
 
 We have also added support for this to our modeling library.
-Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the cryptographic primitive.
+Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
 
-\subsubsection{Example}
-A possible branch ordering would be based on the rounds of a hash function.
-Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
-
-By trying various orders we obtain the results shown in Figure \ref{fig:opt-branchorder-example-sha1}.
-The numbers in the \emph{order} column refer to the rounds of the compression function.
-For example \emph{20, 19} means that first all variables from the 20th round get assigned, then all variables from 19th round and then the original heuristic takes over.
-
-While the times are averages over multiple runs they are still quite small and susceptible to random noise.
-However the number of conflicts is a more reliable measure and we can see interesting trends from this small example.
-Forcing the SAT solver to work backwards (20, 19, 18) is much worse than the general heuristic.
-On the other hand, starting with the first round leads to significant speed-up.
-
-\begin{figure}
-\caption{Solving time and number of conflicts for 8-bit preimage with 32-bit message on reduced 20-rounds SHA-1 with various branching orders.}
-\label{fig:opt-branchorder-example-sha1}
-\begin{tabular}{l|c|c}
-Order & Time [s] & Conflicts \\ \hline
---- & 0.96 & 9755 \\ \hline
-20 & 0.94 & 9755 \\
-20, 19 & 0.97 & 9755 \\
-20, 19, 18 & 17.35 & 71197 \\ \hline
-1 & 0.35 & 1062 \\
-2 & 0.35 & 1062 \\
-1, 2 & 0.33 & 1062 \\
-1, 2, 3 & 0.29 & 927 \\
-1, 2, 3, 4 & 0.28 & 185 \\
-1, 4 & 0.24 & 119
-\end{tabular}
-\end{figure}
+\subsubsection{Results}
+TODO sha1/3 measurements - ~1pgs + tables
+%A possible branch ordering would be based on the rounds of a hash function.
+%Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
+%
+%By trying various orders we obtain the results shown in Figure \ref{fig:opt-branchorder-example-sha1}.
+%The numbers in the \emph{order} column refer to the rounds of the compression function.
+%For example \emph{20, 19} means that first all variables from the 20th round get assigned, then all variables from 19th round and then the original heuristic takes over.
+%
+%While the times are averages over multiple runs they are still quite small and susceptible to random noise.
+%However the number of conflicts is a more reliable measure and we can see interesting trends from this small example.
+%Forcing the SAT solver to work backwards (20, 19, 18) is much worse than the general heuristic.
+%On the other hand, starting with the first round leads to significant speed-up.
+%
+%\begin{figure}
+%\caption{Solving time and number of conflicts for 8-bit preimage with 32-bit message on reduced 20-rounds SHA-1 with various branching orders.}
+%\label{fig:opt-branchorder-example-sha1}
+%\begin{tabular}{l|c|c}
+%Order & Time [s] & Conflicts \\ \hline
+%--- & 0.96 & 9755 \\ \hline
+%20 & 0.94 & 9755 \\
+%20, 19 & 0.97 & 9755 \\
+%20, 19, 18 & 17.35 & 71197 \\ \hline
+%1 & 0.35 & 1062 \\
+%2 & 0.35 & 1062 \\
+%1, 2 & 0.33 & 1062 \\
+%1, 2, 3 & 0.29 & 927 \\
+%1, 2, 3, 4 & 0.28 & 185 \\
+%1, 4 & 0.24 & 119
+%\end{tabular}
+%\end{figure}
 %TODO nicer table, new numbers with averages
 %TODO rerun these numbers with more rounds? with more trials for better averages? and (!!!) with equal seed distributions (generate ~1k seeds, run each order with the same ones)
-
 %TODO proper systematic evaluation
 %TODO implement groups for branch ordering? might be slower due to complex selection...
