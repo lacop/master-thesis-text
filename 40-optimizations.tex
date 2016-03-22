@@ -13,7 +13,7 @@ Some of these involve a simple change in output instance generation, others invo
 %TODO nech je toho dost, povymyslat dalsie?
 
 \subsection{Branching order}
-
+\label{sec:branching-order}
 %TODO nossum/soos mailing list cite; is it in text?; more references to literature
 
 The most important heuristic in a SAT solver is the decision which unassigned variable to pick next.
@@ -29,7 +29,7 @@ By extending the input file format and the variable picking algorithm we can pro
 We added a new input line type to the \emph{DIMACS CNF} file format used by most SAT solvers, including \emph{CryptoMiniSAT} which is the one we chose to modify.
 Using this we can list any number of variables in the order we would like them to be picked for assignment.
 
-%TODO Dimacs example + semantics
+%TODO Dimacs example + semantics -> move to intro, rewrite prev paragraph to reference it
 
 Then we modified the selection of next branching candidate to first pick all these variables in the specified order.
 Once all have been assigned we fall back to the standard branching order algorithm.

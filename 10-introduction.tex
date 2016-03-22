@@ -13,6 +13,18 @@ By modeling a decision problem as a SAT instance we can take advantage of the ad
 Examples of such uses in practice include formal program verification, model checking or even routing of connections in microchips.
 %TODO refs for use cases
 
+\subsubsection{Interfacing with SAT solvers}
+Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} CNF} format which we use.
+Later in section \ref{sec:branching-order} we will describe extending this format for optimization purposes.
+
+The file begins with a line in form \texttt{p cnf $vars$ $clauses$} where $vars$ and $clauses$ are the number of variables and clauses in this instance, respectively.
+
+The following lines are in the form \texttt{$v_1$\dots$v_i$ 0} and each represents a single clause consisting of a disjunction of literals $v_1$ through $v_i$.
+Each literal $v_i$ is an integer between $1$ and $vars$ for a variable in positive polarity or an integer between $-1$ and $-vars$ for negative polarity.
+
+The output for a satisfiable instance is a list of $vars$ numbers.
+For every $1 \le v_i \le vars$ either $v_i$ or $-v_i$ is present in the list, indicating the polarity of the $i$-th variable in (one of) the satisfying assignment. 
+
 \subsection{Cryptographic problems}
 In our work we make use of SAT solvers to find solutions to instances which represent a cryptographic primitive.
 By placing additional restrictions on the possible solutions (by introducing more clauses) we can find a truth assignment that gives us the desired inputs and outputs to the cryptographic primitive.
