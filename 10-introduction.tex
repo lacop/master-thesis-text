@@ -14,6 +14,7 @@ Examples of such uses in practice include formal program verification, model che
 %TODO refs for use cases
 
 \subsubsection{Interfacing with SAT solvers}
+\label{sec:dimacs}
 Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} CNF} format which we use.
 Later in section \ref{sec:branching-order} we will describe extending this format for optimization purposes.
 
@@ -59,6 +60,7 @@ The total length of the formula then can be exponential in the size of the input
 %TODO exponential example
 
 \subsubsection{Tseitin transformation}
+\label{sec:tseitin}
 To reduce the number of clauses of the resulting encoding we can use the \emph{Tseitin transformation} \cite{tseitin1983complexity}.
 Instead of generating a large number of clauses when expanding the circuit we will add a new variable for each vertex.
 
