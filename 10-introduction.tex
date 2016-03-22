@@ -39,6 +39,62 @@ In our work we will focus specifically on hash functions.
 \subsection{Related work}
 %TODO nice summary + large table + references
 
+\subsection{Boolean circuits}
+The cryptographic primitive we want to encode into a SAT instance can be thought of as a \emph{boolean circuit} -- a \emph{DAG} (directed acyclic graph) in which vertices are boolean operators (\emph{gates}, such as the \emph{AND gate}, \emph{XOR gate} and so on).
+The edges represent flow of values from one gate to another.
+\emph{Inputs} are special vertices that have no incoming edges.
+\emph{Outputs} are also special vertices that have exactly one incoming edge and no outgoing edges.
+
+Given this representation the simplest way to encode this as a CNF formula would be to take each output vertex and recursively expand it in the following way:
+At first we start with an output vertex $v$ encoded as $(v)$.
+This will have one incoming edge from a gate vertex $g$ with inputs $x_1, \dots, x_k$.
+We will encode this as $g(x_1, \dots, x_k)$ where $g$ is the appropriate boolean operation of the gate -- for example, if the output vertex is connected to an \emph{AND} gate this would be $(x_1 \land \dots \land x_k)$.
+
+Now we repeat this process recursively, expanding each gate node until the encoding only refers to the input vertices.
+The resulting encoding has to be converted into conjunctive normal form and can then be solved with any SAT solver.
+
+However, this approach produces very large output formula with many clauses.
+Since we are recursively expanding each vertex until we reach the input vertices, large subgraphs which are referenced (connected by an outgoing edge) multiple times will needlessly be repeated in the output encoding.
+The total length of the formula then can be exponential in the size of the input circuit.
+%TODO exponential example
+
+\subsubsection{Tseitin transformation}
+To reduce the number of clauses of the resulting encoding we can use the \emph{Tseitin transformation} \cite{tseitin1983complexity}.
+Instead of generating a large number of clauses when expanding the circuit we will add a new variable for each vertex.
+
+Each gate vertex can then be encoded as a boolean function with constant number of clauses using only variables corresponding to gates (or inputs) that are connected via an incoming edge.
+The following table shows how to encode the most popular boolean gates with two inputs $A$ and $B$.
+Variable $C$ refers to the new variable representing this gate in the encoding.
+
+\begin{tabular}{r c l}
+\emph{AND}& $A\land B$ & $(C \lor \overline{A} \lor \overline{B}) \land (\overline{C} \lor A) \land (\overline{C} \lor B)$ \\
+\emph{OR} & $A\lor B$ & $(\overline{C} \lor A \lor B) \land (C \lor \overline{A}) \land (C \lor \overline{B})$ \\
+\emph{XOR} & $A\oplus B$ & $(\overline{C} \lor \overline{A} \lor \overline{B}) \land (\overline{C} \lor A \lor B) \land$\\
+& & $(C \lor \overline{A} \lor B) \land (C \lor A \lor \overline{B})$
+\end{tabular}
+
+Other binary gates such as \emph{NAND} can be encoded similarly.
+In case of multiple inputs we can either extend this encoding or replace the n-ary gates with multiple binary ones.
+%However, the \emph{XOR} gate will have number of clauses exponential in the number of variables.
+
+This encoding produces formula with linear number of variables and linear length with respect to the size of the boolean circuit.
+
+\subsubsection{Arithmetic gates}
+Most cryptographic algorithms make heavy use of arithmetic operations, such as modular addition.
+These usually work on variables of some fixed size, for example 32-bit integers.
+
+The n-bit variable can be represented using n binary variables in the SAT instance.
+However, these operations can not be performed on individual bits like with the boolean operators.
+We need to introduce additional helper variables that will represent the carry bits during the addition operation.
+
+This can be thought of as taking the boolean circuit for a binary adder with carry (either ripple-carry or lookahead-carry), composed of several full-adder circuits.
+These can then be encoded using the Tseitin transformation.
+
+However, for simplicity we extend our model of boolean circuits to support modular addition nodes directly.
+When encoding these nodes to CNF we then use the additional carry variables and output the clauses required to model a binary adder.
+
+%TODO adders, xor clauses ...
+
 % sat solvers
 %  - solve any decision problem
 %  - input usualy as cnf
