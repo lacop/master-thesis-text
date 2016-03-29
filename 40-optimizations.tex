@@ -106,6 +106,16 @@ From these plots we see that while the ratios for the number of conflict are mos
 
 TODO Games-Howell tabulky
 
+The \emph{r0-S-y-x} strategy behaves the same as \emph{r0-S-x-y} -- the number of conflicts for every instance is identical and the differences in time are negligible.
+
+TODO preco?
+
+On the other hand the strategies starting with the last round's $S$ matrix lead to the same behavior as not providing any branch ordering at all (the \emph{none} strategy).
+This must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default \emph{MiniSat} heuristic is also picking them for branching first.
+
+TODO debug printf do minisatu, zistit ktore z tohto sa deje
+
+	
 %A possible branch ordering would be based on the rounds of a hash function.
 %Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
 %
