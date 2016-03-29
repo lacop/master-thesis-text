@@ -51,12 +51,65 @@ Once all have been assigned we fall back to the standard branching order algorit
 We have also added support for this to our modeling library.
 Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
 
-\subsubsection{Results}
-TODO sha1/3 measurements - ~1pgs + tables
+\subsubsection{SHA-1 analysis}
+TODO
+
+\subsubsection{SHA-3 analysis}
+\begin{figure}
+\centering \includegraphics{figures/bo-ex1/sbs-time-none-r0sxy.pdf}
+\caption{Violin plot comparing the solving time using two branching order strategies for $8$-bit SHA-3 preimage. For every number of rounds the left (yellow) violin shows the distribution of running times with the \emph{none} strategy along with the median, mean and extreme values. The right (green) violin shows the same for the \emph{r0-S-x-y} strategy.}
+\label{fig:bo-sbs-time-none-r0sxy}
+\end{figure}
+
+\begin{figure}
+\centering \includegraphics{figures/bo-ex1/sbs-confl-none-r0sxy.pdf}
+\caption{Violin plot comparing the number of conflicts for two branching order strategies.}
+\label{fig:bo-sbs-confl-none-r0sxy}
+\end{figure}
+
+
+For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $0$ to $24$ (full SHA-3).
+For every number of rounds 10 different instances were generated and each was solved 10 times, for a total of 100 samples per round per strategy.
+We compared the following branching order strategies:
+
+\textbf{\emph{none}}: No branching order was specified. This is the default unmodified \emph{MiniSat} behavior.
+
+\textbf{\emph{r0-S-x-y}}: The $S$ matrix from the first round is branched on first, in column-major order.
+
+\textbf{\emph{r0-S-y-x}}: Same as previous one, but in row-major order.
+
+\textbf{\emph{rlast-S-x-y}} and \textbf{\emph{rlast-S-y-x-}}: Same as previous two, but the $S$ matrix from the last round is used instead.	
+
+A plot comparing the solving time of the first two strategies is show in figure \ref{fig:bo-sbs-time-none-r0sxy}.
+Figure \ref{fig:bo-sbs-confl-none-r0sxy} compares the number of conflicts.
+
+We can see that the number of conflicts was reduced using the \emph{r0-S-x-y} strategy.
+However the effect on solving time is harder to interpret -- while we can see the extremes for some rounds got better and for others they got worse, the distributions are too similar to see the effect.
+
+\begin{figure}
+\centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
+\caption{Violin plot showing the distribution of time ratios.}
+\label{fig:bo-ratio-time-none-r0sxy}
+\end{figure}
+
+\begin{figure}
+\centering \includegraphics{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}
+\caption{Violin plot showing the distribution of number of conflict ratios.}
+\label{fig:bo-ratio-confl-none-r0sxy}
+\end{figure}
+
+
+Instead we can plot the ratios of solving time and number of conflicts as in figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy}.
+Here the violins show distributions of values that were obtained by taking pairs of samples (the solving time on some instance with one strategy and the solving time on that same instance with a different strategy) and taking their ratios.
+
+From these plots we see that while the ratios for the number of conflict are mostly below 1 (meaning that the \emph{r0-S-x-y} strategy leads to fewer conflicts), the time ratios are often higher than 1.
+
+TODO Games-Howell tabulky
+
 %A possible branch ordering would be based on the rounds of a hash function.
 %Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
 %
-%By trying various orders we obtain the results shown in Figure \ref{fig:opt-branchorder-example-sha1}.
+%By trying various orders we obtain the results shown in Figure \ref{fig:opt-branchorder-example-sha1}-branchorder-example-sha1}.
 %The numbers in the \emph{order} column refer to the rounds of the compression function.
 %For example \emph{20, 19} means that first all variables from the 20th round get assigned, then all variables from 19th round and then the original heuristic takes over.
 %
