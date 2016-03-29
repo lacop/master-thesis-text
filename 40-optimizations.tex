@@ -2,7 +2,7 @@
 
 Modern SAT solvers use many advanced optimizations and heuristics to improve the solving time.
 However these are usually designed for general problem instances.
-With additional knowledge about a specific problem we can try to come up with better rules which lead to faster solving time.
+With additional knowledge about a specific problem we can try to come up with better rules which lead to decrease of solving time.
 
 In this chapter we will describe several optimizations that we implemented and evaluated.
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
@@ -27,7 +27,7 @@ TODO ~1pgs + nejake porovnania velkosti a rychlosti
 
 The most important heuristic in a SAT solver is the decision which unassigned variable to pick next.
 A bad order might assign randomly picked values to many variables before some conflict is found and the search tree depth will be quite high.
-This in turn leads to a slow solving time.
+This in turn leads to an increased solving time.
 On the other hand a good heuristic would pick variables in an order that causes many propagations and with an unsatisfiable assignment leads to conflicts quickly.
 
 The branching order is picked by a heuristic in the SAT solver, which does not have additional knowledge about what these variables represent and how they relate to each other.
@@ -35,7 +35,13 @@ By extending the input file format and the variable picking algorithm we can pro
 
 \subsubsection{Implementation}
 
-We added a new input line type to the \emph{DIMACS CNF} file format (see section \ref{sec:dimacs}).
+We added a new input line type to the \emph{DIMACS CNF} file format.
+A line in the form
+
+\centerline{\texttt{b $v$ 0}}
+
+\noindent means that variable $v$ should be branched on first.
+When multiple such lines are provided the order of branching is the same as the order of these lines in the input file.
 Using this we can provide a list of any number of variables in the order we want them to be picked for assignment.
 
 We modified the popular \emph{CryptoMiniSAT} solver to be able to parse and store this list.
