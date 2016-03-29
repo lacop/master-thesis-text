@@ -124,14 +124,18 @@ Our library also makes use of this feature with the additional advantage that we
 Additionally their work uses only simple Tseitin transform without additional optimizations, and the code for the tool is not available.
 %TODO verify again not available...
 
-Another work which automates the generation of instances makes use of the \emph{Verilog} hardware description language\footnote{HDLs describe the behavior of logic circuits. They are used for programming FPGAs or designing ICs.} \cite{morawiecki2013sat}.
+Another work which automates the generation of instances makes use of the \emph{Verilog} hardware description language\footnote{HDLs describe the behavior of logic circuits. They are used for programming FPGAs or designing ASICs.} \cite{morawiecki2013sat}.
 After writing the cryptographic primitive in this language a free, but proprietary, compiler is used to generate equations which are then turned to a CNF instance.
 Since \emph{Verilog} is quite a niche language most cryptographic primitives do not have implementations available.
 Additionally the toolkit itself is also not available.
 
-TODO nossum sha1
+An in-depth analysis of \emph{SHA-1} preimage attacks was done in \cite{nossum2012sat}.
+The instances were generated using a custom, hand-built 1000-line \emph{C++} program.
+The experiments investigated the speed of various SAT solvers, effects of preprocessing and simplifying the instance and various heuristics.
 
-TODO dalsie refs/tabulka? ~0.25pgs
+Further related works can be found in the bibliography.
+
+%TODO dalsie refs/tabulka? ~0.25pgs
 %TODO nice summary + large table + references
 
 
