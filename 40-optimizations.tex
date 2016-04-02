@@ -79,7 +79,7 @@ On the other hand, from the high p-value of $0.96$ we can't reject the hypothesi
 %\label{tbl:opt-sha3-cmp}
 %\end{figure}
 
-\subsubsection{Conclusion}
+\subsubsection{Discussion}
 Even with large number of samples to eliminate the intrinsic randomness in SAT solving times we were unable to reject hypotheses that the tested optimizations do not lead to an improvement.
 From this we conclude that they do not provide significant benefits.
 
@@ -88,8 +88,8 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 %TODO discussion/conclusion
 %TODO high pvalue, no difference -> parada, netreba to pouzivat, nasa naive noeffort kniznica je rovnako dobra ako handcrafted kod
 
-\subsection{Merging operators}
-TODO ~0.25pgs
+%\subsection{Merging operators}
+%TODO ~0.25pgs
 
 %\subsection{Truth table minimization}
 %TODO ~1pgs + nejake porovnania velkosti a rychlosti
@@ -124,8 +124,8 @@ Once all have been assigned we fall back to the standard branching order algorit
 We have also added support for this to our modeling library.
 Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
 
-\subsubsection{SHA-1 analysis}
-TODO
+%\subsubsection{SHA-1 analysis}
+%TODO
 
 \subsubsection{SHA-3 analysis}
 \begin{figure}
@@ -155,9 +155,6 @@ We compared the following branching order strategies:
 A plot comparing the solving time of the first two strategies is show in figure \ref{fig:bo-sbs-time-none-r0sxy}.
 Figure \ref{fig:bo-sbs-confl-none-r0sxy} compares the number of conflicts.
 
-We can see that the number of conflicts was reduced using the \emph{r0-S-x-y} strategy.
-However the effect on solving time is harder to interpret -- while we can see the extremes for some rounds got better and for others they got worse, the distributions are too similar to see the effect.
-
 \begin{figure}
 \centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
 \caption{Violin plot showing the distribution of time ratios.}
@@ -170,6 +167,9 @@ However the effect on solving time is harder to interpret -- while we can see th
 \label{fig:bo-ratio-confl-none-r0sxy}
 \end{figure}
 
+\subsubsection{Discussion}
+We can see that the number of conflicts was reduced using the \emph{r0-S-x-y} strategy.
+However the effect on solving time is harder to interpret -- while we can see the extremes for some rounds got better and for others they got worse, the distributions are too similar to see the effect.
 
 Instead we can plot the ratios of solving time and number of conflicts as in figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy}.
 Here the violins show distributions of values that were obtained by taking pairs of samples (the solving time on some instance with one strategy and the solving time on that same instance with a different strategy) and taking their ratios.
@@ -191,6 +191,7 @@ This must mean that either their choice does not lead to any forced assignments 
 
 TODO debug printf do minisatu, zistit ktore z tohto sa deje
 
+TODO aj ine verzie ako r0-C, D, ... ziaden efekt/rovnake ako S
 	
 %A possible branch ordering would be based on the rounds of a hash function.
 %Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
