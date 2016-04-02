@@ -52,6 +52,8 @@ As we can see the effect of this optimization is quite small and the running tim
 %TODO mozno porovnat aj pocet konfliktov/velkost instancie s a bez opt?
 
 Using the \emph{Games-Howell} post hoc test we do obtain a mean time improvement of $t=1.4$ seconds however at a fairly high significance level of $p=0.15$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
+
+TODO pre viac ako x kol iba?
 %TODO reference G-H
 
 \subsubsection{SHA-3 analysis} 
@@ -68,6 +70,7 @@ Using the \emph{Espresso} minimization will lead to 32 clauses but only one extr
 Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in table \ref{tbl:opt-sha3-cmp}.
 
 TODO pekna tabulka
+TODO tiezlen pre >12 kol?
 
 We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.1$) at significance level of $p=0.01$.
 Thus the default behavior is more efficient.
@@ -125,22 +128,7 @@ Once all have been assigned we fall back to the standard branching order algorit
 We have also added support for this to our modeling library.
 Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
 
-%\subsubsection{SHA-1 analysis}
-%TODO
-
 \subsubsection{SHA-3 analysis}
-\begin{figure}
-\centering \includegraphics{figures/bo-ex1/sbs-time-none-r0sxy.pdf}
-\caption{Violin plot comparing the solving time using two branching order strategies for $8$-bit SHA-3 preimage. For every number of rounds the left (yellow) violin shows the distribution of running times with the \emph{none} strategy along with the median, mean and extreme values. The right (green) violin shows the same for the \emph{r0-S-x-y} strategy.}
-\label{fig:bo-sbs-time-none-r0sxy}
-\end{figure}
-
-\begin{figure}
-\centering \includegraphics{figures/bo-ex1/sbs-confl-none-r0sxy.pdf}
-\caption{Violin plot comparing the number of conflicts for two branching order strategies.}
-\label{fig:bo-sbs-confl-none-r0sxy}
-\end{figure}
-
 For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $0$ to $24$ (full SHA-3).
 For every number of rounds 10 different instances were generated and each was solved 10 times, for a total of 100 samples per round per strategy.
 We compared the following branching order strategies:
@@ -153,9 +141,6 @@ We compared the following branching order strategies:
 
 \textbf{\emph{rlast-S-x-y}} and \textbf{\emph{rlast-S-y-x-}}: Same as previous two, but the $S$ matrix from the last round is used instead.	
 
-A plot comparing the solving time of the first two strategies is show in figure \ref{fig:bo-sbs-time-none-r0sxy}.
-Figure \ref{fig:bo-sbs-confl-none-r0sxy} compares the number of conflicts.
-
 \begin{figure}
 \centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
 \caption{Violin plot showing the distribution of time ratios.}
@@ -167,13 +152,6 @@ Figure \ref{fig:bo-sbs-confl-none-r0sxy} compares the number of conflicts.
 \caption{Violin plot showing the distribution of number of conflict ratios.}
 \label{fig:bo-ratio-confl-none-r0sxy}
 \end{figure}
-
-\subsubsection{Discussion}
-%We can see that the number of conflicts was reduced using the \emph{r0-S-x-y} strategy.
-%However the effect on solving time is harder to interpret -- while we can see the extremes for some rounds got better and for others they got worse, the distributions are too similar to see the effect.
-
-%Instead we can plot the ratios of solving time and number of conflicts as in figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy}.
-%Here the violins show distributions of values that were obtained by taking pairs of samples (the solving time on some instance with one strategy and the solving time on that same instance with a different strategy) and taking their ratios.
 
 The figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy} show \emph{violin plots} of the distribution of ratios of the solving time and the number of conflicts.
 Each \emph{violin} also show the mean, median and extreme values.
@@ -193,10 +171,12 @@ TODO preco?
 On the other hand the strategies starting with the last round's $S$ matrix lead to the same behavior as not providing any branch ordering at all (the \emph{none} strategy).
 This must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default \emph{MiniSat} heuristic is also picking them for branching first.
 
-TODO debug printf do minisatu, zistit ktore z tohto sa deje
-
 TODO aj ine verzie ako r0-C, D, ... ziaden efekt/rovnake ako S
-	
+
+
+\subsubsection{Discussion}
+
+TODO prepisat koniec predoslej casti a dat to sem, + najaky kratky sumar	
 %A possible branch ordering would be based on the rounds of a hash function.
 %Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
 %
