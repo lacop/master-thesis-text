@@ -117,7 +117,7 @@ A line in the form
 When multiple such lines are provided the order of branching is the same as the order of these lines in the input file.
 Using this we can provide a list of any number of variables in the order we want them to be picked for assignment.
 
-We modified the popular \emph{CryptoMiniSAT} solver to be able to parse and store this list.
+We modified the popular \emph{MiniSat} solver to be able to parse and store this list.
 Then we modified the selection of next branching candidate to first pick all these variables in the specified order.
 Once all have been assigned we fall back to the standard branching order algorithm.
 
@@ -139,7 +139,6 @@ TODO
 \caption{Violin plot comparing the number of conflicts for two branching order strategies.}
 \label{fig:bo-sbs-confl-none-r0sxy}
 \end{figure}
-
 
 For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $0$ to $24$ (full SHA-3).
 For every number of rounds 10 different instances were generated and each was solved 10 times, for a total of 100 samples per round per strategy.
@@ -177,7 +176,11 @@ Here the violins show distributions of values that were obtained by taking pairs
 
 From these plots we see that while the ratios for the number of conflict are mostly below 1 (meaning that the \emph{r0-S-x-y} strategy leads to fewer conflicts), the time ratios are often higher than 1.
 
-TODO Games-Howell tabulky
+The \emph{Games-Howell} procedure confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 21$ at significance level $p < 0.001$.
+However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
+
+TODO GH tabulka cas/konflikty pre rounds>12 (odstrani sum)
+TODO spomenut ze len pre rounds>12
 
 The \emph{r0-S-y-x} strategy behaves the same as \emph{r0-S-x-y} -- the number of conflicts for every instance is identical and the differences in time are negligible.
 
