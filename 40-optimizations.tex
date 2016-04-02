@@ -33,10 +33,10 @@ This is then processed using an external truth table minimization tool \emph{Esp
 When this expression is used anywhere in the model a node is created in the boolean circuit representation.
 It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
 
-\subsubsection{SHA-1 evaluation}
+\subsubsection{SHA-1 analysis}
 We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
 We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
-The preimage bits were obtained by hashing a random message to ensure a solution would exist even for instances with reduced number of rounds.
+The preimage bits were obtained by hashing random messages to ensure a solution would exist even for instances with reduced number of rounds.
 We repeated the experiment multiple times for a total of $5670$ samples for each variant.
 
 \begin{figure}
@@ -54,14 +54,14 @@ As we can see the effect of this optimization is quite small and the running tim
 Using the \emph{Games-Howell} post hoc test we do obtain a mean time improvement of $t=1.4$ seconds however at a fairly high significance level of $p=0.15$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
 %TODO reference G-H
 
-\subsubsection{SHA-3 evaluation} 
-We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits came from a randomly generated message.
+\subsubsection{SHA-3 analysis} 
+We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits again came from randomly generated messages.
 We considered two possible optimizations in the round function and tested four variants -- all combinations of turning on or off these two optimizations.
 A total of $2000$ samples was collected for each variant.
 
-The first optimization was minimizing the expression in the $\chi$ step: $x \oplus (\overline{y} \land z)$, which is used to fill the 5-by-5 $S$ matrix in each round.
+The first optimization was minimizing the expression $x \oplus (\overline{y} \land z)$ in the $\chi$ step, which is used to fill the $5\times 5$ state matrix $S$ in each round.
 
-The second optimization was in the $\theta$ step, where the $C$ vector is filled using a \emph{xor} of five different values.
+The second optimization was in the $\theta$ step, where the $C$ vector is filled using an exclusive or of five different values.
 Without optimization this leads to four extra variables and 16 extra clauses.
 Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
 
@@ -70,6 +70,7 @@ Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison 
 TODO pekna tabulka
 
 We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.1$) at significance level of $p=0.01$.
+Thus the default behavior is more efficient.
 On the other hand, from the high p-value of $0.96$ we can't reject the hypothesis that optimizing the $\chi$ step makes no difference at all.
 
 %\begin{figure}
@@ -107,7 +108,7 @@ The branching order is picked by a heuristic in the SAT solver, which does not h
 By extending the input file format and the variable picking algorithm we can provide our own (partial) variable branching order.
 
 \subsubsection{Implementation}
-
+\label{sec:branching-order-impl}
 We added a new input line type to the \emph{DIMACS CNF} file format.
 A line in the form
 
@@ -168,11 +169,14 @@ Figure \ref{fig:bo-sbs-confl-none-r0sxy} compares the number of conflicts.
 \end{figure}
 
 \subsubsection{Discussion}
-We can see that the number of conflicts was reduced using the \emph{r0-S-x-y} strategy.
-However the effect on solving time is harder to interpret -- while we can see the extremes for some rounds got better and for others they got worse, the distributions are too similar to see the effect.
+%We can see that the number of conflicts was reduced using the \emph{r0-S-x-y} strategy.
+%However the effect on solving time is harder to interpret -- while we can see the extremes for some rounds got better and for others they got worse, the distributions are too similar to see the effect.
 
-Instead we can plot the ratios of solving time and number of conflicts as in figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy}.
-Here the violins show distributions of values that were obtained by taking pairs of samples (the solving time on some instance with one strategy and the solving time on that same instance with a different strategy) and taking their ratios.
+%Instead we can plot the ratios of solving time and number of conflicts as in figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy}.
+%Here the violins show distributions of values that were obtained by taking pairs of samples (the solving time on some instance with one strategy and the solving time on that same instance with a different strategy) and taking their ratios.
+
+The figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy} show \emph{violin plots} of the distribution of ratios of the solving time and the number of conflicts.
+Each \emph{violin} also show the mean, median and extreme values.
 
 From these plots we see that while the ratios for the number of conflict are mostly below 1 (meaning that the \emph{r0-S-x-y} strategy leads to fewer conflicts), the time ratios are often higher than 1.
 
