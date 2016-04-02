@@ -42,12 +42,17 @@ We repeated the experiment multiple times for a total of $5670$ samples for each
 Figure \ref{fig:opt-sha1-cmp-espresso} shows the mean running times for both instances without optimizations and for ones using \emph{Espresso} minimization.
 As we can see the effect of this optimization is quite small and the running times appear to be identical.
 
-%TODO nejaka tabulka a cisla?
+%> posthocTGH(y=raw[raw$rounds>20,]$time, x=raw[raw$rounds>20,]$label, method='games-howell')
+%          n means variances
+%s1espr 4200   2.5       7.4
+%s1none 4200   2.6       7.4
+%
+%                t   df    p
+%s1espr:s1none 1.6 8398 0.12
+
 %TODO mozno porovnat aj pocet konfliktov/velkost instancie s a bez opt?
 
-Using the \emph{Games-Howell} post hoc test we do obtain a mean time improvement of $t=1.4$ seconds however at a fairly high significance level of $p=0.15$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
-
-TODO pre viac ako x kol iba?
+Using the \emph{Games-Howell} post hoc test on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
 %TODO reference G-H
 
 \subsubsection{SHA-3 analysis} 
@@ -61,7 +66,38 @@ The second optimization was in the $\theta$ step, where the $C$ vector is filled
 Without optimization this leads to four extra variables and 16 extra clauses.
 Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
 
-Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in table \ref{tbl:opt-sha3-cmp}.
+%> posthocTGH(y=raw[raw$rounds>12,]$time, x=raw[raw$rounds>12,]$label, method='games-howell')
+%          n means variances
+%s3esno  949   7.4        50
+%s3esxor 949   8.2        54
+%s3nono  949   7.5        45
+%s3noxor 949   8.5        49
+%
+%                   t   df      p
+%s3esno:s3esxor  2.56 1892 0.0521
+%s3esno:s3nono   0.52 1891 0.9540
+%s3esno:s3noxor  3.63 1896 0.0016
+%s3esxor:s3nono  2.11 1878 0.1499
+%s3esxor:s3noxor 0.98 1891 0.7581
+%s3nono:s3noxor  3.21 1892 0.0075
+
+\begin{figure*}
+\centering \begin{tabular}{ccrccrr}
+\multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{1}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{2}{c}{\textbf{Time}} \\
+\textbf{$\chi$ step} & \textbf{$\theta$ step} & \multicolumn{1}{c}{\textbf{Mean}} & \textbf{$\chi$ step} & \textbf{$\theta$ step} & \textbf{t} & \textbf{p}\\ \hline
+\xmark & \xmark & $7.5$ & \xmark & \cmark & $3.21$ & $<0.01$ \\
+& & & \cmark & \xmark & $0.52$ & $0.95$ \\
+& & & \cmark & \cmark & $2.11$ & $0.15$ \\ \hline
+\xmark & \cmark & $8.5$ & \cmark & \xmark & $3.63$ & $<0.01$ \\
+& & & \cmark & \cmark & $0.98$ & $0.75$ \\ \hline
+\cmark & \xmark & $7.4$ & \cmark & \cmark & $2.56$ & $0.05$ \\ \hline
+\cmark & \cmark & $8.2$ & \\
+\end{tabular}
+\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the \emph{Games-Howell} procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy.}
+\label{tbl:gh-sha3-opts}
+\end{figure*}
+
+Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in table \ref{tbl:gh-sha3-opts}.
 
 TODO pekna tabulka
 TODO tiezlen pre >12 kol?
@@ -198,7 +234,7 @@ From these plots we see that while the ratios for the number of conflict are mos
 %r0-S-y-x:rlast-S-y-x    0.609 956 0.97
 %rlast-S-x-y:rlast-S-y-x 0.153 958 1.00
 \begin{figure*}
-\centering \begin{tabular}{lrr @{\hskip 1cm} lrrrr}
+\centering \begin{tabular}{lrrlrrrr}
 \textbf{Strategy} & \textbf{Time} & \textbf{Conflicts} & \textbf{Strategy} & \multicolumn{2}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Conflicts}} \\
 & \multicolumn{2}{c}{\textbf{Mean}} & & \textbf{t} & \textbf{p} & \textbf{t} & \textbf{p} \\ \hline
 \emph{none} & $7.8$ & $731$ & \emph{r0-S-x-y} & $0.65$ & $0.97$ & $17$ & $<0.01$ \\
@@ -213,7 +249,7 @@ From these plots we see that while the ratios for the number of conflict are mos
 \emph{r0-last-x-y} & $7.8$ & $731$ & \emph{rlast-S-y-x} & $0.15$ & $>0.99$ & $0$ & $>0.99$ \\ \hline
 \emph{r0-last-y-x} & $7.8$ & $731$ & & & & &  \\
 \end{tabular}
-\caption{Pairwise comparison of various branching order strategies using the \emph{Games-Howell} procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy.}
+\caption{Pairwise comparison of various branching order strategies for \emph{SHA-3-512} using the \emph{Games-Howell} procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy.}
 \label{tbl:gh-sha3-bos}
 \end{figure*}
 
