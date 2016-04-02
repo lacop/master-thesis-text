@@ -4,7 +4,7 @@ Modern SAT solvers use many advanced optimizations and heuristics to improve the
 However these are usually designed for general problem instances.
 With additional knowledge about a specific problem we can try to come up with better rules which lead to decrease of solving time.
 
-In this chapter we will describe several optimizations that we implemented and evaluated.
+In this section we will describe several optimizations that we implemented and evaluated.
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
 
 %TODO vsetko poriadne odmerat, otestovat a spisat
@@ -12,14 +12,87 @@ Some of these involve a simple change in output instance generation, others invo
 %TODO spravit este: espresso minimizer
 %TODO nech je toho dost, povymyslat dalsie?
 
-\subsection{XOR clauses}
-TODO ~1pgs
+\subsection{Expression encoding}
+The automatic and transparent conversion from unmodified source code to SAT instance via operator overloading and boolean circuits may lead to suboptimal encoding of various expressions.
+For example, the \emph{choice} round function in \emph{SHA-1}
+\[
+Ch(x, y, z) = (x \land y) \oplus (\overline{x} \land z)
+\]
+leads to an encoding with three variables and ten clauses (three clauses for each \emph{and} gate and four for the \emph{xor} gate) if we apply the Tseitin transformation directly.
+A better encoding using just six clauses and one variable is shown in \cite{nossum2012sat}.
+In fact, it is possible to encode this expression with just four clauses.
+%TODO insert the encodings to demonstrate?
+
+%TODO move to section2 (library) after tseitin/boolean?
+To solve this issue we provide an expression optimization function in our library.
+Any $n$-ary expression can be wrapped using this function to replace the standard Tseitin encoding with a (potentially) smaller one, in terms of number of extra variables and clauses required.
+
+To achieve this we first evaluate the expression on all $2^n$ possible inputs to generate a truth table.
+This is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode this truth table.
+%TODO espresso citation
+When this expression is used anywhere in the model a node is created in the boolean circuit representation.
+It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
+
+\subsubsection{SHA-1 evaluation}
+We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
+We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
+The preimage bits were obtained by hashing a random message to ensure a solution would exist even for instances with reduced number of rounds.
+We repeated the experiment multiple times for a total of $5670$ samples for each variant.
+
+\begin{figure}
+\centering \includegraphics[width=.5\textwidth]{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
+\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using \emph{Espresso} minimization for rounds functions (red).}
+\label{fig:opt-sha1-cmp-espresso}
+\end{figure}
+ 
+Figure \ref{fig:opt-sha1-cmp-espresso} shows the mean running times for both instances without optimizations and for ones using \emph{Espresso} minimization.
+As we can see the effect of this optimization is quite small and the running times appear to be identical.
+
+%TODO nejaka tabulka a cisla?
+%TODO mozno porovnat aj pocet konfliktov/velkost instancie s a bez opt?
+
+Using the \emph{Games-Howell} post hoc test we do obtain a mean time improvement of $t=1.4$ seconds however at a fairly high significance level of $p=0.15$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
+%TODO reference G-H
+
+\subsubsection{SHA-3 evaluation} 
+We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits came from a randomly generated message.
+We considered two possible optimizations in the round function and tested four variants -- all combinations of turning on or off these two optimizations.
+A total of $2000$ samples was collected for each variant.
+
+The first optimization was minimizing the expression in the $\chi$ step: $x \oplus (\overline{y} \land z)$, which is used to fill the 5-by-5 $S$ matrix in each round.
+
+The second optimization was in the $\theta$ step, where the $C$ vector is filled using a \emph{xor} of five different values.
+Without optimization this leads to four extra variables and 16 extra clauses.
+Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
+
+Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in table \ref{tbl:opt-sha3-cmp}.
+
+TODO pekna tabulka
+
+We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.1$) at significance level of $p=0.01$.
+On the other hand, from the high p-value of $0.96$ we can't reject the hypothesis that optimizing the $\chi$ step makes no difference at all.
+
+%\begin{figure}
+%\begin{tabular}{c|c|c|c|c}
+%
+%\end{tabular}
+%\label{tbl:opt-sha3-cmp}
+%\end{figure}
+
+\subsubsection{Conclusion}
+Even with large number of samples to eliminate the intrinsic randomness in SAT solving times we were unable to reject hypotheses that the tested optimizations do not lead to an improvement.
+From this we conclude that they do not provide significant benefits.
+
+While our library provides this optimization feature to users as we saw in our measurements it is not necessary to use it.
+Therefore minimal changes to existing, off-the-shelf implementations of hash functions (without the need to identify expressions with non-optimal Tseitin representation) are sufficient to match the hand-optimized instances such as in \cite{nossum2012sat}.
+%TODO discussion/conclusion
+%TODO high pvalue, no difference -> parada, netreba to pouzivat, nasa naive noeffort kniznica je rovnako dobra ako handcrafted kod
 
 \subsection{Merging operators}
-TODO ~0.5pgs
+TODO ~0.25pgs
 
-\subsection{Truth table minimization}
-TODO ~1pgs + nejake porovnania velkosti a rychlosti
+%\subsection{Truth table minimization}
+%TODO ~1pgs + nejake porovnania velkosti a rychlosti
 
 \subsection{Branching order}
 \label{sec:branching-order}
