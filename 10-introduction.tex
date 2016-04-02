@@ -150,8 +150,6 @@ These can then be encoded using the Tseitin transformation.
 However, for simplicity we extend our model of boolean circuits to support modular addition nodes directly.
 When encoding these nodes to CNF we use the additional carry variables and output the clauses required to model a binary adder.
 
-%TODO adders, xor clauses ...
-
 \subsection{Related work}
 \label{sec:related-work}
 The idea of using SAT solvers for cryptographic problems was first introduced in \cite{massacci2000logical}.
@@ -161,7 +159,6 @@ However the work is very specific to \emph{DES} and modifying the tool for a dif
 The first attempt to simplify this process can be found in \cite{jovanovic2005logical} where \emph{operator overloading} (see section \ref{sec:operator-overloading}) in the \emph{C++} language is used.
 Our library also makes use of this feature with the additional advantage that we use a \emph{dynamic} programming language (\emph{Python}) and therefore require smaller changes to existing code.
 Additionally their work uses only simple Tseitin transform without additional optimizations, and the code for the tool is not available.
-%TODO verify again not available...
 
 Another work which automates the generation of instances makes use of the \emph{Verilog} hardware description language\footnote{HDLs describe the behavior of logic circuits. They are used for programming FPGAs or designing ASICs.} \cite{morawiecki2013sat}.
 After writing the cryptographic primitive in this language a free, but proprietary, compiler is used to generate equations which are then turned to a CNF instance.
@@ -171,10 +168,6 @@ Additionally the toolkit itself is also not publicly available.
 An in-depth analysis of \emph{SHA-1} preimage attacks was done in \cite{nossum2012sat}.
 The instances were generated using a custom, hand-built 1000-line \emph{C++} program.
 The experiments investigated the speed of various SAT solvers, effects of preprocessing and simplifying the instance and various heuristics.
-
-%Further related works can be found in the bibliography.
-%TODO dalsie refs/tabulka? ~0.25pgs
-%TODO nice summary + large table + references
 
 
 % sat solvers

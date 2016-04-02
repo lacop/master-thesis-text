@@ -47,16 +47,6 @@ For our library we have decided to use the \emph{Python} language which also sup
 As the name suggests, \emph{operator overloading} allows us to overload (override) existing behavior of operators in some programming language.
 While the feature is only \emph{syntactic sugar} (which means it does not allow us to do anything more than would be possible without it; it just simplifies the syntax) it not only greatly increases the readability of the code, but also allows us to reuse existing implementations as we will show.
 
-%As an example use of operator overloading we can take multiplication of complex numbers.
-%In a language which does not support operator overloading like \emph{C} we would have to call a function, which takes two complex numbers and returns their product such as \texttt{C = complex\_multiply(A, B)}.
-%In this example \texttt{A}, \texttt{B} and \texttt{C} are variable of some not built-in type.
-%TODO minted code here
-
-%On the other hand in a language such as \emph{C++} which does support operator overloading we can simply write \texttt{C = A*B} as we would with any built-in numeric type.
-%If the appropriate operator override is provided by the complex number type the corresponding multiplication function will be substituted by the compiler.
-
-%~\\
-
 The reason this feature is useful in our library is that we can change the type of some variables in existing code without having to change anything else.
 For example, we can take an implementation of some hash function and change the type of all variables from the built-in integers to our new data type.
 Without operator overloading this could would not be possible, since operators such as addition or bit shift would not be defined for our new type by the language.
@@ -89,7 +79,6 @@ Similarly for cyclic bit shift we can reuse existing variables but with differen
 Once all variables have been assigned integer values we pass through all the nodes again.
 This time we generate the clauses which model the operator behavior.
 The number of clauses required depends on the operator and the bit width of the \emph{BitVector} node.
-%TODO small example for some nodes, or at least some sample numbers of clauses required
 
 \subsubsection{Solving and working with solution}
 After the model has been turned into an instance we can run a SAT solver on this generated list of clauses and wait for it to terminate.
@@ -98,15 +87,3 @@ The library will load, parse and store this data for later use.
 
 We can then easily query any of the \emph{BitVector} variables for its value.
 The mapping from variables to integer labels will be used to find the appropriate assignment and to reconstruct the value of the node.
-
-%\subsection{Usage example}
-%To demonstrate the ease of use of our library we will use it to model the well-known \emph{SHA-1} hash function.
-
-%\subsubsection{Reference implementation}
-%We begin with a classical implementation of \emph{SHA-1} in Python, which computes the digest for an input message.
-%TODO code samples, nice syntax highlighting
-%TODO keep it short, reference the attachment for full code
-
-%TODO ~1pgs, code samples
-
-%TODO ~0.5pgs compare to existing work + graphs

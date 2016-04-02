@@ -7,11 +7,6 @@ With additional knowledge about a specific problem we can try to come up with be
 In this section we will describe several optimizations that we implemented and evaluated.
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
 
-%TODO vsetko poriadne odmerat, otestovat a spisat
-%TODO sem dat: xor klauzule, xor arita
-%TODO spravit este: espresso minimizer
-%TODO nech je toho dost, povymyslat dalsie?
-
 \subsection{Expression encoding}
 The automatic and transparent conversion from unmodified source code to SAT instance via operator overloading and boolean circuits may lead to suboptimal encoding of various expressions.
 For example, the \emph{choice} round function in \emph{SHA-1}
@@ -26,45 +21,6 @@ In fact, it is possible to encode this expression with just four clauses.
 %TODO move to section2 (library) after tseitin/boolean?
 To solve this issue we provide an expression optimization function in our library.
 Any $n$-ary expression can be wrapped using this function to replace the standard Tseitin encoding with a (potentially) smaller one, in terms of number of extra variables and clauses required.
-
-To achieve this we first evaluate the expression on all $2^n$ possible inputs to generate a truth table.
-This is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode this truth table.
-%TODO espresso citation
-When this expression is used anywhere in the model a node is created in the boolean circuit representation.
-It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
-
-\subsubsection{SHA-1 analysis}
-We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
-We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
-The preimage bits were obtained by hashing random messages to ensure a solution would exist even for instances with reduced number of rounds.
-We repeated the experiment multiple times for a total of $5670$ samples for each variant.
- 
-Figure \ref{fig:opt-sha1-cmp-espresso} shows the mean running times for both instances without optimizations and for ones using \emph{Espresso} minimization.
-As we can see the effect of this optimization is quite small and the running times appear to be identical.
-
-%> posthocTGH(y=raw[raw$rounds>20,]$time, x=raw[raw$rounds>20,]$label, method='games-howell')
-%          n means variances
-%s1espr 4200   2.5       7.4
-%s1none 4200   2.6       7.4
-%
-%                t   df    p
-%s1espr:s1none 1.6 8398 0.12
-
-%TODO mozno porovnat aj pocet konfliktov/velkost instancie s a bez opt?
-
-Using the \emph{Games-Howell} post hoc test on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
-%TODO reference G-H
-
-\subsubsection{SHA-3 analysis} 
-We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits again came from randomly generated messages.
-We considered two possible optimizations in the round function and tested four variants -- all combinations of turning on or off these two optimizations.
-A total of $2000$ samples was collected for each variant.
-
-The first optimization was minimizing the expression $x \oplus (\overline{y} \land z)$ in the $\chi$ step, which is used to fill the $5\times 5$ state matrix $S$ in each round.
-
-The second optimization was in the $\theta$ step, where the $C$ vector is filled using an exclusive or of five different values.
-Without optimization this leads to four extra variables and 16 extra clauses.
-Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
 
 %> posthocTGH(y=raw[raw$rounds>12,]$time, x=raw[raw$rounds>12,]$label, method='games-howell')
 %          n means variances
@@ -97,21 +53,49 @@ Using the \emph{Espresso} minimization will lead to 32 clauses but only one extr
 \label{tbl:gh-sha3-opts}
 \end{figure*}
 
+
+To achieve this we first evaluate the expression on all $2^n$ possible inputs to generate a truth table.
+This is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode this truth table.
+%TODO espresso citation
+When this expression is used anywhere in the model a node is created in the boolean circuit representation.
+It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
+
+\subsubsection{SHA-1 analysis}
+We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
+We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
+The preimage bits were obtained by hashing random messages to ensure a solution would exist even for instances with reduced number of rounds.
+We repeated the experiment multiple times for a total of $5670$ samples for each variant.
+ 
+Figure \ref{fig:opt-sha1-cmp-espresso} shows the mean running times for both instances without optimizations and for ones using \emph{Espresso} minimization.
+As we can see the effect of this optimization is quite small and the running times appear to be identical.
+
+%> posthocTGH(y=raw[raw$rounds>20,]$time, x=raw[raw$rounds>20,]$label, method='games-howell')
+%          n means variances
+%s1espr 4200   2.5       7.4
+%s1none 4200   2.6       7.4
+%
+%                t   df    p
+%s1espr:s1none 1.6 8398 0.12
+
+Using the \emph{Games-Howell} post hoc test on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
+%TODO reference G-H
+
+\subsubsection{SHA-3 analysis} 
+We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits again came from randomly generated messages.
+We considered two possible optimizations in the round function and tested four variants -- all combinations of turning on or off these two optimizations.
+A total of $2000$ samples was collected for each variant.
+
+The first optimization was minimizing the expression $x \oplus (\overline{y} \land z)$ in the $\chi$ step, which is used to fill the $5\times 5$ state matrix $S$ in each round.
+
+The second optimization was in the $\theta$ step, where the $C$ vector is filled using an exclusive or of five different values.
+Without optimization this leads to four extra variables and 16 extra clauses.
+Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
+
 Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in table \ref{tbl:gh-sha3-opts}.
 
-TODO pekna tabulka
-TODO tiezlen pre >12 kol?
-
-We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.1$) at significance level of $p=0.01$.
+We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.21$) at significance level of $p < 0.01$.
 Thus the default behavior is more efficient.
-On the other hand, from the high p-value of $0.96$ we can't reject the hypothesis that optimizing the $\chi$ step makes no difference at all.
-
-%\begin{figure}
-%\begin{tabular}{c|c|c|c|c}
-%
-%\end{tabular}
-%\label{tbl:opt-sha3-cmp}
-%\end{figure}
+On the other hand, from the high p-value of $0.75$ we can't reject the hypothesis that optimizing the $\chi$ step makes no difference at all.
 
 \subsubsection{Discussion}
 Even with large number of samples to eliminate the intrinsic randomness in SAT solving times we were unable to reject hypotheses that the tested optimizations do not lead to an improvement.
@@ -119,14 +103,6 @@ From this we conclude that they do not provide significant benefits.
 
 While our library provides this optimization feature to users as we saw in our measurements it is not necessary to use it.
 Therefore minimal changes to existing, off-the-shelf implementations of hash functions (without the need to identify expressions with non-optimal Tseitin representation) are sufficient to match the hand-optimized instances such as in \cite{nossum2012sat}.
-%TODO discussion/conclusion
-%TODO high pvalue, no difference -> parada, netreba to pouzivat, nasa naive noeffort kniznica je rovnako dobra ako handcrafted kod
-
-%\subsection{Merging operators}
-%TODO ~0.25pgs
-
-%\subsection{Truth table minimization}
-%TODO ~1pgs + nejake porovnania velkosti a rychlosti
 
 \begin{figure*}	
 \centering \includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
@@ -145,7 +121,6 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 \caption{Violin plot showing the ratios distribution of number of conflicts for the \emph{none} and {r0-S-x-y} strategies.}
 \label{fig:bo-ratio-confl-none-r0sxy}
 \end{figure*}
-
 
 \subsection{Branching order}
 \label{sec:branching-order}
@@ -255,47 +230,14 @@ From these plots we see that while the ratios for the number of conflict are mos
 
 The \emph{Games-Howell} procedure (table \ref{tbl:gh-sha3-bos} confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
 However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
-Note that only samples for more than $12$ rounds were included to avoid the strong effect of randomness for instances that solve in very short time.
+Note that once again only samples for more than $12$ rounds were included to avoid the strong effect of randomness for instances that solve in very short time.
 
 The \emph{r0-S-y-x} strategy behaves the same as \emph{r0-S-x-y} -- the number of conflicts for every instance is identical and the differences in time are negligible.
 On the other hand the strategies starting with the last round's $S$ matrix lead to the same behavior as not providing any branch ordering at all (the \emph{none} strategy).
-This must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default \emph{MiniSat} heuristic is also picking them for branching first.
 
-TODO aj ine verzie ako r0-C, D, ... ziaden efekt/rovnake ako S
+Similar experiments were performed with the auxiliary vectors and matrices $B, C$ and $D$ with the same results -- enforcing branching order did not lead to better solving times.
 
 \subsubsection{Discussion}
 
-TODO prepisat koniec predoslej casti a dat to sem, + najaky kratky sumar	
-%A possible branch ordering would be based on the rounds of a hash function.
-%Given the reduced 20 rounds variant of SHA-1, we could first force the solver to assign values to all variables corresponding to variables in the $n$-th round of the compression function.
-%
-%By trying various orders we obtain the results shown in Figure \ref{fig:opt-branchorder-example-sha1}-branchorder-example-sha1}.
-%The numbers in the \emph{order} column refer to the rounds of the compression function.
-%For example \emph{20, 19} means that first all variables from the 20th round get assigned, then all variables from 19th round and then the original heuristic takes over.
-%
-%While the times are averages over multiple runs they are still quite small and susceptible to random noise.
-%However the number of conflicts is a more reliable measure and we can see interesting trends from this small example.
-%Forcing the SAT solver to work backwards (20, 19, 18) is much worse than the general heuristic.
-%On the other hand, starting with the first round leads to significant speed-up.
-%
-%\begin{figure}
-%\caption{Solving time and number of conflicts for 8-bit preimage with 32-bit message on reduced 20-rounds SHA-1 with various branching orders.}
-%\label{fig:opt-branchorder-example-sha1}
-%\begin{tabular}{l|c|c}
-%Order & Time [s] & Conflicts \\ \hline
-%--- & 0.96 & 9755 \\ \hline
-%20 & 0.94 & 9755 \\
-%20, 19 & 0.97 & 9755 \\
-%20, 19, 18 & 17.35 & 71197 \\ \hline
-%1 & 0.35 & 1062 \\
-%2 & 0.35 & 1062 \\
-%1, 2 & 0.33 & 1062 \\
-%1, 2, 3 & 0.29 & 927 \\
-%1, 2, 3, 4 & 0.28 & 185 \\
-%1, 4 & 0.24 & 119
-%\end{tabular}
-%\end{figure}
-%TODO nicer table, new numbers with averages
-%TODO rerun these numbers with more rounds? with more trials for better averages? and (!!!) with equal seed distributions (generate ~1k seeds, run each order with the same ones)
-%TODO proper systematic evaluation
-%TODO implement groups for branch ordering? might be slower due to complex selection...
+The fact that these branching order do not change the solving time significantly must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default \emph{MiniSat} heuristic is also picking them for branching first.
+The second case means that this optimization is unnecessary and that the default SAT solver heuristic is sufficient in this case.
