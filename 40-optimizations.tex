@@ -38,12 +38,6 @@ We evaluated the effectiveness of this optimization on preimage attacks on \emph
 We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
 The preimage bits were obtained by hashing random messages to ensure a solution would exist even for instances with reduced number of rounds.
 We repeated the experiment multiple times for a total of $5670$ samples for each variant.
-
-\begin{figure}
-\centering \includegraphics[width=.5\textwidth]{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
-\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using \emph{Espresso} minimization for rounds functions (red).}
-\label{fig:opt-sha1-cmp-espresso}
-\end{figure}
  
 Figure \ref{fig:opt-sha1-cmp-espresso} shows the mean running times for both instances without optimizations and for ones using \emph{Espresso} minimization.
 As we can see the effect of this optimization is quite small and the running times appear to be identical.
@@ -98,6 +92,25 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 %\subsection{Truth table minimization}
 %TODO ~1pgs + nejake porovnania velkosti a rychlosti
 
+\begin{figure*}	
+\centering \includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
+\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using \emph{Espresso} minimization for rounds functions (red).}
+\label{fig:opt-sha1-cmp-espresso}
+\end{figure*}
+
+\begin{figure*}
+\centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
+\caption{Violin plot showing the ratios distribution of solving time for the \emph{none} and {r0-S-x-y} strategies.}
+\label{fig:bo-ratio-time-none-r0sxy}
+\end{figure*}
+
+\begin{figure*}
+\centering \includegraphics{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}
+\caption{Violin plot showing the ratios distribution of number of conflicts for the \emph{none} and {r0-S-x-y} strategies.}
+\label{fig:bo-ratio-confl-none-r0sxy}
+\end{figure*}
+
+
 \subsection{Branching order}
 \label{sec:branching-order}
 %TODO nossum/soos mailing list cite; is it in text?; more references to literature
@@ -140,18 +153,6 @@ We compared the following branching order strategies:
 \textbf{\emph{r0-S-y-x}}: Same as previous one, but in row-major order.
 
 \textbf{\emph{rlast-S-x-y}} and \textbf{\emph{rlast-S-y-x-}}: Same as previous two, but the $S$ matrix from the last round is used instead.	
-
-\begin{figure}
-\centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
-\caption{Violin plot showing the distribution of time ratios.}
-\label{fig:bo-ratio-time-none-r0sxy}
-\end{figure}
-
-\begin{figure}
-\centering \includegraphics{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}
-\caption{Violin plot showing the distribution of number of conflict ratios.}
-\label{fig:bo-ratio-confl-none-r0sxy}
-\end{figure}
 
 The figures \ref{fig:bo-ratio-time-none-r0sxy} and \ref{fig:bo-ratio-confl-none-r0sxy} show \emph{violin plots} of the distribution of ratios of the solving time and the number of conflicts.
 Each \emph{violin} also show the mean, median and extreme values.
