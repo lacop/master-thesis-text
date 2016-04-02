@@ -44,9 +44,44 @@ With hash functions this can mean reversing the output for an \emph{preimage} at
 In our work we will focus specifically on hash functions, which we describe in more detail in the following section.
 
 \subsubsection{Hash functions}
-TODO ~0.5pgs
 %TODO copy from old text?
-%A \emph{hash function} is a function 
+A \emph{hash function} is designed to reduce a long input \emph{message} into a shorter, fixed-length \emph{digest} (short from \emph{message digest}, also called \emph{hash}).
+The computation in this direction is often designed to be fast and efficient.
+However, a \emph{cryptographic} hash function should further have the property that it is infeasible to compute it in the opposite direction -- that is, given a digest to find a\footnote{Not \emph{the} message, since there might be multiple input messages that have the same digest.} message.
+
+By infeasible (or hard) we mean that the computation should take time exponential to some parameters of the hash function and its input, and thus is not practical for sufficient input sizes.
+
+Formally, hash function $h$ is a function $h: X \to Y$ where $X$ is the (unbounded) set of input messages and $h(x) \in Y = \{0,1\}^n$ is an $n$-bit message digest.
+The properties which we require these functions to have are:
+
+\textbf{Preimage resistance:} Given a digest $d$ it is hard to find a message $m$ such that $h(m) = d$.
+
+\textbf{Second preimage resistance:} Given a message $m_1$ it is hard to find a message $m_2 \neq m_1$ such that $h(m_1) = h(m_2)$.
+
+\textbf{Collision resistance:} It is hard to find messages $m_1,m_2$ such that $h(m_1) = h(m_2)$ and $m_1 \neq m_2$.
+
+It is easy to see that when a hash function lacks one of these properties it also lacks all the following ones.
+
+Most modern hash functions have multiple rounds in which the state is modified using a \emph{round function}.
+The initial state is based on the input message (with some form of padding).
+The final state is then used to produce the digest.
+
+~\\
+
+We will briefly describe two hash functions on which we focus in our work and to whose internals we will be referring later.
+
+\textbf{SHA-1}, short for \emph{Secure Hash Algorithm} is a widely used hash function based on the \emph{Merkle-Damg\aa rd} construction with output digest size of $160$ bits.
+%TODO M-D cite
+%TODO cite standard
+The internal state consists of five $32$-bit words which are updated in $80$ rounds.
+
+\textbf{SHA-3} is a recently standardized hash function based on the \emph{Keccak} family that won the hash function competition.
+It is based on a \emph{sponge} construction which allows the output digest size to be variable.
+We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit state updated in $24$ rounds and produces a $512$-bit digest.
+%TODO cite standard
+
+The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
+Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
 
 \subsection{Encoding}
 The most important step when using SAT solvers for any problem is the encoding of the model to a suitable instance.
@@ -133,8 +168,7 @@ An in-depth analysis of \emph{SHA-1} preimage attacks was done in \cite{nossum20
 The instances were generated using a custom, hand-built 1000-line \emph{C++} program.
 The experiments investigated the speed of various SAT solvers, effects of preprocessing and simplifying the instance and various heuristics.
 
-Further related works can be found in the bibliography.
-
+%Further related works can be found in the bibliography.
 %TODO dalsie refs/tabulka? ~0.25pgs
 %TODO nice summary + large table + references
 
