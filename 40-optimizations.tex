@@ -159,21 +159,73 @@ Each \emph{violin} also show the mean, median and extreme values.
 
 From these plots we see that while the ratios for the number of conflict are mostly below 1 (meaning that the \emph{r0-S-x-y} strategy leads to fewer conflicts), the time ratios are often higher than 1.
 
-The \emph{Games-Howell} procedure confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 21$ at significance level $p < 0.001$.
-However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
+%> posthocTGH(y=confl[confl$rounds>12,]$time, x=confl[confl$rounds>12,]$label, method='games-howell')
+%              n means variances
+%none        480   731    330234
+%r0-S-x-y    480   250     51256
+%r0-S-y-x    480   250     51256
+%rlast-S-x-y 480   731    330234
+%rlast-S-y-x 480   731    330234
+%
+%                         t  df       p
+%none:r0-S-x-y           17 624 1.7e-10
+%none:r0-S-y-x           17 624 1.7e-10
+%none:rlast-S-x-y         0 958 1.0e+00
+%none:rlast-S-y-x         0 958 1.0e+00
+%r0-S-x-y:r0-S-y-x        0 958 1.0e+00
+%r0-S-x-y:rlast-S-x-y    17 624 1.7e-10
+%r0-S-x-y:rlast-S-y-x    17 624 1.7e-10
+%r0-S-y-x:rlast-S-x-y    17 624 1.7e-10
+%r0-S-y-x:rlast-S-y-x    17 624 1.7e-10
+%rlast-S-x-y:rlast-S-y-x  0 958 1.0e+00
+%> posthocTGH(y=time[time$rounds>12,]$time, x=time[time$rounds>12,]$label, method='games-howell')
+%              n means variances
+%none        480   7.8        35
+%r0-S-x-y    480   7.5        39
+%r0-S-y-x    480   7.5        38
+%rlast-S-x-y 480   7.8        36
+%rlast-S-y-x 480   7.8        35
+%
+%                            t  df    p
+%none:r0-S-x-y           0.647 956 0.97
+%none:r0-S-y-x           0.576 956 0.98
+%none:rlast-S-x-y        0.185 958 1.00
+%none:rlast-S-y-x        0.032 958 1.00
+%r0-S-x-y:r0-S-y-x       0.071 958 1.00
+%r0-S-x-y:rlast-S-x-y    0.826 956 0.92
+%r0-S-x-y:rlast-S-y-x    0.680 956 0.96
+%r0-S-y-x:rlast-S-x-y    0.755 957 0.94
+%r0-S-y-x:rlast-S-y-x    0.609 956 0.97
+%rlast-S-x-y:rlast-S-y-x 0.153 958 1.00
+\begin{figure*}
+\centering \begin{tabular}{lrr @{\hskip 1cm} lrrrr}
+\textbf{Strategy} & \textbf{Time} & \textbf{Conflicts} & \textbf{Strategy} & \multicolumn{2}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Conflicts}} \\
+& \multicolumn{2}{c}{\textbf{Mean}} & & \textbf{t} & \textbf{p} & \textbf{t} & \textbf{p} \\ \hline
+\emph{none} & $7.8$ & $731$ & \emph{r0-S-x-y} & $0.65$ & $0.97$ & $17$ & $<0.01$ \\
+& & & \emph{r0-S-y-x} & $0.58$ & $0.98$ & $17$ & $<0.01$ \\
+& & & \emph{rlast-S-x-y} & $0.18$ & $>0.99$ & $958$ & $>0.99$ \\
+& & & \emph{rlast-S-y-x} & $0.03$ & $>0.99$ & $958$ & $>0.99$ \\ \hline
+\emph{r0-S-x-y} & $7.5$ & $250$ & \emph{r0-S-y-x} & $0.07$ & $>0.99$ & $0$ & $<0.01$ \\	
+& & & \emph{rlast-S-x-y} & $0.83$ & $0.92$ & $17$ & $<0.01$ \\
+& & & \emph{rlast-S-y-x} & $0.68$ & $0.96$ & $17$ & $<0.01$ \\ \hline
+\emph{r0-S-y-x} & $7.5$ & $250$ & \emph{rlast-S-x-y} & $0.76$ & $0.94$ & $17$ & $<0.01$ \\
+& & & \emph{rlast-y-x} & $0.60$ & $0.97$ & $17$ & $<0.01$ \\ \hline
+\emph{r0-last-x-y} & $7.8$ & $731$ & \emph{rlast-S-y-x} & $0.15$ & $>0.99$ & $0$ & $>0.99$ \\ \hline
+\emph{r0-last-y-x} & $7.8$ & $731$ & & & & &  \\
+\end{tabular}
+\caption{Pairwise comparison of various branching order strategies using the \emph{Games-Howell} procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy.}
+\label{tbl:gh-sha3-bos}
+\end{figure*}
 
-TODO GH tabulka cas/konflikty pre rounds>12 (odstrani sum)
-TODO spomenut ze len pre rounds>12
+The \emph{Games-Howell} procedure (table \ref{tbl:gh-sha3-bos} confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
+However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
+Note that only samples for more than $12$ rounds were included to avoid the strong effect of randomness for instances that solve in very short time.
 
 The \emph{r0-S-y-x} strategy behaves the same as \emph{r0-S-x-y} -- the number of conflicts for every instance is identical and the differences in time are negligible.
-
-TODO preco?
-
 On the other hand the strategies starting with the last round's $S$ matrix lead to the same behavior as not providing any branch ordering at all (the \emph{none} strategy).
 This must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default \emph{MiniSat} heuristic is also picking them for branching first.
 
 TODO aj ine verzie ako r0-C, D, ... ziaden efekt/rovnake ako S
-
 
 \subsubsection{Discussion}
 
