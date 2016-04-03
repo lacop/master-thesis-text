@@ -54,8 +54,7 @@ Any $n$-ary expression can be wrapped using this function to replace the standar
 \end{figure*}
 
 First we evaluate the expression on all $2^n$ possible inputs to generate a truth table.
-It is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode the expression.
-%TODO espresso citation
+It is then processed using an external truth table minimization tool \emph{Espresso} \cite{rudell1986multiple}, which generates a list of clauses that can be used to encode the expression.
 When this expression is used anywhere in the model a node is created in the boolean circuit representation.
 It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
 
@@ -77,7 +76,6 @@ As we can see the effect of this optimization is quite small and the running tim
 %s1espr:s1none 1.6 8398 0.12
 
 Using the \emph{Games-Howell} post hoc test \cite{games1976pairwise} on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
-%TODO reference G-H
 
 \subsubsection{SHA-3 analysis} 
 We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits again came from randomly generated messages.
