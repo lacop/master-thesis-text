@@ -89,7 +89,7 @@ The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
 The most important step when using SAT solvers for any problem is the encoding of the model to a suitable instance.
 In case of cryptographic problems this previously (see section \ref{sec:related-work}) required significant effort of either generating the SAT instance by hand, or by first translating the model to a more suitable form and then using existing tools to generate the instance.
 
-In our work we created a library which automates large parts of this process.
+In our work we created a library \cite{papay2016code} which automates large parts of this process.
 This makes it easier, faster and less error-prone.
 To achieve this we made use of \emph{boolean circuit} representation to translate almost unmodified implementations of cryptographic primitives to SAT instances transparently.
 
