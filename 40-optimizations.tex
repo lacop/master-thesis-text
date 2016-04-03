@@ -53,7 +53,6 @@ Any $n$-ary expression can be wrapped using this function to replace the standar
 \label{tbl:gh-sha3-opts}
 \end{figure*}
 
-
 To achieve this we first evaluate the expression on all $2^n$ possible inputs to generate a truth table.
 This is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode this truth table.
 %TODO espresso citation
@@ -91,7 +90,7 @@ The second optimization was in the $\theta$ step, where the $C$ vector is filled
 Without optimization this leads to four extra variables and 16 extra clauses.
 Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
 
-Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in table \ref{tbl:gh-sha3-opts}.
+Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in figure \ref{tbl:gh-sha3-opts}.
 
 We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.21$) at significance level of $p < 0.01$.
 Thus the default behavior is more efficient.
@@ -228,7 +227,7 @@ From these plots we see that while the ratios for the number of conflict are mos
 \label{tbl:gh-sha3-bos}
 \end{figure*}
 
-The \emph{Games-Howell} procedure (table \ref{tbl:gh-sha3-bos} confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
+The \emph{Games-Howell} procedure (figure \ref{tbl:gh-sha3-bos} confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
 However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
 Note that once again only samples for more than $12$ rounds were included to avoid the strong effect of randomness for instances that solve in very short time.
 
