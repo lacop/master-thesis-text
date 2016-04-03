@@ -76,7 +76,7 @@ As we can see the effect of this optimization is quite small and the running tim
 %                t   df    p
 %s1espr:s1none 1.6 8398 0.12
 
-Using the \emph{Games-Howell} post hoc test on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
+Using the \emph{Games-Howell} post hoc test \cite{games1976pairwise} on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
 %TODO reference G-H
 
 \subsubsection{SHA-3 analysis} 
@@ -144,7 +144,7 @@ A line in the form
 When multiple such lines are provided the order of branching is the same as the order of these lines in the input file.
 Using this we can provide a list of any number of variables in the order we want them to be picked for assignment.
 
-We modified the popular \emph{MiniSat} solver to be able to parse and store this list.
+We modified the popular \emph{MiniSat} solver \cite{een2005minisat} to be able to parse and store this list.
 Then we modified the selection of next branching candidate to first pick all these variables in the specified order.
 Once all have been assigned we fall back to the standard branching order algorithm.
 
