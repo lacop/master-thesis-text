@@ -16,7 +16,7 @@ Examples of such uses in practice include formal program verification, model che
 \subsubsection{Interfacing with SAT solvers}
 \label{sec:dimacs}
 Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} CNF} format which we use.
-Later in section \ref{sec:branching-order-impl} we will describe extending this format for optimization purposes.
+Later in section \ref{sec:branching-order-impl} we will describe augmenting this format for optimization purposes.
 
 The file begins with a line in form
 
@@ -80,11 +80,11 @@ The internal state consists of five $32$-bit words which are updated in $80$ rou
 
 \textbf{SHA-3} is a recently standardized hash function based on the \emph{Keccak} family that won the selection competition against fifty other candidates.
 It is based on a \emph{sponge} construction which allows the output digest size to be variable.
-We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit state updated in $24$ rounds and produces a $512$-bit digest.
-%TODO cite standard
 
+We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit state updated in $24$ rounds (divided into five steps called $\theta, \rho, \pi, \chi$ and $\iota$) and produces a $512$-bit digest.
+%TODO cite standard
 The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
-Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
+%Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
 
 \subsection{Encoding}
 The most important step when using SAT solvers for any problem is the encoding of the model to a suitable instance.

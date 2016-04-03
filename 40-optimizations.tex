@@ -53,8 +53,8 @@ Any $n$-ary expression can be wrapped using this function to replace the standar
 \label{tbl:gh-sha3-opts}
 \end{figure*}
 
-To achieve this we first evaluate the expression on all $2^n$ possible inputs to generate a truth table.
-This is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode this truth table.
+First we evaluate the expression on all $2^n$ possible inputs to generate a truth table.
+It is then processed using an external truth table minimization tool \emph{Espresso}, which generates a list of clauses that can be used to encode the expression.
 %TODO espresso citation
 When this expression is used anywhere in the model a node is created in the boolean circuit representation.
 It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
