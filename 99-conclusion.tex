@@ -11,6 +11,6 @@ We added an option to optimize specific expression to our library and evaluated 
 While we found that the optimized instances can lead to fewer conflicts the solving time was not improved in any statistically significant way.
 This leads us to conclude that these optimizations are not required and therefore the minimal changes to existing implementations mentioned above are sufficient to create a reasonable instance.
 
-We then modified the \emph{MiniSat} solver to see if overriding the default branching order heuristic with the help of additional information about the problem structure would lead to speed improvements.
+We then modified the MiniSat solver to see if overriding the default branching order heuristic with the help of additional information about the problem structure would lead to speed improvements.
 However, same as with previous optimizations, we found that only the number of conflicts was reduced in this way.
 From this we conclude that the existing heuristics employed by modern solvers behave reasonably on these instances and therefore using an off-the-shelf solver is sufficient.

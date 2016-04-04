@@ -40,11 +40,11 @@ This makes it easy to extract for example the colliding messages out of the mode
 To achieve the goals stated in previous section we take advantage of a technique called \emph{operator overloading}.
 This is a feature present in many programming languages.
 For our library we have decided to use the \emph{Python} language which also supports it.
-\emph{Python} has the additional advantage that it is very popular and therefore has implementations of virtually all commonly used cryptographic primitives.
+Python has the additional advantage that it is very popular and therefore has implementations of virtually all commonly used cryptographic primitives.
 
 \subsubsection{Operator overloading}
 \label{sec:operator-overloading}
-As the name suggests, \emph{operator overloading} allows us to overload (override) existing behavior of operators in some programming language.
+As the name suggests, operator overloading allows us to overload (override) existing behavior of operators in some programming language.
 While the feature is only \emph{syntactic sugar} (which means it does not allow us to do anything more than would be possible without it; it just simplifies the syntax) it not only greatly increases the readability of the code, but also allows us to reuse existing implementations as we will show.
 
 The reason this feature is useful in our library is that we can change the type of some variables in existing code without having to change anything else.
@@ -53,7 +53,7 @@ Without operator overloading this could would not be possible, since operators s
 With operator overloading however we can provide these definitions ourselves.
 
 Our library provides a new data type \emph{BitVector} that supports all the operations as the built-in integer type.
-Since \emph{Python} uses \emph{dynamic typing} it is sufficient to change the types of the constants used by the cryptographic primitive implementation.
+Since Python uses \emph{dynamic typing} it is sufficient to change the types of the constants used by the cryptographic primitive implementation.
 All other variables are a result of operations on these constants and will therefore have the proper type.
 
 \subsubsection{Boolean circuit creation}
@@ -63,7 +63,7 @@ More specifically, each time an operation is applied to one or more operands (va
 %TODO figure of boolean circuit here
 
 \subsubsection{Instance generation}
-Once we have the boolean circuit for a model we can then take this representation and output a SAT instance using the \emph{Tseitin transform} described in section \ref{sec:tseitin}.
+Once we have the boolean circuit for a model we can then take this representation and output a SAT instance using the Tseitin transformation described in section \ref{sec:tseitin}.
 
 The order of clauses in the output is irrelevant, however since the circuit forms a DAG we can process it in topological order.
 For every node (representing an operator applied to one or more operands) we first assign numbers to all required variables.

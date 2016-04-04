@@ -49,7 +49,7 @@ Any $n$-ary expression can be wrapped using this function to replace the standar
 \cmark & \xmark & $7.4$ & \cmark & \cmark & $2.56$ & $0.05$ \\ \hline
 \cmark & \cmark & $8.2$ & \\
 \end{tabular}
-\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the \emph{Games-Howell} procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy.}
+\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy.}
 \label{tbl:gh-sha3-opts}
 \end{figure*}
 
@@ -86,9 +86,9 @@ The first optimization was minimizing the expression $x \oplus (\overline{y} \la
 
 The second optimization was in the $\theta$ step, where the $C$ vector is filled using an exclusive or of five different values.
 Without optimization this leads to four extra variables and 16 extra clauses.
-Using the \emph{Espresso} minimization will lead to 32 clauses but only one extra variable.
+Using the Espresso minimization will lead to 32 clauses but only one extra variable.
 
-Using the \emph{Games-Howell} procedure again we obtain the pairwise comparison shown in figure \ref{tbl:gh-sha3-opts}.
+Using the Games-Howell procedure again we obtain the pairwise comparison shown in figure \ref{tbl:gh-sha3-opts}.
 
 We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.21$) at significance level of $p < 0.01$.
 Thus the default behavior is more efficient.
@@ -103,19 +103,19 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 
 \begin{figure*}	
 \centering \includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
-\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using \emph{Espresso} minimization for rounds functions (red).}
+\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using Espresso minimization for rounds functions (red).}
 \label{fig:opt-sha1-cmp-espresso}
 \end{figure*}
 
 \begin{figure*}
 \centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
-\caption{Violin plot showing the ratios distribution of solving time for the \emph{none} and {r0-S-x-y} strategies.}
+\caption{Violin plot showing the ratios distribution of solving time for the \emph{none} and \emph{r0-S-x-y} strategies.}
 \label{fig:bo-ratio-time-none-r0sxy}
 \end{figure*}
 
 \begin{figure*}
 \centering \includegraphics{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}
-\caption{Violin plot showing the ratios distribution of number of conflicts for the \emph{none} and {r0-S-x-y} strategies.}
+\caption{Violin plot showing the ratios distribution of number of conflicts for the \emph{none} and \emph{r0-S-x-y} strategies.}
 \label{fig:bo-ratio-confl-none-r0sxy}
 \end{figure*}
 
@@ -154,7 +154,7 @@ For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference pre
 For every number of rounds 10 different instances were generated and each was solved 10 times, for a total of 100 samples per round per strategy.
 We compared the following branching order strategies:
 
-\textbf{\emph{none}}: No branching order was specified. This is the default unmodified \emph{MiniSat} behavior.
+\textbf{\emph{none}}: No branching order was specified. This is the default unmodified MiniSat behavior.
 
 \textbf{\emph{r0-S-x-y}}: The $S$ matrix from the first round is branched on first, in column-major order.
 
@@ -221,11 +221,11 @@ From these plots we see that while the ratios for the number of conflict are mos
 \emph{r0-last-x-y} & $7.8$ & $731$ & \emph{rlast-S-y-x} & $0.15$ & $>0.99$ & $0$ & $>0.99$ \\ \hline
 \emph{r0-last-y-x} & $7.8$ & $731$ & & & & &  \\
 \end{tabular}
-\caption{Pairwise comparison of various branching order strategies for \emph{SHA-3-512} using the \emph{Games-Howell} procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy.}
+\caption{Pairwise comparison of various branching order strategies for \emph{SHA-3-512} using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy.}
 \label{tbl:gh-sha3-bos}
 \end{figure*}
 
-The \emph{Games-Howell} procedure (figure \ref{tbl:gh-sha3-bos} confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
+The Games-Howell procedure (figure \ref{tbl:gh-sha3-bos}) confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
 However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
 Note that once again only samples for more than $12$ rounds were included to avoid the strong effect of randomness for instances that solve in very short time.
 
@@ -236,5 +236,5 @@ Similar experiments were performed with the auxiliary vectors and matrices $B, C
 
 \subsubsection{Discussion}
 
-The fact that these branching order do not change the solving time significantly must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default \emph{MiniSat} heuristic is also picking them for branching first.
+The fact that these branching order do not change the solving time significantly must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default MiniSat heuristic is also picking them for branching first.
 The second case means that this optimization is unnecessary and that the default SAT solver heuristic is sufficient in this case.
