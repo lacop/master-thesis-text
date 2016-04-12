@@ -1,5 +1,5 @@
 %\chapter{Modeling library}
-\section{Modeling library}
+\chapter{Modeling library}
 %TODO after SVK change section to chapters, subsections to sections etc (commands and text references)
 
 The works mentioned in previous section created their models for various cryptographic problems mostly by hand.
@@ -12,7 +12,7 @@ In this section we will state our goals for this library, describe its design an
 We will also show examples of its use.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Goals}
+\section{Goals}
 The main goals of our library are as follows:
 
 ~\\
@@ -36,13 +36,13 @@ This makes it easy to extract for example the colliding messages out of the mode
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Our approach}
+\section{Our approach}
 To achieve the goals stated in previous section we take advantage of a technique called \emph{operator overloading}.
 This is a feature present in many programming languages.
 For our library we have decided to use the \emph{Python} language which also supports it.
 Python has the additional advantage that it is very popular and therefore has implementations of virtually all commonly used cryptographic primitives.
 
-\subsubsection{Operator overloading}
+\subsection{Operator overloading}
 \label{sec:operator-overloading}
 As the name suggests, operator overloading allows us to overload (override) existing behavior of operators in some programming language.
 While the feature is only \emph{syntactic sugar} (which means it does not allow us to do anything more than would be possible without it; it just simplifies the syntax) it not only greatly increases the readability of the code, but also allows us to reuse existing implementations as we will show.
@@ -56,13 +56,13 @@ Our library provides a new data type \emph{BitVector} that supports all the oper
 Since Python uses \emph{dynamic typing} it is sufficient to change the types of the constants used by the cryptographic primitive implementation.
 All other variables are a result of operations on these constants and will therefore have the proper type.
 
-\subsubsection{Boolean circuit creation}
+\subsection{Boolean circuit creation}
 The difference between the built-in integer type and \emph{BitVector} is that while the integer variable only holds one given value, our type instead stores how its value can be obtained from other variables.
 
 More specifically, each time an operation is applied to one or more operands (variables of type \emph{BitVector} or constants) the result is another instance of type \emph{BitVector} which stores these operands.  That means that the output of some cryptographic primitive is not a single value but instead a boolean circuit representation. The circuit will form a directed acyclic graph.
 %TODO figure of boolean circuit here
 
-\subsubsection{Instance generation}
+\subsection{Instance generation}
 Once we have the boolean circuit for a model we can then take this representation and output a SAT instance using the Tseitin transformation described in section \ref{sec:tseitin}.
 
 The order of clauses in the output is irrelevant, however since the circuit forms a DAG we can process it in topological order.
@@ -80,7 +80,7 @@ Once all variables have been assigned integer values we pass through all the nod
 This time we generate the clauses which model the operator behavior.
 The number of clauses required depends on the operator and the bit width of the \emph{BitVector} node.
 
-\subsubsection{Solving and working with solution}
+\subsection{Solving and working with solution}
 After the model has been turned into an instance we can run a SAT solver on this generated list of clauses and wait for it to terminate.
 If the instance is satisfiable the solver will find a satisfying truth assignment and output it as truth values for all the variables.
 The library will load, parse and store this data for later use.
