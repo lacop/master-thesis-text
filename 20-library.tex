@@ -87,3 +87,75 @@ The library will load, parse and store this data for later use.
 
 We can then easily query any of the \emph{BitVector} variables for its value.
 The mapping from variables to integer labels will be used to find the appropriate assignment and to reconstruct the value of the node.
+
+\section{Using the library}
+We will demonstrate the use of this library on two examples.
+The first one is very simple and shows the entire process from start to finish.
+The second example shows a real-world use case -- modifying existing \emph{SHA-1} implementation to use our library for instance generation.
+We compare this modified implementation to a hand-crafted one from a previous work.
+
+\subsection{Simple example}
+Suppose we wish to find solutions to the boolean equation $X = A \land (B \oplus C)$.
+We begin with importing the modeling library and defining the input variables $A$,$B$ and $C$ as $1$-bit vectors:
+%\begin{figure}[H]
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+from instance import *
+A, B, C = BitVector(1), BitVector(1), BitVector(1)
+\end{minted}
+
+Next, we can write the expression in the same way as we normally would.
+The resulting variable $X$ will also be of type \emph{BitVector} and will store the boolean circuit representing this expression:
+\begin{minted}[linenos,
+			   firstnumber=3,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+X = A & (B ^ C)
+\end{minted}
+
+Now we can create a new instance, generate it using the variables we are interested in and solve it using any SAT solver using the \emph{DIMACS} standard.
+Afterwards the satisfying assignment is easily accessible through the variables.
+In this case we will simply print it out:
+
+\begin{minted}[linenos,
+               firstnumber=4,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+instance = Instance()
+instance.emit([X])
+instance.solve(['minisat'])
+
+print([q.getValuation(instance) for q in [A, B, C, X]])
+\end{minted}
+
+The output might look like \texttt{[[False], [False], [False], [False]]}, which is indeed a valid solution to our equation.
+However, suppose we wish the result $X$ to be true.
+We can add this additional constraint by setting
+
+\begin{minted}[linenos,
+               firstnumber=4,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+X.bits = [True]
+\end{minted}
+
+before generating and solving the instance.
+Now we obtain the output \texttt{[[True], [False], [True], [True]]} which is another valid solution with the additional property that the value of $X$ is true.
+
+The entire program is less than ten lines long and very straightforward.
+We will use the same two concepts -- replacing input variables with \emph{BitVector} and adding additional constraints -- in the next example.
+
+%\caption{a}
+%\end{figure}
+% - simple example
+% - sha1 implementation
+%   - compare to nossum
+%     - code size/...
+%     - generating time?
+%     - solving time -> in experiments chapter?
+%     - instance size (clauses/vars)
