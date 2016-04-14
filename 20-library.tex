@@ -150,6 +150,102 @@ Now we obtain the output \texttt{[[True], [False], [True], [True]]} which is ano
 The entire program is less than ten lines long and very straightforward.
 We will use the same two concepts -- replacing input variables with \emph{BitVector} and adding additional constraints -- in the next example.
 
+\subsection{SHA-1 example}
+We begin with a standard \emph{SHA-1} implementation based on ones available online and extended to support reduced instances.
+Here we show the most important parts of this code:
+
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+# Round functions and constants
+fs = [lambda a, b, c, d, e: (b & c) | (~b & d),
+      lambda a, b, c, d, e: b ^ c ^ d,
+      lambda a, b, c, d, e: (b & c) | (b & d) | (c & d),
+      lambda a, b, c, d, e: b ^ c ^ d]
+K = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6]
+
+def sha1(message, rounds = 80):
+    # Initialization
+    h0, h1, h2, h3, h4 = 0x67452301, ...,  0xC3D2E1F0
+    # (omitted) Message padding
+    for pos in range(0, len(message), 64):
+        # (omitted) Prepare message chunk W
+        A, B, C, D, E = h0, h1, h2, h3, h4
+        for i in range(rounds):
+            F = fs[i//20](A, B, C, D, E)
+            k = K[i//20]
+
+            T = (leftrotate(A, 5) + F + E + k + W[i]) & 0xFFFFFFFF
+            A, B, C, D, E = T, A, leftrotate(B, 30), C, D
+        h0 = (h0 + A) & 0xFFFFFFFF
+        # ...        
+        h4 = (h4 + E) & 0xFFFFFFFF
+\end{minted}
+
+To modify this code to use our library and produce a SAT instance we need to perform only a few small changes.
+First of all, we need to convert all constants to \emph{BitVector} objects of the appropriate size:
+
+% Many spaces to overflow # outside of document...
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               texcomments,
+               firstnumber=6,
+               framesep=2mm]{python}
+K = [intToVector(x) for x in [0x5A827999, ...]]                                 #\setcounter{FancyVerbLine}{9}
+h0, h1, h2, h3, h4 = [intToVector(x) for x in [0x67452301, ...]]
+\end{minted}
+
+Next we replace the \texttt{leftrotate} function with the \emph{CyclicLeftShift} provided by our library\footnote{Since Python does not provide an operator for cyclic left shift we can't use operator overloading in this case}.
+Since addition on $32$-bit \emph{BitVector} objects is automatically done modulo $2^{32}$ we can remove the unnecessary \emph{and mask}:
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               firstnumber=15,
+               framesep=2mm]{python}
+    for i in range(rounds):
+        F = fs[i//20](A, B, C, D, E)
+        k = K[i//20]
+
+        T = CyclicLeftShift(A, 5) + F + E + k + Mvec[i]
+        A, B, C, D, E = T, A, CyclicLeftShift(B, 30), C, D
+    h0, h1, h2, h3, h4 = h0+A, h1+B, h2+C, h3+D, h4+E
+\end{minted}
+
+As we can see the changes required are minimal and trivial to perform.
+For brevity we have omitted details such as message padding -- the full source code can be found in the attachment \cite{papay2016code}.
+It is about 80 lines long and includes additional constraints on the output bits to find (partial) preimages.
+After obtaining a solution the message is extracted and hashed using a reference implementation to ensure its validity.
+
+%\subsubsection{Comparison to existing work}
+%In \cite{nossum2012sat} a custom 
+%TODO compare? ~80 lines vs ~800 lines... also compare instance sizes/solving times
+
+\section{Hash function toolkit}
+In addition to the modeling library we also provide a simple command line interface for generating custom instances called \emph{hashtoolkit}.
+It allows us to specify the hash function, number of rounds and input message length.
+Additionally the output digest bits can individually be set to either true, false or \emph{r} -- the same as a randomly generated reference digest.
+
+In this example we find a $10$-round $64$-bit preimage on \emph{SHA-1}, where the first eight bits are equal to a reference message and next eight bits are equal to the hexadecimal byte $0f$:
+
+\begin{minted}[frame=lines,
+               framesep=2mm]{shell-session}
+$ python3 hashtoolkit.py -h sha1 -l 64 -r 10 \
+  -o 'rrrrrrrr00001111' -s 'minisat'
+...
+SATISFIABLE
+Reference message: b'\x06)\xeaVqz\xe1\x8a'
+Reference digest: 44c79c8b97df9297a4f551b3d14ec9aafe296a32
+
+Message length 64 bits
+Message bytes: b'NQ\xdbd\x8a\x06\x98\xde' rounds:  10
+Message digest:   440f7115cc0483f042885b32247fe5eab998a8b4
+\end{minted}
+
+More details about this tool and usage instructions can be found in the attachment.
+
+
 %\caption{a}
 %\end{figure}
 % - simple example
