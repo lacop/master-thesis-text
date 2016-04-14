@@ -46,7 +46,7 @@ The \emph{implication graph} is a directed graph in which vertices are variables
 These will be marked as either \emph{decision} or \emph{forced}.
 
 At first we start with an empty implication graph and execute the DPLL algorithm.
-Every time we make an arbitrary decision (the recursive step in the algorithm) we will store add a decision vertex representing this variable and the assignment we have chosen into the graph.
+Every time we make an arbitrary decision (the recursive step in the algorithm) we will add a decision vertex representing this variable and the assignment we have chosen into the graph.
 Every time either of the two rules of the DPLL algorithm forces some assignment of a variable we will add a forced vertex into the graph, with edges from every vertex that is a part of this forced choice.
 
 For example, with clause $(x \lor y \lor z)$ and with partial assignment $x=0, y=0$ the unit propagation rule will force the assignment of $z=1$.
@@ -184,8 +184,8 @@ We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit 
 The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
 %Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
 
-We will describe the step $\theta$ and $\chi$ in little more detail since we will be referring to them later in section \ref{sec:sha3-espresso}.
-In the $\theta$ steps an auxiliary array $C$ is filled as follows:
+We will describe the steps $\theta$ and $\chi$ in little more detail since we will be referring to them later in section \ref{sec:sha3-espresso}.
+In the $\theta$ step an auxiliary array $C$ is filled as follows:
 \[
 C_i = S_{i,0} \oplus S_{i,1} \oplus S_{i,2} \oplus S_{i,3} \oplus S_{i,4} ~~~ (0 \le i < 5)
 \]
@@ -252,7 +252,7 @@ Other binary gates such as \emph{NAND} can be encoded similarly.
 In case of multiple inputs we can either extend this encoding or replace the $n$-ary gates with multiple binary ones.
 %However, the \emph{XOR} gate will have number of clauses exponential in the number of variables.
 
-This encoding produces formula with linear number of variables and linear length with respect to the size of the boolean circuit, if we limit the it to unary and binary gates.
+This encoding produces formula with linear number of variables and linear length with respect to the size of the boolean circuit, if we limit it to unary and binary gates.
 
 \subsection{Arithmetic gates}
 Most cryptographic algorithms make heavy use of arithmetic operations, such as modular addition.
