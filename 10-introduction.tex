@@ -184,6 +184,16 @@ We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit 
 The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
 %Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
 
+We will describe the step $\theta$ and $\chi$ in little more detail since we will be referring to them later in section \ref{sec:sha3-espresso}.
+In the $\theta$ steps an auxiliary array $C$ is filled as follows:
+\[
+C_i = S_{i,0} \oplus S_{i,1} \oplus S_{i,2} \oplus S_{i,3} \oplus S_{i,4} ~~~ (0 \le i < 5)
+\]
+This is then used, along with two additional arrays $B$ and $D$ to compute the new values of the state $S$ in the $\chi$ step:
+\[
+A_{i,j} = B_{i,j} \oplus (\overline{B_{i+1,j}} \land B_{i+2,j}) ~~~ (0 \le i,j < 5)
+\]
+
 The most important difference compared to SHA-1 is that not the whole state is used for output.
 Instead it is divided into two parts: the $576$-bit \emph{bitrate} and $1024$-bit \emph{capacity}, and only the bitrate part is used for the output while the capacity part stays hidden.
 

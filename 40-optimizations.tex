@@ -78,6 +78,7 @@ As we can see the effect of this optimization is quite small and the running tim
 Using the \emph{Games-Howell} post hoc test \cite{games1976pairwise} on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
 
 \subsection{SHA-3 analysis} 
+\label{sec:sha3-espresso}
 We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits again came from randomly generated messages.
 We considered two possible optimizations in the round function and tested four variants -- all combinations of turning on or off these two optimizations.
 A total of $2000$ samples was collected for each variant.
