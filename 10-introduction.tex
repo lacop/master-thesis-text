@@ -127,6 +127,17 @@ We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit 
 The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
 %Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
 
+The most important difference compared to SHA-1 is that not the whole state is used for output.
+Instead it is divided into two parts: the $576$-bit \emph{bitrate} and $1024$-bit \emph{capacity}, and only the bitrate part is used for the output while the capacity part stays hidden.
+
+The sponge construction then works in two phases -- \emph{absorbing} and \emph{squeezing}.
+During absorbing, chunks of the padded input message are xored with the state and the $24$ rounds are performed until the message is fully processed.
+Afterwards the bitrate part of the state is used for the output digest.
+If it is not long enough another series of $24$ rounds is performed on the whole state and the resulting bitrate part is appended to the digest and so on until the desired length is reached.
+
+This flexible design allows arbitrary output digest sizes for specific applications.
+It also makes reversing the process harder, since the entire output state is not known.
+
 \section{Encoding}
 The most important step when using SAT solvers for any problem is the encoding of the model to a suitable instance.
 In case of cryptographic problems this previously (see section \ref{sec:related-work}) required significant effort of either generating the SAT instance by hand, or by first translating the model to a more suitable form and then using existing tools to generate the instance.
