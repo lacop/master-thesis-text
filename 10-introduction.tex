@@ -13,6 +13,63 @@ By modeling a decision problem as a SAT instance we can take advantage of the ad
 Examples of such uses in practice include formal program verification, model checking or even routing of connections in microchips.
 %TODO refs for use cases
 
+\subsection{Implementation}
+Since SAT is an $NP$-complete language and assuming $P \neq NP$ we can not in general do better than an exponential time algorithm, which tries every possible boolean truth assignment.
+To remember which assignments have been tried and which have not we can implement this algorithm as a recursive backtracking, where for every input variable we try in turn both possible values.
+This will only require linear memory to implement.
+
+While we can't improve this algorithm asymptotically for the worst case we can still improve on it significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a partial assignment that can not be extended into any satisfying one.
+
+\subsubsection{DPLL algorithm}
+First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \citep{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by applying two rules at each step:
+
+\begin{description}
+\item[Unit propagation] \hfill \\
+We will call a clause a \emph{unit} if it only contains one unassigned literal.
+If the clause is already satisfied we can ignore it during further search.
+Otherwise it can only be satisfied by assigning the necessary value to the remaining literal.
+This means there will be no branching for this literal and thus the search time will be reduced by avoiding the obviously wrong choice.
+
+\item[Pure literal elimination] \hfill \\
+We will call a variable \emph{pure} if it only occurs in the formula with a single polarity (that is, always negated or always non-negated).
+All pure literals can be assigned the required value to make all clauses containing them true and these clauses can then also be ignored during further search.
+\end{description}
+
+These two simple rules will help to reduce the search space the algorithm has to look through and thus reduce the total running time.
+
+\subsubsection{Conflict-Driven Clause Learning}
+It can happen that after some partial assignment of variables there is already a conflict and it is not possible to extend this assignment to a satisfying one.
+However, the DPLL algorithm will continue to explore the entire search subspace.
+With \emph{conflict-driven clause learning} (CDCL, \citep{bayardo1997using,marques1999grasp}) we can avoid this by the use of \emph{implication graph} and \emph{learnt clauses}.
+
+The \emph{implication graph} is a directed graph in which vertices are variables with their assignment.
+These will be marked as either \emph{decision} or \emph{forced}.
+
+At first we start with an empty implication graph and execute the DPLL algorithm.
+Every time we make an arbitrary decision (the recursive step in the algorithm) we will store add a decision vertex representing this variable and the assignment we have chosen into the graph.
+Every time either of the two rules of the DPLL algorithm forces some assignment of a variable we will add a forced vertex into the graph, with edges from every vertex that is a part of this forced choice.
+
+For example, with clause $(x \lor y \lor z)$ and with partial assignment $x=0, y=0$ the unit propagation rule will force the assignment of $z=1$.
+We will add this as a forced vertex, with edges from both $x$ and $y$.
+
+When we add an vertex to the graph for some variable but this variable is already present with the opposite assignment we have found a conflict.
+Now comes the part of CDCL which speeds up this search -- we will find all the decision vertices (variables) that are responsible for this conflict.
+Let us call them $x_1, \dots, x_k$ with assignments $v_1, \dots, v_k$.
+From this we can build a \emph{learnt clause} $L$:
+\begin{align*}
+(x_1 = v_1 \land \dots \land x_k = v_k) &\Rightarrow \bot \\
+\overline{\bot} &\Rightarrow \overline{(x_1 = v_1 \land \dots \land x_k = v_k)} \\
+\top &\Rightarrow (x_1 = \overline{v_1} \lor \dots \lor x_k = \overline{v_k}) \\
+L &:= (x_1^{(\overline{v_1})} \lor \dots \lor x_k^{(\overline{v_k})})
+\end{align*}
+
+The notation $x^{(v)}$ is used to represent $x$ if $v=1$ and $\overline{x}$ if $v=0$. Symbols $\top$ and $\bot$ represent tautology and contradiction, respectively.
+
+We can now add this learnt clause $L$ into the list of clauses we have to satisfy, since not satisfying it is guaranteed to lead to a conflict.
+In the next step of the backtracking algorithm we will not return only a single level up from the recursion (that is, removing the assigning of just a single variable) but all the way back until we reach the first point where one of the conflicting variables was assigned a value.
+
+This method is used in all modern SAT solvers and improves their performance significantly over the naive algorithm.
+
 \subsection{Interfacing with SAT solvers}
 \label{sec:dimacs}
 Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} CNF} format which we use.
