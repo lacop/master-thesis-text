@@ -2,7 +2,7 @@
 
 In this chapter we describe various experiments that were performed to evaluate the effectiveness and necessity of optimizations described in the previous chapter.
 These experiments compare the time required to solve particular instances across two or more variants.
-Each variant can either a modification to the instance itself (by changing the way it is generated) or the instance can be unchanged but rather the behavior of the SAT solver itself is modified.
+Each variant can be either a modification to the instance itself (by changing the way it is generated), or the instance can be unchanged but rather the behavior of the SAT solver itself is modified.
 
 \section{Methodology}
 Since the running time of a SAT solver is not deterministic it is not enough to simply perform a single run for every instance.
@@ -46,7 +46,7 @@ Instead we use the $BC_a$ bootstrap procedure \cite{diciccio1996bootstrap} for c
 
 ~\\
 
-To evaluate the  of some optimization on the running time we need a statistical procedure to decide if there is a significant difference in the running time distribution or of all differences can be attributed to chance.
+To evaluate the effect of some optimization on the running time we need a statistical procedure to decide if there is a significant difference in the running time distribution or if all differences can be attributed to chance.
 Since experiments can have varying parameters (such as number of rounds) and for each parameter combination we run multiple independent samples a pairwise sample comparison is required.
 There are several such procedures, such as the Student's t-test or the Tukey's test.
 
