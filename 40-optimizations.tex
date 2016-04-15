@@ -8,6 +8,7 @@ In this chapter we will describe several optimizations that we implemented and e
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
 
 \section{Expression encoding}
+\label{sec:expression-encoding}
 The automatic and transparent conversion from unmodified source code to SAT instance via operator overloading and boolean circuits may lead to suboptimal encoding of various expressions.
 For example, the \emph{choice} round function in \emph{SHA-1}
 \[

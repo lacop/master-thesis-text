@@ -42,7 +42,7 @@ By performing more and more repetitions and obtaining more samples we can reduce
 It is important to note that standard techniques for computing means and confidence intervals require either normal distribution of the data, or at least some knowledge about the distribution.
 With SAT solving times we have neither -- although the solving times for some cryptographic instances have been shown \cite{bard2007efficient} to have a log-normal distribution we would still have to verify this assumption for our data sets.
 
-Instead we will use the $BC_a$ bootstrap procedure \cite{diciccio1996bootstrap} for calculating means and confidence intervals that does not require any knowledge or assumptions about the distribution.
+Instead we use the $BC_a$ bootstrap procedure \cite{diciccio1996bootstrap} for calculating means and confidence intervals that does not require any knowledge or assumptions about the distribution.
 
 ~\\
 
@@ -53,9 +53,15 @@ There are several such procedures, such as the Student's t-test or the Tukey's t
 However, both of those make assumptions about the underlying distributions which are not met in our case.
 For that reason we use the rather less known \emph{Games-Howell} procedure \cite{games1976pairwise} which does not require these assumptions.
 
+~\\
+
+Both used procedures are implemented by the \emph{R} statistical computing language \cite{rteam2013}.
+Availability of implementations was also a factor when deciding on methodology -- using a tested implementation greatly reduces the chance of errors.
 
 \section{Expression encoding evaluation}
-...
+In this section we discuss the effect of expression encoding optimizations described in section \ref{sec:expression-encoding}.
+We performed this experiment on two hash functions, the \emph{SHA-1} and \emph{SHA-3}.
+
 \subsection{SHA-1 analysis}
 We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
 We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
@@ -150,7 +156,8 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 \end{figure*}
 
 \section{Branching order evaluation}
-...
+For branching order optimization described in section \ref{sec:branching-order} we used the \emph{SHA-3} hash function for evaluation.
+
 \subsection{SHA-3 analysis}
 For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $0$ to $24$ (full SHA-3).
 For every number of rounds 10 different instances were generated and each was solved 10 times, for a total of 100 samples per round per strategy.
