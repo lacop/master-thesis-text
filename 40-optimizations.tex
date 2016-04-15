@@ -14,10 +14,47 @@ For example, the \emph{choice} round function in \emph{SHA-1}
 \[
 Ch(x, y, z) = (x \land y) \oplus (\overline{x} \land z)
 \]
-leads to an encoding with three variables and ten clauses (three clauses for each \emph{and} gate and four for the \emph{xor} gate) if we apply the Tseitin transformation directly.
-A better encoding using just six clauses and one variable is shown in \cite{nossum2012sat}.
-In fact, it is possible to encode this expression with just four clauses.
-%TODO insert the encodings to demonstrate?
+leads to an encoding with three variables and ten clauses (three clauses for each \emph{and} gate and four for the \emph{xor} gate) if we apply the Tseitin transformation directly:
+
+% Naive Tseitin
+% 1x 2y 3leftand 4notx 5z 6rightand 7result
+%%%%%
+%-3 1 0
+%-3 2 0
+%3 -1 -2 0
+%4 1 0
+%-4 -1 0
+%-6 4 0
+%-6 5 0
+%6 -4 -5 0
+%3 6 -7 0
+%3 -6 7 0
+%-3 6 7 0
+%-3 -6 -7 0
+\begin{align*}
+(\overline{a} \lor x) \land (\overline{a} \lor y) \land (a \lor \overline{x} \lor \overline{y}) &~& \text{Left AND gate}\\
+(\overline{b} \lor \overline{x}) \lor (\overline{b} \lor z) \lor (b \lor x \lor \overline{z})&~& \text{Right AND gate} \\
+(c \lor a \lor \overline{b}) \land (c \lor \overline{a} \lor b) \land (\overline{c} \lor a \lor b) \land (\overline{c} \lor \overline{a} \lor \overline{b}) &~& \text{XOR gate}
+\end{align*}
+
+A better encoding using just six clauses and one variable is shown in \cite{nossum2012sat}:
+\begin{align*}
+&(\overline{a} \lor \overline{x} \lor y) \land (\overline{a} \lor x \lor z) \land (\overline{a} \lor y \lor z) \\
+\land~ &(a \lor \overline{x} \lor \overline{y}) \land (a \lor x \lor \overline{z}) \land (a \lor \overline{y} \lor \overline{z})
+\end{align*}
+
+In fact, it is possible to encode this expression with just four clauses and one variable:
+% Espresso opt
+% 1x 2y 3z 4result
+%%%%%
+%-1 -2  4 0
+%1 -3  4 0
+%1 3  -4 0
+%-1 2  -4 0
+\begin{align*}
+&(a \lor \overline{x} \lor \overline{y}) \land (a \lor x \lor \overline{z}) \land (\overline{a} \lor x \lor z) \land (\overline{a} \lor \overline{x} \lor y)
+\end{align*}
+
 
 %TODO move to section2 (library) after tseitin/boolean?
 To solve this issue we provide an expression optimization function in our library.
@@ -27,6 +64,10 @@ First we evaluate the expression on all $2^n$ possible inputs to generate a trut
 It is then processed using an external truth table minimization tool \emph{Espresso} \cite{rudell1986multiple}, which generates a list of clauses that can be used to encode the expression.
 When this expression is used anywhere in the model a node is created in the boolean circuit representation.
 It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
+
+Using this optimization on the \emph{SHA-1} \emph{choice} round function does indeed lead to the minimal encoding with just four clauses as shown above.
+Similarly, some steps of the \emph{SHA-3} hash function can be wrapped and optimized in this way.
+Both of these optimizations are further described and evaluated in the following chapter in section \ref{sec:expression-encoding-eval}.
 
 \section{Branching order}
 \label{sec:branching-order}
