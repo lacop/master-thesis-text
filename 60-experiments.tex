@@ -24,7 +24,7 @@ Sometimes we might obtain an instance that takes very long time to solve.
 To ensure that experiments conclude in a reasonable time it is common to enforce a time limit and abort all computations that exceed it.
 Since in such cases we can not know the true running time we must discard these aborted measurements.
 
-Data sets with such discarded measurements are called \emh{censored}.
+Data sets with such discarded measurements are called \emph{censored}.
 They make statistical analysis complicated if not impossible, since even trivial statistics such as mean can not be computed without knowing the true censored values.
 
 For this reason we avoided censoring in our experiments.
@@ -32,7 +32,26 @@ While we did have a time limit in place, all experiments that contained censored
 To obtain valid experiments we either increased the time limit or reduced some of the parameters (such as number of rounds or length of the preimage) until we got a configuration that finished without any censoring.
 
 \subsubsection{Statistical analysis}
+For plots of solving time versus some parameter of the instance the most useful statistic is the mean.
+It shows the general trend in behavior and the rate with which the time increases.
+However it is by itself unreliable since the random variability can affect it significantly.
 
+For this reason we also include $95\%$ confidence intervals in our plots.
+By performing more and more repetitions and obtaining more samples we can reduce the size of those intervals and obtain reliable results.
+
+It is important to note that standard techniques for computing means and confidence intervals require either normal distribution of the data, or at least some knowledge about the distribution.
+With SAT solving times we have neither -- although the solving times for some cryptographic instances have been shown \cite{bard2007efficient} to have a log-normal distribution we would still have to verify this assumption for our data sets.
+
+Instead we will use the $BC_a$ bootstrap procedure \cite{diciccio1996bootstrap} for calculating means and confidence intervals that does not require any knowledge or assumptions about the distribution.
+
+~\\
+
+To evaluate the  of some optimization on the running time we need a statistical procedure to decide if there is a significant difference in the running time distribution or of all differences can be attributed to chance.
+Since experiments can have varying parameters (such as number of rounds) and for each parameter combination we run multiple independent samples a pairwise sample comparison is required.
+There are several such procedures, such as the Student's t-test or the Tukey's test.
+
+However, both of those make assumptions about the underlying distributions which are not met in our case.
+For that reason we use the rather less known \emph{Games-Howell} procedure \cite{games1976pairwise} which does not require these assumptions.
 
 
 \section{Expression encoding evaluation}
@@ -54,7 +73,7 @@ As we can see the effect of this optimization is quite small and the running tim
 %                t   df    p
 %s1espr:s1none 1.6 8398 0.12
 
-Using the \emph{Games-Howell} post hoc test \cite{games1976pairwise} on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
+Using the Games-Howell post hoc test on instances with more than $20$ rounds (to reduce the effect of randomness when measuring very short time intervals) we do obtain a mean time improvement of $t=1.6$ seconds however at a fairly high significance level of $p=0.12$ which does not give us enough evidence to reject the hypothesis that this optimization leads to no improvement.
 
 \subsection{SHA-3 analysis} 
 \label{sec:sha3-espresso}
