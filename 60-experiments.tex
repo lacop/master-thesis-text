@@ -6,18 +6,18 @@ Each variant can be either a modification to the instance itself (by changing th
 
 \section{Methodology}
 Since the running time of a SAT solver is not deterministic it is not enough to simply perform a single run for every instance.
-In fact, given the same instance and same SAT solver the running time can differ significantly, even by several orders of magnitude.
-We will therefore need to gather multiple samples and use sound statistical methods to discover patterns in this noisy data.
+In fact, given the same instance and the same SAT solver the running time can differ significantly, even by several orders of magnitude.
+Multiple samples therefore have to be gathered and sound statistical methods used to discover patterns in this noisy data.
 
 \subsubsection{Sampling procedure}
 To counter the high variability in time even for one instance we will solve each instance several times.
 
 Additionally, not all instances for particular parameters (such as number of rounds) are equally hard.
-For example, reduced hash functions with number of rounds significantly lower than the full hash function do not behave sufficiently as random functions.
+For example, reduced hash functions with significantly lower number of rounds than the full hash function do not behave sufficiently as random functions.
 Some output digests might be significantly less likely to be produced than other, or might not be even be possible.
 When we are performing a partial preimage attack by fixing several digest bits to be equal to a reference digest (obtained by first hashing a random message) some instances might have fewer solutions than others and be therefore harder.
 
-For this reason we will also perform all such experiments on multiple instances, that have identical parameters but the random reference messages are independently generated.
+For this reason we also perform all such experiments on multiple instances that have identical parameters but the random reference messages are independently generated.
 
 \subsubsection{Censoring}
 Sometimes we might obtain an instance that takes very long time to solve.

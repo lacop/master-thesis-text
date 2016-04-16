@@ -14,11 +14,12 @@ Examples of such uses in practice include formal program verification, model che
 %TODO refs for use cases
 
 \subsection{Implementation}
-Since SAT is an $NP$-complete language and assuming $P \neq NP$ we can not in general do better than an exponential time algorithm, which tries every possible boolean truth assignment.
+Since SAT is an $NP$-complete language and assuming $P \neq NP$ we can not in general find solutions in polynomial time.
+A simple exponential time algorithm is to try every possible boolean truth assignment.
 To remember which assignments have been tried and which have not we can implement this algorithm as a recursive backtracking, where for every input variable we try in turn both possible values.
 This will only require linear memory to implement.
 
-While we can't improve this algorithm asymptotically for the worst case we can still improve on it significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a partial assignment that can not be extended into any satisfying one.
+While there are no known algorithms that perform asymptotically better in he worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a partial assignment that can not be extended into any satisfying one.
 
 \subsubsection{DPLL algorithm}
 First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \citep{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by applying two rules at each step:
@@ -68,7 +69,7 @@ The notation $x^{(v)}$ is used to represent $x$ if $v=1$ and $\overline{x}$ if $
 We can now add this learnt clause $L$ into the list of clauses we have to satisfy, since not satisfying it is guaranteed to lead to a conflict.
 In the next step of the backtracking algorithm we will not return only a single level up from the recursion (that is, removing the assigning of just a single variable) but all the way back until we reach the first point where one of the conflicting variables was assigned a value.
 
-This method is used in all modern SAT solvers and improves their performance significantly over the naive algorithm.
+This method is used in all modern SAT solvers and improves their performance significantly over the DPLL algorithm.
 
 \subsection{Interfacing with SAT solvers}
 \label{sec:dimacs}
@@ -127,7 +128,7 @@ The initial state is based on the input message (with some form of padding).
 The final state is then used to produce the digest.
 
 \subsubsection{Reduced hash functions and partial attacks}
-The solving time for actual hash functions as used in practical cryptography is usually so large we couldn't obtain a solution in our lifetime.
+The expected time to find a preimage for actual hash functions as used in practical cryptography is usually so large we couldn't obtain a solution in a reasonable time.
 For this reason we will be working with \emph{reduced} instances of hash functions -- modifications that are similar but easier to attack.
 To create such reduced instances we can simply lower the number of rounds used in the computation.
 
@@ -137,7 +138,7 @@ Instead we will focus on \emph{partial} preimage attacks, where only a certain n
 \subsubsection{The SHA hash functions}
 We will briefly describe two hash functions on which we focus in our work and to whose internals we will be referring later.
 
-\textbf{SHA-1}, short for \emph{Secure Hash Algorithm} is a widely used hash function based on the \emph{Merkle-Damg\aa rd} construction \cite{merkle1979secrecy} with output digest size of $160$ bits.
+\textbf{SHA-1}, short for \emph{Secure Hash Algorithm} \cite{NIST1995FIPS180-1} is a widely used hash function based on the \emph{Merkle-Damg\aa rd} construction \cite{merkle1979secrecy} with output digest size of $160$ bits.
 %TODO cite standard
 The internal state consists of five $32$-bit words $A, B, C, D$ and $E$ which are updated in $80$ rounds.
 
@@ -176,7 +177,7 @@ After processing all chunks the resulting state is the output digest.
 
 ~\\
 
-\textbf{SHA-3} is a recently standardized hash function based on the \emph{Keccak} family that won the selection competition against fifty other candidates.
+\textbf{SHA-3} is a recently standardized \cite{NIST2015FIPS202} hash function family based on the \emph{Keccak} family \cite{bertoni2011keccak} that won the selection competition against fifty other candidates.
 It is based on a \emph{sponge} construction which allows the output digest size to be variable.
 
 We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit state updated in $24$ rounds (divided into five steps called $\theta, \rho, \pi, \chi$ and $\iota$) and produces a $512$-bit digest.
