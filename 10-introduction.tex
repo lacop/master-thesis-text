@@ -112,7 +112,9 @@ However, a \emph{cryptographic} hash function should further have the property t
 
 By infeasible (or hard) we mean that the computation should take time exponential to some parameters of the hash function and its input, and thus is not practical for sufficient input sizes.
 
-Formally, hash function $h$ is a function $h: X \to Y$ where $X$ is the (potentially unbounded) set of input messages and $h(x) \in Y = \{0,1\}^n$ is an $n$-bit message digest.
+More precisely, hash function $h$ is a function $h: X \to Y$ where $X$ is the (potentially unbounded) set of input messages and $h(x) \in Y = \{0,1\}^n$ is an $n$-bit message digest.
+For a more formal discussion of hash functions (which is beyond the scope of our work) we refer the reader to \cite{rogaway2004cryptographic}.
+
 The properties which we require these functions to have are:
 
 \textbf{Preimage resistance:} Given a digest $d$ it is hard to find a message $m$ such that $h(m) = d$.
@@ -124,8 +126,8 @@ The properties which we require these functions to have are:
 %It is easy to see that when a hash function lacks one of these properties it also lacks all the following ones.
 
 Most modern hash functions have multiple rounds in which the state is modified using a \emph{round function}.
-The initial state is based on the input message (with some form of padding).
-The final state is then used to produce the digest.
+Starting from the initial state (usually some constant) a part of the input message (with some form of padding) is processed and a new state produced.
+This is repeated until the whole input has been processed and the final state is then used to produce the digest.
 
 \subsubsection{Reduced hash functions and partial attacks}
 The expected time to find a preimage for actual hash functions as used in practical cryptography is usually so large we couldn't obtain a solution in a reasonable time.
@@ -167,9 +169,9 @@ The value of $k$ is one of four constants, depending on the value of $\lfloor \f
 Similarly, $f$ is computed by one of four \emph{round functions}:
 
 \begin{align*}
-f_0 &= (B \land C) \oplus (\overline{B} \land D) \\
+f_0 &= Ch(B, C, D) = (B \land C) \oplus (\overline{B} \land D) \\
 f_1 = f_3 &= B \oplus C \oplus D \\
-f_2 &= (B \land C) \oplus (B \land D) \oplus (C \land D)\\
+f_2 &= Maj(B, C, D) = (B \land C) \oplus (B \land D) \oplus (C \land D)\\
 f &= f_{\lfloor \frac{i}{20} \rfloor}
 \end{align*}
 

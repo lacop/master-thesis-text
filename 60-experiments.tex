@@ -44,16 +44,12 @@ With SAT solving times we have neither -- although the solving times for some cr
 
 Instead we use the $BC_a$ bootstrap procedure \cite{diciccio1996bootstrap} for calculating means and confidence intervals that does not require any knowledge or assumptions about the distribution.
 
-~\\
-
 To evaluate the effect of some optimization on the running time we need a statistical procedure to decide if there is a significant difference in the running time distribution or if all differences can be attributed to chance.
 Since experiments can have varying parameters (such as number of rounds) and for each parameter combination we run multiple independent samples a pairwise sample comparison is required.
 There are several such procedures, such as the Student's t-test or the Tukey's test.
 
 However, both of those make assumptions about the underlying distributions which are not met in our case.
 For that reason we use the rather less known \emph{Games-Howell} procedure \cite{games1976pairwise} which does not require these assumptions.
-
-~\\
 
 Both used procedures are implemented by the \emph{R} statistical computing language \cite{rteam2013}.
 Availability of implementations was also a factor when deciding on methodology -- using a tested implementation greatly reduces the chance of errors.

@@ -74,8 +74,6 @@ However, an addition node needs additional carry variables.
 On the other hand, for a negation node we don't need to introduce additional variables, as we can simply use the variables already assigned to the operand with reversed polarity.
 Similarly for cyclic bit shift we can reuse existing variables but with different ordering.
 
-~\\
-
 Once all variables have been assigned integer values we pass through all the nodes again.
 This time we generate the clauses which model the operator behavior.
 The number of clauses required depends on the operator and the bit width of the \emph{BitVector} node.
