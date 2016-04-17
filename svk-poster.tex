@@ -58,15 +58,15 @@ In our work we created a modeling library that allows simple creation of SAT ins
 We specifically focus on various cryptographic problems, however the library is generic enough that it can be used for other purposes as well.
 ~\\
 
-Using this library we create models for several cryptographic hash functions.
-Various SAT solvers, optimizations and heuristics are evaluated on these models to compare their performance.
-These include the use of the \emph{Espresso} logic minimizer to reduce the instance size, forcing custom variable branching order with help of modified SAT solvers and others.
+%Using this library we create models for several cryptographic hash functions.
+%Various SAT solvers, optimizations and heuristics are evaluated on these models to compare their performance.
+%These include the use of the \emph{Espresso} logic minimizer to reduce the instance size, forcing custom variable branching order with help of modified SAT solvers and others.
 
 \mysection{Library design}
 Previous results obtained in this area required creation of custom programs for modeling the problem and generating the SAT instances.
 While the results obtained are interesting, they are hard to reproduce by others.
 Also this approach does not help to solve similar problems (like using a different hash function instead), as a new model would have to be created from scratch.
-~\\
+%~\\
 
 To address these issues we provide an easy to use and reusable library for modeling SAT instances.
 While the library can be used for modeling any problem we specifically focus on making modeling cryptographic problems as simple as possible.
@@ -75,26 +75,30 @@ While the library can be used for modeling any problem we specifically focus on 
 The main features of our library are as follows:
 
 \begin{description}
-\item[Existing implementation reuse]~\\
-In order to simplify the modeling as much as possible we allow reuse of existing implementations with only minor changes.
+\item[Existing implementation reuse:] In order to simplify the modeling as much as possible we allow reuse of existing implementations with only minor changes.
 In addition to saving time this also makes the modeling less error-prone as we can build upon a well tested implementation.
 
-\item[Output abstraction]~\\
-The library takes care of generating the output in proper format for some SAT solver.
+\item[Output abstraction:] The library takes care of generating the output in proper format for some SAT solver.
 
-\item[Model parsing]~\\
-After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
+\item[Model parsing]: After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
 The library can then load this model and map the truth assignment back to variables defined by the user.
 This makes it easy to extract for example the colliding messages out of the model.
 \end{description}
 ~\\
 
+We use \emph{operator overloading} in the \emph{Python} programming language to make the library use transparent.
+When performing any boolean operation on variables, instead of the direct computation a \emph{boolean circuit} is created internally.
+
+This is then used to generate a SAT instance.
+A na\"{\i}ve transformation of a boolean circuit to clauses in conjunctive normal form could produce output of exponential size.
+For this reasone we use the \emph{Tseitin transformation} which produces output of linear size by introducing some additional variables.
+
+~\\
+
 We also provide a command line program called \emph{HashToolkit} for easy generation of preimage attack instances.
 It supports several hash functions, variable message length and customizable preimage bits.
 
-TODO shorten, mention operator overloading + tseitin
-
-~\\	
+\columnbreak
 \mysection{Preimage attacks on hash functions}
 Informally, \emph{hash function} is a function $h: X \to Y$ for which it is easy to compute $y = h(x)$ given $x$ but very hard to compute the inverse function.
 That is, given $y$ to find some (since usually $|X| \gg |Y|$ the answer is not unique) $x$ for which $y = h(x)$.
@@ -140,145 +144,58 @@ After a solution is obtained the library is again used to extract the found mess
 %\end{minted}
 
 \mysection{Expression optimization}
+The direct use of Tseitin transform might not produce optimal results.
+For example, the \emph{choice} function used in \emph{SHA-1}
+\[
+Ch(x, y, z) = (x \land y) \oplus (\overline{x} \land z)
+\]
+leads to an encoding with three extra variables and ten clauses.
+In \cite{nossum2012sat} the authors point this out and instead use a hand-crafted encoding using just one extra variable and six clauses.
+It is in fact even possible to encode this function with just one extra variable and four clauses.
+~\\
 
-
+To evaluate the impact of this change on the time required to solve such instances we added an expression optimization feature to our library.
+Any expression can be wrapped in a function call that will use the \emph{Espresso} heuristic logic minimizer instead of the usual Tseitin transform to generate clauses for it.
+When used on the choice function it does indeed use the optimal four-clause encoding.
 
 \mysection{Branching order optimization}
+Another possible optimization does not change the way instances are generated but instead modifies the behavior of the SAT solver itself.
+While modern SAT solvers employ many advanced algorithms (such as \emph{DPLL} or \emph{CDCL}) and heuristics, in their essence they are simple recursive backtracking algorithms that find the solution using brute force.
 
-\mysection{Conclusion}
+At every step a variable that has no truth value assigned yet is picked, some value is assigned and the process continues.
+If this leads to some clause being unsatisfied the algorithm backtracks and reverses some choice.
+This is repeated until a satisfying assignment is found or if the search tree is exhausted (which means the instance is unsatisfiable).
+~\\
+
+We modified the popular SAT solver \emph{MiniSat} to see if the default branching order can lead to lower solving time.
+
+\columnbreak
+\mysection{Results and conclusions}
+For the expression optimization we plot the time (as mean and $95\%$ confidence intervals) required to find an $8$-bit preimage on $32$-bit message for \emph{SHA-1}:
+
+\includegraphics[width=\columnwidth]{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso-sq.pdf}
+
+The black points are without the choice function optimization, the red ones with.
+We can see that while the optimization might reduce number of clauses (and therefore the instance size) it has no effect on the solving time.
+Statistical analysis using the \emph{Games-Howell} procedure confirms this.
+~\\
+
+We also performed a very similar experiment on \emph{SHA-3-512}, optimizing two different expressions.
+However the results were the same -- the optimizations did lead to smaller instances but not faster solving.
+~\\
+
+From this we conclude that using our library in the most straightforward way with minimal changes to existing implementations is sufficient for good performance.
+
 
 \mysection{Library}
 TODO link+qr
 
 TODO selected references
 
-%\mysection{Introduction}
-%Here we show how easy it is to prepare a poster for ŠVK.
-%There are some differences in preparing a poster compared to
-%preparing a paper:
-%
-%\begin{itemize}
-%\item use \emph{less text}, since people are not going to stand
-%      in front of your poster forever and read all your text,
-%\item use \emph{more figures}, because they quickly draw the
-%      eye of the reader to the most important points on your poster,
-%\item use \emph{simple structure} (no numbered theorems, subsections,
-%      or numbered figures)
-%\item cite onle \emph{the most important references}
-%\end{itemize}
-%
-%\mysection{Sample text}
-%
-%Let $S=[s_{ij}]$ ($1\leq i,j\leq n$) be a $(0,1,-1)$-matrix
-%of order $n$. Then $S$ is a {\em sign-nonsingular matrix}
-%(SNS-matrix) provided that each real matrix with the same
-%sign pattern as $S$ is nonsingular. 
-%In this paper we consider the evaluation of integrals of the 
-%following forms:
-%\begin{equation}
-%\int_a^b \left( \sum_i E_i B_{i,k,x}(t) \right)
-%         \left( \sum_j F_j B_{j,l,y}(t) \right) dt,\label{problem}
-%\end{equation}
-%\begin{equation}
-%\int_a^b f(t) \left( \sum_i E_i B_{i,k,x}(t) \right) dt,\label{problem2}
-%\end{equation}
-%where $B_{i,k,x}$ is the $i$th B-spline of order $k$ defined over the
-%knots $x_i, x_{i+1}, \ldots, x_{i+k}$.
-%
-%\begin{enumerate}
-%\item Use Gauss quadrature on each interval.
-%\item Convert the integral to a linear combination of
-%      integrals of products of B-splines and provide a recurrence for
-%      integrating the product of a pair of B-splines.
-%\item Convert the sums of B-splines to piecewise
-%      B\'{e}zier format and integrate segment
-%      by segment using the properties of the Bernstein polynomials.
-%\item Express the product of a pair of B-splines as a linear combination
-%      of B-splines.
-%      Use this to reformulate the integrand as a linear combination
-%      of B-splines, and integrate term by term.
-%\item Integrate by parts.
-%\end{enumerate}
-%
-%Of these five, only methods 1 and 5 are suitable for our purposes.
-%
-%%\includegraphics[width=\columnwidth]{allmonkeys}
-%
-%
-%
-%\mysection{Some displayed equations}
-%     By introducing the product topology on  $R^{m \times m} \times
-%R^{n \times n}$  with the induced inner product
-%\begin{equation}
-%\langle (A_{1},B_{1}), (A_{2},B_{2})\rangle := \langle A_{1},A_{2}\rangle 
-%+ \langle B_{1},B_{2}\rangle,\label{eq2.10}
-%\end{equation}
-%we calculate the Fr\'{e}chet derivative of  $F$  as follows:
-%\begin{eqnarray}
-% F'(U,V)(H,K) &=& \langle R(U,V),H\Sigma V^{T} + U\Sigma K^{T}\nonumber\\
-%             && - P(H\Sigma V^{T} + U\Sigma K^{T})\rangle \nonumber \\
-%         &=& \langle R(U,V),H\Sigma V^{T} + U\Sigma K^{T}\rangle\nonumber \\
-%&=& \langle R(U,V)V\Sigma^{T},H\rangle + \nonumber\\
-%  &&    \langle \Sigma^{T}U^{T}R(U,V),K^{T}\rangle.    \label{eq2.11}
-%\end{eqnarray}
-%
-%In the middle line of (\ref{eq2.11}) we have used the fact that the range of
-%$R$ is always perpendicular to the range of $P$.  The gradient $\nabla F$  of
-%$F$, therefore,  may be interpreted as the
-%pair of matrices:
-%\begin{eqnarray}
-% \nabla F(U,V) &=& (R(U,V)V\Sigma^{T},R(U,V)^{T}U\Sigma )\nonumber\\
-% && \in R^{m \times m} \times R^{n \times n}.   \label{eq2.12}
-%\end{eqnarray}
-%
-%Thus, the vector field
-%\begin{equation}
-%\frac{d(U,V)}{dt} = -g(U,V) 	\label{eq2.15}
-%\end{equation}
-%defines a steepest descent flow on the manifold  ${\cal O} (m) \times
-%{\cal O} (n)$ for the objective function  $F(U,V)$.
-%
-%\columnbreak 
-%
-%\mysection{Numerical experiments} 
-%
-%We conducted numerical experiments 
-%in computing inexact Newton steps for discretizations of a  
-%{\em modified Bratu problem}, given by  
-%\begin{eqnarray} 
-%{\displaystyle \Delta w + c e^w + d{ {\partial w}\over{\partial x} } } 
-%&=&{\displaystyle f \quad {\rm in}\ D, }\nonumber\\[-1.5ex]
-%\label{bratu} \\[-1.5ex]
-%{\displaystyle w }&=&{\displaystyle 0 \quad {\rm on}\ \partial D , } \nonumber
-%\end{eqnarray} 
-%where $c$ and $d$ are constants. The actual Bratu problem has $d=0$ and  
-%$f \equiv0$. It provides a simplified model of nonlinear diffusion  
-%phenomena, e.g., in combustion and semiconductors, and has been 
-%considered by Glowinski, Keller, and Rheinhardt \cite{GloKR85}, 
-%as well as by a number of other investigators; see \cite{GloKR85} 
-%and the references therein. See also problem 3 by Glowinski and  Keller  
-%and problem 7 by Mittelmann in the collection of nonlinear model 
-%problems assembled by Mor\'e \cite{More}. The modified problem  
-%(\ref{bratu}) has been used as a test problem for inexact Newton 
-%methods by Brown and Saad \cite{Brown-Saad1}.  
-%
-%\def\gmres{{GMRES}} 
-%\def\gmresm{{\rm GMRES($m$)}} 
-%
-%In our experiments, we took $D = [0,1]\times[0,1]$, $f \equiv0$, 
-%$c=d=10$, and discretized (\ref{bratu}) using the usual second-order 
-%centered differences over a $100\times100$ mesh of equally 
-%spaced points in $D$. In \gmres($m$), we took $m=10$ and used fast  
-%Poisson right preconditioning as before.
-%
-%\bigskip 
-%%\includegraphics[width=\columnwidth]{fig}
-%%\caption{Graph of the function $\sin(x)/x$.} 
-% 
-%
+
 %%% zoznam literatury
-%%\bibliographystyle{apalike}
-%%\bibliography{references}
+\bibliographystyle{apalike}
+\bibliography{research}
 
 \end{multicols*}
 \end{document}
