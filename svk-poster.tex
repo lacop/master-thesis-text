@@ -25,6 +25,9 @@
 \usepackage{csquotes}
 \usepackage{microtype}
 
+%\usepackage{minted}
+%\usemintedstyle{tango}
+
 \begin{document}
 \setlength{\logowidth}{20cm}
 \setlength{\titlewidth}{\textwidth}
@@ -89,11 +92,56 @@ This makes it easy to extract for example the colliding messages out of the mode
 We also provide a command line program called \emph{HashToolkit} for easy generation of preimage attack instances.
 It supports several hash functions, variable message length and customizable preimage bits.
 
+TODO shorten, mention operator overloading + tseitin
+
 ~\\	
 \mysection{Preimage attacks on hash functions}
-\mysection{Using the library}
+Informally, \emph{hash function} is a function $h: X \to Y$ for which it is easy to compute $y = h(x)$ given $x$ but very hard to compute the inverse function.
+That is, given $y$ to find some (since usually $|X| \gg |Y|$ the answer is not unique) $x$ for which $y = h(x)$.
+This reverse process is called a \emph{preimage attack}.
+
+We will focus on two popular cryptographic hash functions, the \emph{SHA-1} and \emph{SHA-3-512}.
+They take as an input a message of (for our purposes) arbitrary length and output a \emph{digest} of $160$ or $512$ bits respectively.
+~\\
+
+A few very simple modifications to existing off-the-shelf implementation of these hash functions are enough to create their models using our library.
+We then add additional constraints to the model to find a preimage for a specified value of $y$.
+These can be used to generate instances for solving using SAT solver.
+After a solution is obtained the library is again used to extract the found message $x$.
+
+%\mysection{Using the library}
+%\begin{minted}[linenos,
+%			   numbersep=5pt,
+%               frame=lines,
+%               framesep=2mm]{python}
+%# Round functions and constants
+%fs = [lambda a, b, c, d, e: (b & c) | (~b & d),
+%      lambda a, b, c, d, e: b ^ c ^ d,
+%      lambda a, b, c, d, e: (b & c) | (b & d) | (c & d),
+%      lambda a, b, c, d, e: b ^ c ^ d]
+%K = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6]
+%
+%def sha1(message, rounds = 80):
+%  # Initialization
+%  h0, h1, h2, h3, h4 = 0x67452301, ...,  0xC3D2E1F0
+%  # (omitted) Message padding
+%  for pos in range(0, len(message), 64):
+%    # (omitted) Prepare message chunk W
+%    A, B, C, D, E = h0, h1, h2, h3, h4
+%    for i in range(rounds):
+%      F = fs[i//20](A, B, C, D, E)
+%      k = K[i//20]
+%      
+%      T = (rotleft(A, 5) + F + E + k + W[i]) & 0xFFFFFFFF
+%      A, B, C, D, E = T, A, leftrotate(B, 30), C, D
+%    h0 = (h0 + A) & 0xFFFFFFFF
+%    # ...        
+%    h4 = (h4 + E) & 0xFFFFFFFF
+%\end{minted}
 
 \mysection{Expression optimization}
+
+
 
 \mysection{Branching order optimization}
 
