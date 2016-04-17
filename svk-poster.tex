@@ -48,45 +48,39 @@ FMFI UK, Mlynská Dolina, 842~48~Bratislava
 }
 \maketitle
 
-\begin{multicols*}{3}
+%%TODOLIST
+% remove python/oo details
+% replace something with a diagram?
 
-\mysection{Introduction}
+\begin{multicols*}{3}
+%\mysection{Introduction}
 SAT solvers are an universal tool for finding solutions to boolean satisfiability problems.
 In the past they have been used for cryptographic problems, such as finding preimages for hash functions or obtaining the key for stream ciphers.
-However these solutions are not easily reusable or modifiable.
+However these solutions used custom programs for modeling the problems and generating instances which are not easily reusable or modifiable.
 ~\\
 
-In our work we created a modeling library that allows simple creation of SAT instances.
-We specifically focus on various cryptographic problems, however the library is generic enough that it can be used for other purposes as well.
+In our work we create an easy to use and reusable library, which we then use to model several hash functions and investigate the impact of some optimizations.
 
-%Using this library we create models for several cryptographic hash functions.
-%Various SAT solvers, optimizations and heuristics are evaluated on these models to compare their performance.
-%These include the use of the \emph{Espresso} logic minimizer to reduce the instance size, forcing custom variable branching order with help of modified SAT solvers and others.
-
-\mysection{Library design}
-Previous results obtained in this area required creation of custom programs for modeling the problem and generating the SAT instances.
-These are hard to reproduce or to adapt for similar problems (like using a different hash function instead), as a new model would have to be created from scratch.
-%~\\
-
-To address these issues we provide an easy to use and reusable library for modeling SAT instances.
-While the library can be used for modeling any problem we specifically focus on making modeling cryptographic problems as simple as possible.
-~\\
-
+\mysection{SAT modeling library}
 The main features of our library are as follows:
 
 \begin{description}
 \item[Existing implementation reuse:] In order to simplify the modeling as much as possible we allow reuse of existing implementations with only minor changes.
 In addition to saving time this also makes the modeling less error-prone as we can build upon a well tested implementation.
 
-%\item[Output abstraction:] The library takes care of generating the output in proper format for some SAT solver.
+\item[Output abstraction:] The library takes care of generating the output in proper format for some SAT solver.
 
 \item[Model parsing]: After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
 The library can then load this model and map the truth assignment back to variables defined by the user.
 This makes it easy to extract for example the colliding messages out of the model.
 \end{description}
+~\\
 
-We use \emph{operator overloading} in the \emph{Python} programming language to make the library use transparent.
-When performing any boolean operation on variables, instead of the direct computation a \emph{boolean circuit} is created.
+While the library can be used for modeling any problem we specifically focus on making modeling cryptographic problems as simple as possible.
+~\\
+
+%We use \emph{operator overloading} in the \emph{Python} programming language to make the library use transparent.
+%When performing any boolean operation on variables, instead of the direct computation a \emph{boolean circuit} is created.
 
 This is then used to generate a SAT instance.
 A na\"{\i}ve transformation of a boolean circuit to clauses in conjunctive normal form could produce output of exponential size.
@@ -97,11 +91,13 @@ We also provide a command line program called \emph{HashToolkit} for easy genera
 It supports several hash functions, variable message length and adjustment of output bits.
 ~\\
 
-\begin{minipage}{.65\columnwidth}
-The library, including the \emph{HashToolkit} tool and usage samples, is available for download at http://dx.doi.org/10.5281/zenodo.48832
+\vfill
+
+\begin{minipage}[t][][b]{.59\columnwidth}
+The library, including the \emph{HashToolkit} tool, usage samples and code used for statistical analysis, is available for download at http://dx.doi.org/10.5281/zenodo.48832
 \end{minipage}
-\begin{minipage}{.3\columnwidth}
-\hfill \qrcode[height=6cm]{http://dx.doi.org/10.5281/zenodo.48832}
+\begin{minipage}[t][][t]{.4\columnwidth}
+\hfill \qrcode[height=8cm]{http://dx.doi.org/10.5281/zenodo.48832}
 \end{minipage}
 
 \columnbreak
@@ -122,9 +118,7 @@ After a solution is obtained the library is again used to extract the found mess
 \mysection{Using the library}
 To demonstrate the use of the library we show the code used to generate \emph{SHA-1} instances.
 For brevity we omit some details such as padding the message.
-\begin{minted}[linenos,
-			   numbersep=5pt,
-               frame=lines,
+\begin{minted}[%frame=lines,
                framesep=2mm]{python}
 from instance import *
 # Round functions and constants
