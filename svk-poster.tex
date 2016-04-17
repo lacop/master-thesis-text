@@ -49,18 +49,48 @@ FMFI UK, Mlynská Dolina, 842~48~Bratislava
 SAT solvers are an universal tool for finding solutions to boolean satisfiability problems.
 In the past they have been used for cryptographic problems, such as finding preimages for hash functions or obtaining the key for stream ciphers.
 However these solutions are not easily reusable or modifiable.
+~\\
 
-In our work we create a modeling library that allows simple creation of SAT instances.
+In our work we created a modeling library that allows simple creation of SAT instances.
 We specifically focus on various cryptographic problems, however the library is generic enough that it can be used for other purposes as well.
+~\\
 
 Using this library we create models for several cryptographic hash functions.
 Various SAT solvers, optimizations and heuristics are evaluated on these models to compare their performance.
 These include the use of the \emph{Espresso} logic minimizer to reduce the instance size, forcing custom variable branching order with help of modified SAT solvers and others.
 
-TODO rewrite second/third paragraph
-
 \mysection{Library design}
+Previous results obtained in this area required creation of custom programs for modeling the problem and generating the SAT instances.
+While the results obtained are interesting, they are hard to reproduce by others.
+Also this approach does not help to solve similar problems (like using a different hash function instead), as a new model would have to be created from scratch.
+~\\
 
+To address these issues we provide an easy to use and reusable library for modeling SAT instances.
+While the library can be used for modeling any problem we specifically focus on making modeling cryptographic problems as simple as possible.
+~\\
+
+The main features of our library are as follows:
+
+\begin{description}
+\item[Existing implementation reuse]~\\
+In order to simplify the modeling as much as possible we allow reuse of existing implementations with only minor changes.
+In addition to saving time this also makes the modeling less error-prone as we can build upon a well tested implementation.
+
+\item[Output abstraction]~\\
+The library takes care of generating the output in proper format for some SAT solver.
+
+\item[Model parsing]~\\
+After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
+The library can then load this model and map the truth assignment back to variables defined by the user.
+This makes it easy to extract for example the colliding messages out of the model.
+\end{description}
+~\\
+
+We also provide a command line program called \emph{HashToolkit} for easy generation of preimage attack instances.
+It supports several hash functions, variable message length and customizable preimage bits.
+
+~\\	
+\mysection{Preimage attacks on hash functions}
 \mysection{Using the library}
 
 \mysection{Expression optimization}
