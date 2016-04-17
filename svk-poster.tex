@@ -28,7 +28,9 @@
 \usepackage{minted}
 \usemintedstyle{tango}
 
+\usepackage{fancyvrb}
 \usepackage{qrcode}
+\usepackage{tikz}
 
 \begin{document}
 \setlength{\logowidth}{20cm}
@@ -37,7 +39,7 @@
 \rightlogo[0.9]{fmfilogo-farebne}
 \useleftlogofalse
 
-\color{textCol}
+%\color{textCol}
 
 \title{Evaluation of SAT-based\\ preimage attack optimizations}
 \author{Ladislav P\'apay\\
@@ -74,7 +76,6 @@ In addition to saving time this also makes the modeling less error-prone as we c
 The library can then load this model and map the truth assignment back to variables defined by the user.
 This makes it easy to extract for example the colliding messages out of the model.
 \end{description}
-~\\
 
 While the library can be used for modeling any problem we specifically focus on making modeling cryptographic problems as simple as possible.
 ~\\
@@ -82,7 +83,19 @@ While the library can be used for modeling any problem we specifically focus on 
 %We use \emph{operator overloading} in the \emph{Python} programming language to make the library use transparent.
 %When performing any boolean operation on variables, instead of the direct computation a \emph{boolean circuit} is created.
 
-This is then used to generate a SAT instance.
+We use \emph{operator overloading} to transparently convert expressions such as
+\begin{center}
+\begin{BVerbatim}
+X = A & (B ^ C)
+\end{BVerbatim}
+\end{center}
+into a \emph{boolean circuit}.
+This is then used to generate a SAT instance:
+
+\resizebox{!}{9cm}{
+  \input{figures/poster/boolean.pgf}
+}
+
 A na\"{\i}ve transformation of a boolean circuit to clauses in conjunctive normal form could produce output of exponential size.
 For this reasone we use the \emph{Tseitin transformation} \cite{tseitin1983complexity} which produces output of linear size by introducing some additional variables.
 ~\\

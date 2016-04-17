@@ -1,0 +1,9 @@
+\begin{tikzpicture}%[every node/.style = {draw, shape=rectangle, inner sep=3pt}]
+%               level 1/.style={sibling distance=20mm}]
+\node {$\land$} [grow = up]
+  child {node {$\oplus$}
+    child {node [shape=circle] {C}}
+    child {node [shape=circle] {B}}
+  }
+  child {node [shape=circle] {A}};
+\end{tikzpicture}
