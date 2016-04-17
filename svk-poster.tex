@@ -56,7 +56,7 @@ FMFI UK, Mlynská Dolina, 842~48~Bratislava
 
 \begin{multicols*}{3}
 %\mysection{Introduction}
-SAT solvers are an universal tool for finding solutions to boolean satisfiability problems.
+SAT solvers are a universal tool for finding solutions to boolean satisfiability problems.
 In the past they have been used for cryptographic problems, such as finding preimages for hash functions or obtaining the key for stream ciphers.
 However these solutions used custom programs for modeling the problems and generating instances which are not easily reusable or modifiable.
 ~\\
@@ -70,11 +70,11 @@ The main features of our library are as follows:
 \item[Existing implementation reuse:] In order to simplify the modeling as much as possible we allow reuse of existing implementations with only minor changes.
 In addition to saving time this also makes the modeling less error-prone as we can build upon a well tested implementation.
 
-\item[Output abstraction:] The library takes care of generating the output in proper format for some SAT solver.
+\item[Output abstraction:] The library takes care of generating the output in proper format for SAT solver.
 
 \item[Model parsing]: After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
 The library can then load this model and map the truth assignment back to variables defined by the user.
-This makes it easy to extract for example the colliding messages out of the model.
+This makes it easy to extract values out of the model.
 \end{description}
 
 While the library can be used for modeling any problem we specifically focus on making modeling cryptographic problems as simple as possible.
@@ -97,7 +97,7 @@ This is then used to generate a SAT instance:
 \end{center}
 
 A na\"{\i}ve transformation of a boolean circuit to clauses in conjunctive normal form could produce output of exponential size.
-For this reasone we use the \emph{Tseitin transformation} \cite{tseitin1983complexity} which produces output of linear size by introducing some additional variables ($X$ and $Y$ in our example).
+For this reasonf   we use the \emph{Tseitin transformation} \cite{tseitin1983complexity} which produces output of linear size by introducing some additional variables ($X$ and $Y$ in our example).
 ~\\
 
 We also provide a command line program called \emph{HashToolkit} for easy generation of preimage and collision attack instances.
@@ -120,7 +120,7 @@ That is, given $y$ to find some (since usually $|X| \gg |Y|$ the answer is not u
 This reverse process is called a \emph{preimage attack}.
 
 We will focus on two popular cryptographic hash functions, the \emph{SHA-1} and \emph{SHA-3-512}.
-They take as an input a message of (for our purposes) arbitrary length and output a \emph{digest} of $160$ or $512$ bits respectively.
+They take a message of (for our purposes) arbitrary length as input and produce a \emph{digest} of $160$ or $512$ bits respectively.
 ~\\
 
 A few very simple modifications to existing off-the-shelf implementation of these hash functions are enough to create their models using our library.
@@ -130,7 +130,7 @@ After a solution is obtained the library is again used to extract the found mess
 
 \mysection{Using the library}
 To demonstrate the use of the library we show the code used to generate \emph{SHA-1} instances.
-For brevity we omit some details such as padding the message.
+We omit some details such as padding the message for brevity.
 \begin{minted}[%frame=lines,
                framesep=2mm]{python}
 from instance import *
