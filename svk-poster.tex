@@ -25,8 +25,10 @@
 \usepackage{csquotes}
 \usepackage{microtype}
 
-%\usepackage{minted}
-%\usemintedstyle{tango}
+\usepackage{minted}
+\usemintedstyle{tango}
+
+\usepackage{qrcode}
 
 \begin{document}
 \setlength{\logowidth}{20cm}
@@ -56,7 +58,6 @@ However these solutions are not easily reusable or modifiable.
 
 In our work we created a modeling library that allows simple creation of SAT instances.
 We specifically focus on various cryptographic problems, however the library is generic enough that it can be used for other purposes as well.
-~\\
 
 %Using this library we create models for several cryptographic hash functions.
 %Various SAT solvers, optimizations and heuristics are evaluated on these models to compare their performance.
@@ -64,8 +65,7 @@ We specifically focus on various cryptographic problems, however the library is 
 
 \mysection{Library design}
 Previous results obtained in this area required creation of custom programs for modeling the problem and generating the SAT instances.
-While the results obtained are interesting, they are hard to reproduce by others.
-Also this approach does not help to solve similar problems (like using a different hash function instead), as a new model would have to be created from scratch.
+These are hard to reproduce or to adapt for similar problems (like using a different hash function instead), as a new model would have to be created from scratch.
 %~\\
 
 To address these issues we provide an easy to use and reusable library for modeling SAT instances.
@@ -78,25 +78,31 @@ The main features of our library are as follows:
 \item[Existing implementation reuse:] In order to simplify the modeling as much as possible we allow reuse of existing implementations with only minor changes.
 In addition to saving time this also makes the modeling less error-prone as we can build upon a well tested implementation.
 
-\item[Output abstraction:] The library takes care of generating the output in proper format for some SAT solver.
+%\item[Output abstraction:] The library takes care of generating the output in proper format for some SAT solver.
 
 \item[Model parsing]: After successfully solving the instance with a SAT solver we obtain a model in form of a satisfying variable assignment.
 The library can then load this model and map the truth assignment back to variables defined by the user.
 This makes it easy to extract for example the colliding messages out of the model.
 \end{description}
-~\\
 
 We use \emph{operator overloading} in the \emph{Python} programming language to make the library use transparent.
-When performing any boolean operation on variables, instead of the direct computation a \emph{boolean circuit} is created internally.
+When performing any boolean operation on variables, instead of the direct computation a \emph{boolean circuit} is created.
 
 This is then used to generate a SAT instance.
 A na\"{\i}ve transformation of a boolean circuit to clauses in conjunctive normal form could produce output of exponential size.
-For this reasone we use the \emph{Tseitin transformation} which produces output of linear size by introducing some additional variables.
-
+For this reasone we use the \emph{Tseitin transformation} \cite{tseitin1983complexity} which produces output of linear size by introducing some additional variables.
 ~\\
 
 We also provide a command line program called \emph{HashToolkit} for easy generation of preimage attack instances.
 It supports several hash functions, variable message length and customizable preimage bits.
+~\\
+
+\begin{minipage}{.65\columnwidth}
+The library, including the \emph{HashToolkit} tool and usage samples, is available for download at http://dx.doi.org/10.5281/zenodo.48832
+\end{minipage}
+\begin{minipage}{.3\columnwidth}
+\hfill \qrcode[height=6cm]{http://dx.doi.org/10.5281/zenodo.48832}
+\end{minipage}
 
 \columnbreak
 \mysection{Preimage attacks on hash functions}
@@ -113,41 +119,49 @@ We then add additional constraints to the model to find a preimage for a specifi
 These can be used to generate instances for solving using SAT solver.
 After a solution is obtained the library is again used to extract the found message $x$.
 
-%\mysection{Using the library}
-%\begin{minted}[linenos,
-%			   numbersep=5pt,
-%               frame=lines,
-%               framesep=2mm]{python}
-%# Round functions and constants
-%fs = [lambda a, b, c, d, e: (b & c) | (~b & d),
-%      lambda a, b, c, d, e: b ^ c ^ d,
-%      lambda a, b, c, d, e: (b & c) | (b & d) | (c & d),
-%      lambda a, b, c, d, e: b ^ c ^ d]
-%K = [0x5A827999, 0x6ED9EBA1, 0x8F1BBCDC, 0xCA62C1D6]
-%
-%def sha1(message, rounds = 80):
-%  # Initialization
-%  h0, h1, h2, h3, h4 = 0x67452301, ...,  0xC3D2E1F0
-%  # (omitted) Message padding
-%  for pos in range(0, len(message), 64):
-%    # (omitted) Prepare message chunk W
-%    A, B, C, D, E = h0, h1, h2, h3, h4
-%    for i in range(rounds):
-%      F = fs[i//20](A, B, C, D, E)
-%      k = K[i//20]
-%      
-%      T = (rotleft(A, 5) + F + E + k + W[i]) & 0xFFFFFFFF
-%      A, B, C, D, E = T, A, leftrotate(B, 30), C, D
-%    h0 = (h0 + A) & 0xFFFFFFFF
-%    # ...        
-%    h4 = (h4 + E) & 0xFFFFFFFF
-%\end{minted}
+\mysection{Using the library}
+To demonstrate the use of the library we show the code used to generate \emph{SHA-1} instances.
+For brevity we omit some details such as padding the message.
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+from instance import *
+# Round functions and constants
+fs = [lambda b, c, d: (b & c) | (~b & d), # Choice
+      lambda b, c, d: b ^ c ^ d,
+      lambda b, c, d: (b & c) | (b & d) | (c & d),
+      lambda b, c, d: b ^ c ^ d]
+K = [intToVector(x) for x in [0x5A827999, ...]]
+def sha1(message, rounds = 80):
+  # Initialization
+  h0, h1, h2, h3, h4 = [intToVector(x) for x in [...]]
+  # (omitted) Message padding
+  for pos in range(0, len(message), 64):
+    # (omitted) Prepare message chunk W
+    A, B, C, D, E = h0, h1, h2, h3, h4
+    for i in range(rounds):
+      F = fs[i//20](B, C, D)
+      k = K[i//20]
+      
+      T = CyclicLeftShift(A, 5) + F + E + k + W[i]
+      A, B, C, D, E = T, A, CyclicLeftShift(B, 30), C, D
+    h0, h1, h2, h3, h4 = h0+A, h1+B, h2+C, h3+D, h4+E
+  # (omitted) Return digest
+# (omitted) Set up requested preimage attack parameters
+instance.solve('minisat')
+# (omitted) Load, verify and print solution
+\end{minted}
+The full program is under $100$ lines of code.
+For comparison, the code used to generate instances in \cite{nossum2012sat} is almost $1000$ lines.
 
+
+\columnbreak
 \mysection{Expression optimization}
 The direct use of Tseitin transform might not produce optimal results.
 For example, the \emph{choice} function used in \emph{SHA-1}
 \[
-Ch(x, y, z) = (x \land y) \oplus (\overline{x} \land z)
+Ch(b, c, d) = (b \land c) \oplus (\overline{b} \land d)
 \]
 leads to an encoding with three extra variables and ten clauses.
 In \cite{nossum2012sat} the authors point this out and instead use a hand-crafted encoding using just one extra variable and six clauses.
@@ -157,27 +171,27 @@ It is in fact even possible to encode this function with just one extra variable
 To evaluate the impact of this change on the time required to solve such instances we added an expression optimization feature to our library.
 Any expression can be wrapped in a function call that will use the \emph{Espresso} heuristic logic minimizer instead of the usual Tseitin transform to generate clauses for it.
 When used on the choice function it does indeed use the optimal four-clause encoding.
+%
+%\mysection{Branching order optimization}
+%Another possible optimization does not change the way instances are generated but instead modifies the behavior of the SAT solver itself.
+%While modern SAT solvers employ many advanced algorithms (such as \emph{DPLL} or \emph{CDCL}) and heuristics, in their essence they are simple recursive backtracking algorithms that find the solution using brute force.
+%
+%At every step a variable that has no truth value assigned yet is picked, some value is assigned and the process continues.
+%If this leads to some clause being unsatisfied the algorithm backtracks and reverses some choice.
+%This is repeated until a satisfying assignment is found or if the search tree is exhausted (which means the instance is unsatisfiable).
+%~\\
+%
+%We modified the popular SAT solver \emph{MiniSat} to see if the default branching order can lead to lower solving time.
 
-\mysection{Branching order optimization}
-Another possible optimization does not change the way instances are generated but instead modifies the behavior of the SAT solver itself.
-While modern SAT solvers employ many advanced algorithms (such as \emph{DPLL} or \emph{CDCL}) and heuristics, in their essence they are simple recursive backtracking algorithms that find the solution using brute force.
-
-At every step a variable that has no truth value assigned yet is picked, some value is assigned and the process continues.
-If this leads to some clause being unsatisfied the algorithm backtracks and reverses some choice.
-This is repeated until a satisfying assignment is found or if the search tree is exhausted (which means the instance is unsatisfiable).
-~\\
-
-We modified the popular SAT solver \emph{MiniSat} to see if the default branching order can lead to lower solving time.
-
-\columnbreak
+%\columnbreak
 \mysection{Results and conclusions}
-For the expression optimization we plot the time (as mean and $95\%$ confidence intervals) required to find an $8$-bit preimage on $32$-bit message for \emph{SHA-1}:
+Here we plot the time (as mean and $95\%$ confidence intervals) required to find an $8$-bit preimage on $32$-bit message for \emph{SHA-1}:
 
 \includegraphics[width=\columnwidth]{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso-sq.pdf}
 
 The black points are without the choice function optimization, the red ones with.
 We can see that while the optimization might reduce number of clauses (and therefore the instance size) it has no effect on the solving time.
-Statistical analysis using the \emph{Games-Howell} procedure confirms this.
+Statistical analysis using the \emph{Games-Howell} procedure \cite{games1976pairwise} confirms this.
 ~\\
 
 We also performed a very similar experiment on \emph{SHA-3-512}, optimizing two different expressions.
@@ -187,14 +201,13 @@ However the results were the same -- the optimizations did lead to smaller insta
 From this we conclude that using our library in the most straightforward way with minimal changes to existing implementations is sufficient for good performance.
 
 
-\mysection{Library}
-TODO link+qr
-
-TODO selected references
+%\mysection{Library}
+%TODO link+qr
+%TODO selected references
 
 
 %%% zoznam literatury
-\bibliographystyle{apalike}
+\bibliographystyle{alpha}
 \bibliography{research}
 
 \end{multicols*}
