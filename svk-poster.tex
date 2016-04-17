@@ -92,9 +92,9 @@ X = A & (B ^ C)
 into a \emph{boolean circuit}.
 This is then used to generate a SAT instance:
 
-\resizebox{!}{9cm}{
+\begin{center}
   \input{figures/poster/boolean.pgf}
-}
+\end{center}
 
 A na\"{\i}ve transformation of a boolean circuit to clauses in conjunctive normal form could produce output of exponential size.
 For this reasone we use the \emph{Tseitin transformation} \cite{tseitin1983complexity} which produces output of linear size by introducing some additional variables.

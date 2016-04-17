@@ -1,9 +1,37 @@
-\begin{tikzpicture}%[every node/.style = {draw, shape=rectangle, inner sep=3pt}]
-%               level 1/.style={sibling distance=20mm}]
-\node {$\land$} [grow = up]
-  child {node {$\oplus$}
-    child {node [shape=circle] {C}}
-    child {node [shape=circle] {B}}
+\begin{tikzpicture}[every node/.style = {draw, shape=rectangle, inner sep=2mm,
+                                  font=\fontsize{24.88}{30}\selectfont},
+             every tree node/.style={}, level distance=25mm, sibling distance=30mm]
+\node (and) {$\land$} [grow = up]
+  child {node (xor) {$\oplus$}
+    child {node [shape=circle, inner sep=1mm] {C}}
+    child {node [shape=circle, inner sep=1mm] {B}}
   }
-  child {node [shape=circle] {A}};
+  child {node [shape=circle, inner sep=1mm] {A}};
+
+\node at (and.south east) [xshift=4mm, draw=none] {\small X};
+\node at (xor.south east) [xshift=4mm, draw=none] {\small Y};
+
+\node (arrstart) at (xor.east) [xshift=15mm, draw=none] {};
+\node (arrend) at (xor.east) [xshift=30mm, draw=none] {};
+\draw [->, line width=2pt] (arrstart) -- (arrend);
+
+\node [right of=arrend, draw=none, inner sep=1mm, text width=60mm, xshift=25mm, yshift=13mm] {$(Y \lor B \lor \overline{C}) \land (Y \lor \overline{B} \lor C) \land (\overline{Y} \lor B \lor C) \land (\overline{Y} \lor \overline{B} \lor \overline{C})~\land$};
+\node [right of=arrend, draw=none, inner sep=1mm, text width=60mm, xshift=25mm, yshift=-22mm] {$ (X \lor \overline{A} \lor \overline{Y}) \land (\overline{X} \lor A) \land (\overline{X} \lor Y)$};
+
+\node (arr2start) at (xor.east) [xshift=95mm, draw=none] {};
+\node (arr2end) at (xor.east) [xshift=110mm, draw=none] {};
+\draw [->, line width=2pt] (arr2start) -- (arr2end);
+
+
+\node [right of=arr2end, draw=none, text width=40mm, xshift=20mm] {\small \texttt{4 2 -3 0\\4 -2 3 0\\-4 2 3 0\\-4 -2 -3 0\\~\\5 -1 -4 0\\-5 1 0\\-5 4 0}};
+
 \end{tikzpicture}
+% 1=A, 2=B, 3=C, 4=Y, 5=X
+%%%%
+%2 3 -4 0
+%2 -3 4 0
+%-2 3 4 0
+%-2 -3 -4 0
+%-5 1 0
+%-5 4 0
+%5 -1 -4 0
