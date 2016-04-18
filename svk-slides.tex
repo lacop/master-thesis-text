@@ -293,12 +293,46 @@ Choice function in \emph{SHA-1}: $Ch(x, y, z) = (x \land y) \oplus (\overline{x}
 \end{frame}
 
 \begin{frame}
-TODO branch ordering
+\frametitle{Branching order}
+\begin{itemize}
+\item SAT solver is just backtracking brute-force with many heuristics
+\item Must choose which variable to branch on next
+~\\
+~\\
+\item We modified \emph{MiniSat} to override the default behavior
+\item Evaluated several strategies
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Number of conflicts is decreased
+
+\vfill
+
+\includegraphics[width=\textwidth]{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}
+\end{frame}
+
+\begin{frame}
+But solving time is unchanged
+
+\vfill
+
+\includegraphics[width=\textwidth]{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
 \end{frame}
 
 \begin{frame}
 \frametitle{Conclusions}
-TODO
+\begin{itemize}
+\item Simple to use modeling library
+\item Models of several cryptographic hash functions
+~\\
+~\\
+\item Evaluated several optimizations
+\begin{itemize}
+	\item Do not help to reduce solving time
+	\item Can use our library with minimal modifications to existing implementations
+\end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}
