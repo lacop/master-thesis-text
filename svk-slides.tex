@@ -13,6 +13,10 @@
 \usepackage{color}
 \usepackage{fancyvrb}
 
+% https://tex.stackexchange.com/questions/16793/global-setting-of-spacing-between-items-in-itemize-environment-for-beamer
+\let\olditem\item
+\renewcommand{\item}{%
+\olditem\vspace{4pt}}
 
 \usepackage{amsthm}
 \newtheorem{mydef}{Definition}
@@ -45,10 +49,12 @@
 % - branching order - overview
 % - sha3 comparison plot
 % - gh analysis + conclusion
-% - ? other opts / 
+% - ? other opts / ...
 % - summary
 % - thanks  + questions? (+ doi/link)
 %
+%
+% OLD
 % - tseitin translation
 % - existing
 % - our approach (operator overloading,...), md5,sha1,sha3 done, easy to do more
@@ -60,46 +66,41 @@
 % - conclusion/summary
 % - questions/thanks
 
-%\begin{frame}
-%\frametitle{Problem Introduction}
-%\begin{itemize}
-%\item 
-%\end{itemize}
-%\end{frame}
-
 \begin{frame}
-\frametitle{Goals}
+\frametitle{Problem introduction}
 \begin{itemize}
-\item Allow easy modeling of cryptographic primitives as SAT problems
-\item Model hash functions used in practice
-\item Measure performance of various attacks
-\item Evaluate effect of various heuristics and optimizations
+\item \textbf{Hash function} $h: X \to Y$, usually $|X| \gg |Y|$
+\begin{itemize}
+	\item \emph{Easy} to compute $h(x)$ given $x$
+	\item \emph{Hard} to find $x'$ such that $h(x') = y$ given $y$
+	\begin{itemize}
+		\item \textbf{Preimage attack}
+	\end{itemize}
 \end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{SAT Modeling}
+\item \textbf{SAT solvers} can find solutions to any boolean satisfiability problem
 \begin{itemize}
-\item Can think of any cryptographic primitive as a boolean circuit, with input/output bits and boolean operators inbetween
-\item This can be converted to CNF using De Morgan's laws
-\begin{itemize}
-	\item Size will increase exponentially
-\end{itemize}
-\item Instead we use \textbf{Tseytin transform}
-\begin{itemize}
-	\item Introduces additional variables for the operators
-	\item The resulting formula will be linear in size
+	\item \emph{Instance} = variables and clauses in conjunctive normal form
 \end{itemize}
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Existing Work}
-\begin{description}
-\item[SAT-based preimage attacks on SHA-1 (Nossum, 2012)]~\\ Hand-crafted code to generate SHA-1 instances in SAT-solver friendly CNF format. About 1000 lines of code, with functions like \texttt{xor2}, \texttt{xor3} and \texttt{add5}.
-\item[Logical Analysis of Hash Functions (Jovanović, Janičić, 2005)]~\\ Based on a C++ library using operator overloading to simplify the code for MD4 and MD5 implementations. However the library code is unpublished.
-\item[\parbox{11cm}{A SAT-based preimage analysis of reduced Keccak hash functions (Morawiecki, Srebrny, 2010)}]~\\ Toolkit that translates Verilog code (low-level hardware description language) to CNF. The toolkit is not published.
-\end{description}
+\frametitle{Using SAT for preimage attacks}
+\begin{itemize}
+\item \textbf{Idea:} model $h(x) = y$ as a SAT instance
+\begin{itemize}
+	\item Fix value of $y$ using additional constraints
+	\item Let SAT solver find solution for $x$
+\end{itemize}
+\item First proposed in \emph{Logical cryptanalysis as a SAT problem} (Massacci, Marraro, 2000) on the \emph{DES} cipher
+\item Other works focused on hash functions (\emph{MD4}, \emph{MD5}, \emph{SHA-1}, \dots)
+\item \textbf{Problems}
+\begin{itemize}
+	\item Hand crafted specialized programs to generate instances
+	\item Code not available
+	\item Toolkit uses proprietary and niche technologies
+\end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -194,7 +195,7 @@ else:
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Examples}
+\frametitle{Example of use -- HashToolkit}
 \begin{Verbatim}[commandchars=\\\{\}]
 $ python3 hashtoolkit.py -h sha1 -l 64 -o '{\color{red}00001111}'
 Setting variables...
@@ -213,52 +214,72 @@ Message bytes: b'{\color{red}YZ[o_DtQ}' rounds:  80
 sha1 {\color{red}0f}083bf74420893176930c9ffc90e946d91c9fb7
 \end{Verbatim}
 \end{frame}
+%$ % fix syntax highlighting
 
 \begin{frame}
-\frametitle{Evaluation}
-\textbf{Example:} SHA-1 8-bit reference preimage, 32-bit message, 7000 samples
-\includegraphics[width=\textwidth]{sha1-32bit-8bitref}
-\end{frame}
-
-\begin{frame}
-\frametitle{Evaluation}
-\textbf{Example:} SHA-1 12-bit reference preimage, 32-bit message, 400 samples
-\includegraphics[width=\textwidth]{sha1-32bit-12bitref}
-\end{frame}
-
-\begin{frame}
-\frametitle{Heuristics}
+\frametitle{Tseitin transformation}
 \begin{itemize}
-\item SAT solvers use various heuristics to pick the next branching variable
-\item Extended CryptoMiniSAT to allow custom branching order
-\item Tried some order restrictions, more to do
+\item Expressions are converted to a \emph{boolean circuit} and then to clauses
 \begin{itemize}
-\item Every round variable, in forward or reverse round order
-\item Same, but only selected rounds
-\item Same, but only selected few round variable
+	\item Uses additional variables to avoid exponential size of output
 \end{itemize}
+\item For example, \texttt{X = A \& (B \^{} C)}
 \end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Branching order}
-\textbf{Example:} SHA-1, 20 rounds, 32-bit message with 8-bit preimage\\~\\
 \begin{center}
-\begin{tabular}{l|c|c}
-Order & Time [s] & Conflicts \\ \hline
---- & 0.96 & 9755 \\ \hline
-20 & 0.94 & 9755 \\
-20, 19 & 0.97 & 9755 \\
-20, 19, 18 & 17.35 & 71197 \\ \hline
-1 & 0.35 & 1062 \\
-2 & 0.35 & 1062 \\
-1, 2 & 0.33 & 1062 \\
-1, 2, 3 & 0.29 & 927 \\
-1, 2, 3, 4 & 0.28 & 185 \\
-1, 4 & 0.24 & 119
-\end{tabular}
+\resizebox{0.75\textwidth}{!}{
+  \input{figures/poster/boolean-slides.pgf}
+}
 \end{center}
+\begin{itemize}
+\item Possible problem: automatic and transparent conversion of expressions to SAT instance might not be optimal
+\end{itemize}
 \end{frame}
+
+%\begin{frame}
+%\frametitle{Evaluation}
+%\textbf{Example:} SHA-1 8-bit reference preimage, 32-bit message, 7000 samples
+%\includegraphics[width=\textwidth]{sha1-32bit-8bitref}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Evaluation}
+%\textbf{Example:} SHA-1 12-bit reference preimage, 32-bit message, 400 samples
+%\includegraphics[width=\textwidth]{sha1-32bit-12bitref}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Heuristics}
+%\begin{itemize}
+%\item SAT solvers use various heuristics to pick the next branching variable
+%\item Extended CryptoMiniSAT to allow custom branching order
+%\item Tried some order restrictions, more to do
+%\begin{itemize}
+%\item Every round variable, in forward or reverse round order
+%\item Same, but only selected rounds
+%\item Same, but only selected few round variable
+%\end{itemize}
+%\end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Branching order}
+%\textbf{Example:} SHA-1, 20 rounds, 32-bit message with 8-bit preimage\\~\\
+%\begin{center}
+%\begin{tabular}{l|c|c}
+%Order & Time [s] & Conflicts \\ \hline
+%--- & 0.96 & 9755 \\ \hline
+%20 & 0.94 & 9755 \\
+%20, 19 & 0.97 & 9755 \\
+%20, 19, 18 & 17.35 & 71197 \\ \hline
+%1 & 0.35 & 1062 \\
+%2 & 0.35 & 1062 \\
+%1, 2 & 0.33 & 1062 \\
+%1, 2, 3 & 0.29 & 927 \\
+%1, 2, 3, 4 & 0.28 & 185 \\
+%1, 4 & 0.24 & 119
+%\end{tabular}
+%\end{center}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Conclusions}
