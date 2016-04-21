@@ -131,5 +131,7 @@ We modified the popular \emph{MiniSat} solver \cite{een2005minisat} to be able t
 Then we modified the selection of next branching candidate to first pick all these variables in the specified order.
 Once all have been assigned we fall back to the standard branching order algorithm.
 
+We also made similar changes to the \emph{CryptoMiniSat} solver \cite{soos2009extending}, which is based on MiniSat.
+
 We have also added support for this to our modeling library.
 Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
