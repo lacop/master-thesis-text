@@ -216,9 +216,87 @@ For brevity we have omitted details such as message padding -- the full source c
 It is about 80 lines long and includes additional constraints on the output bits to find (partial) preimages.
 After obtaining a solution the message is extracted and hashed using a reference implementation to ensure its validity.
 
-%\subsubsection{Comparison to existing work}
-%In \cite{nossum2012sat} a custom 
-%TODO compare? ~80 lines vs ~800 lines... also compare instance sizes/solving times
+\subsection{Comparison to existing work}
+In \cite{nossum2012sat} a custom program of about $800$ lines is used to generate instances for preimage attacks on \emph{SHA-1}.
+Our implementation using the modeling library we created is about ten times shorter.
+It also includes verification of the solution, unlike in Nossum's work where two additional programs are required to parse and verify the SAT solver output.
+
+In addition to requiring much less code to be written our approach is also much more readable.
+Compare the code for the innermost loop where one of the four \emph{SHA-1} round functions is computed, shown in figure \ref{fig:code-comp-sha1}.
+
+For clarity and fairness of comparison we modified our version of the code slightly to avoid \emph{Python} specific features such as \emph{lambda functions} which make our code even shorter.
+It is clear that our approach leads to much more readable code and is easier to write.
+
+For example, for the \emph{choice} round function used in first $20$ rounds we simply use the definition provided in the standard (see section \ref{sec:hash-functions}).
+On the other hand, a set of six clauses to encode this function had to be found and used in the referenced work.
+
+As we will discuss in section \ref{sec:expression-encoding}, our approach does lead to a less efficient encoding (in terms of number of variable and clauses in the resulting instance).
+However, as experiments in \ref{sec:expression-encoding-eval} demonstrate, this does not have any significant effect on the solving time.
+Moreover, we added expression optimization support to our library that can be used to reduce the instances and in the case of the \emph{choice} function does in fact lead to an even more efficient encoding using just four clauses.
+
+\newsavebox{\mintedboxleft}
+\newsavebox{\mintedboxright}
+\begin{sidewaysfigure}
+\begin{lrbox}{\mintedboxleft}
+\begin{minipage}[c]{.4\textwidth}
+\vspace{.5cm}%
+\begin{minted}[linenos,
+			   numbersep=5pt,
+%               frame=lines,
+               framesep=2mm]{c}
+if (i >= 0 && i < 20) {
+  for (unsigned int j = 0; j < 32; ++j) {
+    clause(-f[j], -b[j], c[j]);
+    clause(-f[j], b[j], d[j]);
+    clause(-f[j], c[j], d[j]);
+
+    clause(f[j], -b[j], -c[j]);
+    clause(f[j], b[j], -d[j]);
+    clause(f[j], -c[j], -d[j]);
+  }
+} else if (i >= 20 && i < 40) {
+  xor3(f, b, c, d);
+} else if (i >= 40 && i < 60) {
+  for (unsigned int j = 0; j < 32; ++j) {
+    clause(-f[j], b[j], c[j]);
+    clause(-f[j], b[j], d[j]);
+    clause(-f[j], c[j], d[j]);
+
+    clause(f[j], -b[j], -c[j]);
+    clause(f[j], -b[j], -d[j]);
+    clause(f[j], -c[j], -d[j]);
+  }
+} else if (i >= 60 && i < 80) {
+  xor3(f, b, c, d);
+}
+\end{minted}
+\end{minipage}
+\end{lrbox}
+\begin{lrbox}{\mintedboxright}
+\begin{minipage}[c]{.35\textwidth}
+\vspace{.5cm}%
+\begin{minted}[linenos,
+			   numbersep=5pt,
+%               frame=lines,
+               framesep=2mm]{python}
+if 0 <= i < 20:
+  f = (b & c) | (~b & d)
+elif 20 <= i < 40:
+  f = b ^ c ^ d
+elif 40 <= i < 60:
+  f = (b & c) | (b & d) | (c & d)
+else:
+  f = b ^ c ^ d
+\end{minted}
+\end{minipage}
+\end{lrbox}
+\centering
+\subtop[Instance generating tool from \cite{nossum2012sat}]{\usebox{\mintedboxleft}}
+\hspace{2cm}
+\subtop[Adapted version of our instance generating code]{\usebox{\mintedboxright}}
+\caption{Comparison of code for computing the \emph{SHA-1} round functions}
+\label{fig:code-comp-sha1}
+\end{sidewaysfigure}
 
 \section{Hash function toolkit}
 In addition to the modeling library we also provide a simple command line interface for generating custom instances called \emph{hashtoolkit}.
