@@ -51,7 +51,7 @@ Every time we make an arbitrary decision (the recursive step in the algorithm) w
 Every time either of the two rules of the DPLL algorithm forces some assignment of a variable we will add a forced vertex into the graph, with edges from every vertex that is a part of this forced choice.
 
 For example, with clause $(x \lor y \lor z)$ and with partial assignment $x=0, y=0$ the unit propagation rule will force the assignment of $z=1$.
-We will add this as a forced vertex, with edges from both $x$ and $y$.
+We will add this as a forced vertex, with edges from both $x=0$ and $y=0$.
 
 When we add an vertex to the graph for some variable but this variable is already present with the opposite assignment we have found a conflict.
 Now comes the part of CDCL which speeds up this search -- we will find all the decision vertices (variables) that are responsible for this conflict.
