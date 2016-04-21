@@ -1,0 +1,92 @@
+\documentclass[border=0pt]{standalone}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{english}
+
+\usepackage{tikz}
+\usetikzlibrary{calc, shapes}
+\usetikzlibrary{decorations.text}
+
+\usepackage{scalefnt}
+\usepackage{tabularx}
+
+%118, 18 - outer, inner
+%108, 38 - printable?
+\newcommand{\picsize}{118mm}
+\newcommand{\outdiam}{108mm}
+\newcommand{\indiam}{38mm}
+\newcommand{\tablewidth}{75mm}
+
+\input{settings}
+
+\begin{document}
+\begin{tikzpicture}
+
+% REMOVE - guides only
+%\node[draw, circle, minimum size=\outdiam] (OUTER) at (0,0) {};
+%\node[draw, circle, minimum size=\indiam] (INNER) at (0,0) {};
+
+
+% KEEP - for scaling
+\node[draw, red, circle, minimum size=\picsize] at (0, 0) {};
+% Guides
+\node[draw=none, circle, minimum size=\outdiam] (OUTER) at (0,0) {};
+\node[draw=none, circle, minimum size=\indiam] (INNER) at (0,0) {};
+
+
+\node[inner sep=0] at ($(OUTER.west)!0.5!(INNER.west)$) {\includegraphics[width=2cm]{figures/school_logo/bw_uniba}};
+\node[inner sep=0] at ($(OUTER.east)!0.5!(INNER.east)$) {\includegraphics[width=2cm]{figures/school_logo/bw_fmph}};
+
+\draw[draw=none] (OUTER.north) -- (INNER.north) node (C) [anchor=north, pos=0.2, rectangle split] {
+    \textsc{\scalefont{0.75} \settingsSchool}
+    \nodepart{second}
+    \textsc{\scalefont{0.75} \settingsFaculty}
+};
+
+\draw[draw=none] (OUTER.north) -- (INNER.north) node (C) [anchor=north, pos=0.55, rectangle split] {
+   {\scalefont{1} \textbf \settingsTitle}
+   \nodepart{second}
+   \emph{\scalefont{0.75} master thesis,~\settingsYear}
+   \nodepart{third}
+   {\scalefont{0.75} \textbf \settingsAuthor}
+};
+
+%\newlength{\lindent}
+%\newcommand{\circletext}[3]{
+%    \pgfmathsetlength{\lindent}{pi*#2}
+%    \draw [decorate, decoration={
+%        text along path,
+%        reverse path,
+%        text align/align=center,
+%        text align/left indent = {\lindent},
+%        text align/right indent = {0cm},
+%        text={#3}
+%    }] #1 circle (#2);
+%}
+%
+%{\scalefont{1.5}\circletext{(0,0)}{45mm}{\settingsTitle}}
+%
+%{\scalefont{1}\circletext{(0,0)}{40mm}{bakalárska práca}}
+
+\node[anchor=north, rectangle split, rectangle split parts=5] at (INNER.south) {
+    \nodepart{one}
+    Modeling library, usage samples, the \emph{HashToolkit} command
+    \nodepart{two}
+    line tool and statistical analysis code
+    \nodepart{three}
+	{\scalefont{0.75} See thesis (appendix A) for further information}
+    \nodepart{four}
+    {\scalefont{0.75} \texttt{https://github.com/lacop/master-thesis-code}}
+    \nodepart{five}
+    {\scalefont{0.75} \texttt{http://dx.doi.org/10.5281/zenodo.48832}}
+};
+%\node[anchor=north, font=\small] at (INNER.south) {
+%    \begin{tabularx}{\tablewidth}{|r|X|}
+%        \hline
+%        Obsah: & zdrojový kód a spustiteľná aplikácia \\ \hline
+%        Revizia: & TODO \\ \hline
+%        Link: & TODO \\ \hline
+%    \end{tabularx}};
+
+\end{tikzpicture}
+\end{document}
