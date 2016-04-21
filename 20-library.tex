@@ -227,22 +227,27 @@ Additionally the output digest bits can individually be set to either true, fals
 
 In this example we find a $10$-round $64$-bit preimage on \emph{SHA-1}, where the first eight bits are equal to a reference message and next eight bits are equal to the hexadecimal byte $0f$:
 
-\begin{minted}[frame=lines,
-               framesep=2mm]{shell-session}
+%\begin{minted}[frame=lines,
+%               framesep=2mm]{shell-session}
+\newcommand*{\tcol}[2]{\textcolor{#1}{#2}}
+\begin{Verbatim}[commandchars=&\[\]]
 $ python3 hashtoolkit.py -h sha1 -l 64 -r 10 \
-  -o 'rrrrrrrr00001111' -s 'minisat'
+  -o '&tcol[red][rrrrrrrr]&tcol[green][0000]&tcol[blue][1111]' -s 'minisat'
 ...
 SATISFIABLE
 Reference message: b'\x06)\xeaVqz\xe1\x8a'
-Reference digest: 44c79c8b97df9297a4f551b3d14ec9aafe296a32
+Reference digest: &tcol[red][44]c79c8b97df9297a4f551b3d14ec9aafe296a32
 
 Message length 64 bits
 Message bytes: b'NQ\xdbd\x8a\x06\x98\xde' rounds:  10
-Message digest:   440f7115cc0483f042885b32247fe5eab998a8b4
-\end{minted}
+Message digest:   &tcol[red][44]&tcol[green][0]&tcol[blue][f]7115cc0483f042885b32247fe5eab998a8b4
+\end{Verbatim}
+%\end{minted}
+%$%
 
-More details about this tool and usage instructions can be found in the attachment.
-
+Collisions can also be found using this tool.
+Supported hash functions are \emph{MD5}, \emph{SHA-1} and \emph{SHA-3-512}.
+More details about the tool and usage instructions can be found in appendix \ref{apx:hashtoolkit}.
 
 %\caption{a}
 %\end{figure}
