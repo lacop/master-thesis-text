@@ -7,6 +7,26 @@ With additional knowledge about a specific problem we can try to come up with be
 In this chapter we will describe several optimizations that we implemented and evaluated.
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
 
+\section{Merging operators}
+Since all operators in the \emph{Python} programming language are either unary or binary so are all the nodes in the created boolean circuit.
+Writing an expressions such as \texttt{X = A \& B \& C \& D} will result in the boolean circuit shown in figure \ref{fig:bc-comp:a} since the \emph{and} operator is left-to-right associative.
+
+A simple recursive algorithm can be used to walk over the boolean circuit in reverse topological order and merge such structures into a single $n$-ary node.
+At each step, if one or both of the operands of some boolean operator node are nodes of the same type, they can be merged together to a single node.
+After repeating this procedure for the whole tree we obtain the result shown in figure \ref{fig:bc-comp:b}.
+
+We implemented such optimization in our library and modified the clause generation code to support arbitrary arities.
+This is a simple optimization that can reduce the number of variables and clauses required to encode the given model as a SAT instance.
+Next we describe a more advanced method that can optimize not just sequences of identical operators but arbitrary expressions.
+
+\begin{figure}
+\centering
+\subbottom[Before merging]{\input{figures/opts/bc-binary.pgf}\label{fig:bc-comp:a}}
+\hspace{2cm}
+\subbottom[After merging]{\input{figures/opts/bc-merged.pgf}\label{fig:bc-comp:b}}
+\caption{Comparing the effect of operator merging on the boolean circuit resulting from the expression \texttt{X = A \& B \& C \& D}.}
+\end{figure}
+
 \section{Expression encoding}
 \label{sec:expression-encoding}
 The automatic and transparent conversion from unmodified source code to SAT instance via operator overloading and boolean circuits may lead to suboptimal encoding of various expressions.
@@ -60,8 +80,22 @@ In fact, it is possible to encode this expression with just four clauses and one
 To solve this issue we provide an expression optimization function in our library.
 Any $n$-ary expression can be wrapped using this function to replace the standard Tseitin encoding with a (potentially) smaller one, in terms of number of extra variables and clauses required.
 
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+# Unoptimized expression
+f = (b & c) | (~b & d)
+
+# Optimized using Espresso
+choice = OptimizeExpression(lambda b, c, d: (b & c) | (~b & d))
+f = choice(b, c, d)
+\end{minted}
+
+
 First we evaluate the expression on all $2^n$ possible inputs to generate a truth table.
 It is then processed using an external truth table minimization tool \emph{Espresso} \cite{rudell1986multiple}, which generates a list of clauses that can be used to encode the expression.
+
 When this expression is used anywhere in the model a node is created in the boolean circuit representation.
 It behaves like any other node and can be used in further expressions, however during instance generation the optimized list of clauses is used instead of the na\"{\i}ve Tseitin encoding.
 

@@ -1,0 +1,11 @@
+\begin{tikzpicture}[every node/.style = {draw, shape=rectangle, inner sep=2mm,},
+             every tree node/.style={}, level distance=40pt, sibling distance=30pt]
+\node (and1) {$\land$} [grow = up]
+  child {node [shape=circle, inner sep=1mm] {D}}
+  child {node [shape=circle, inner sep=1mm] {C}}
+  child {node [shape=circle, inner sep=1mm] {B}}
+  child {node [shape=circle, inner sep=1mm] {A}}
+;
+
+\node at (and1.south east) [xshift=4mm, draw=none] {\small X};
+\end{tikzpicture}
