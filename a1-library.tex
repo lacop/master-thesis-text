@@ -1,3 +1,26 @@
 \chapter{Library}
 
-TODO info, availability, ...
+The library  we developed is available at
+\begin{center}
+\url{https://github.com/lacop/master-thesis-code}
+\end{center}
+or on the CD attachment \citep{papay2016code}.
+~\\
+
+\noindent The attachment includes:
+\begin{description}
+\item[Modeling library] ~ \emph{instance.py} \\
+The most important part of the library, used to model boolean circuits, solve them using SAT solver and read the solutions.
+
+\item[Optimizations] ~ \emph{optimizations.py} \\
+Implementation of the operator merging (section \ref{sec:merging-operators}) and the \emph{Espresso} expression minimization (section \ref{sec:expression-encoding}) optimizations.
+
+\item[HashToolkit] ~ \emph{hashtoolkit.py, hashes.py} \\
+The \emph{HashToolkit} command line tool (appendix \ref{apx:hashtoolkit}).
+
+\item[Samples] ~ \emph{samples/} \\
+Sample implementations of several hash functions.
+
+\item[Statistics and plots] ~ \emph{plots/} \\
+Code used for statistical analysis and to generate plots in this text.
+\end{description}

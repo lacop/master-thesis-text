@@ -8,6 +8,7 @@ In this chapter we will describe several optimizations that we implemented and e
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
 
 \section{Merging operators}
+\label{sec:merging-operators}
 Since all operators in the \emph{Python} programming language are either unary or binary so are all the nodes in the created boolean circuit.
 Writing an expressions such as \texttt{X = A \& B \& C \& D} will result in the boolean circuit shown in figure \ref{fig:bc-comp:a} since the \emph{and} operator is left-to-right associative.
 

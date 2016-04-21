@@ -1,4 +1,13 @@
 \chapter{HashToolkit}
 \label{apx:hashtoolkit}
 
-TODO usage, availability
+The \emph{HashToolkit} command line tool can be used to generate, solve and verify (partial) preimage or collision attacks on hash functions.
+Supported hash functions are \emph{MD5}, \emph{SHA-1} and \emph{SHA-3-512}.
+
+Input and output bits can be individually set to arbitrary values.
+Output bits can additionally be set to be the same as a randomly generated reference digest.
+
+Moreover, the length of the input message and number of rounds can also be customized.
+Any SAT solver that supports the \emph{DIMACS} format (section \ref{sec:dimacs}) can be used for solving.
+
+For more details about all the commands line options run the tool with the \texttt{--help} flag.
