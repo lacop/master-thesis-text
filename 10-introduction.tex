@@ -141,7 +141,6 @@ Instead we will focus on \emph{partial} preimage attacks, where only a certain n
 We will briefly describe two hash functions on which we focus in our work and to whose internals we will be referring later.
 
 \textbf{SHA-1}, short for \emph{Secure Hash Algorithm} \cite{NIST1995FIPS180-1} is a widely used hash function based on the \emph{Merkle-Damg\aa rd} construction \cite{merkle1979secrecy} with output digest size of $160$ bits.
-%TODO cite standard
 The internal state consists of five $32$-bit words $A, B, C, D$ and $E$ which are updated in $80$ rounds.
 
 After padding the message to a length that is multiple of $512$ bits, it is processed in \emph{chunks} of that same size.
@@ -183,7 +182,6 @@ After processing all chunks the resulting state is the output digest.
 It is based on a \emph{sponge} construction which allows the output digest size to be variable.
 
 We will specifically focus on the variant \emph{SHA-3-512} which has $1600$-bit state updated in $24$ rounds (divided into five steps called $\theta, \rho, \pi, \chi$ and $\iota$) and produces a $512$-bit digest.
-%TODO cite standard
 The state is represented as a $5\times 5$ matrix $S$ of $64$-bit words.
 %Each round consists of five steps called $\theta, \rho, \pi, \chi$ and $\iota$ that first populate matrices and vectors $B, C$ and $D$ using the $S$ matrix from previous round and then use them to create the new $S$ matrix.
 
