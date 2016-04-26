@@ -148,9 +148,9 @@ The internal state consists of five $32$-bit words $h_0, \ldots, h_4$ which are 
 After padding\footnote{Details of the padding are not important for our purposes and can be found in the specification.} the message to a length that is multiple of $512$ bits, it is processed in \emph{chunks} of that same size.
 Each chunk is broken into $16$ $32$-bit words $W_0, \dots, W_{15}$.
 From those $64$ additional words $W_{16}, \dots, W_{79}$ are created by \emph{extending} the chunk:
-\[
-W_i = (W_{i-3} \oplus W_{i-8} \oplus W_{i-14} \oplus W_{i-16}) \lll 1 ~~~ (16 \le i < 80)
-\]
+\begin{equation}
+W_i = (W_{i-3} \oplus W_{i-8} \oplus W_{i-14} \oplus W_{i-16}) \lll 1 ~~~ (16 \le i < 80) \label{eqn:sha1-extend}
+\end{equation}
 where $\lll$ means cyclic left shift on $32$-bit words and $\oplus$ means bitwise exclusive or.
 
 These words are then processed in $80$ rounds, during which a set of five $32$-bit \emph{round words} $A, B, C, D$ and $E$ are updated.

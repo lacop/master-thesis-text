@@ -55,6 +55,26 @@ For that reason we use the rather less known \emph{Games-Howell} procedure \cite
 Both used procedures are implemented by the \emph{R} statistical computing language \cite{rteam2013}.
 Availability of implementations was also a factor when deciding on methodology -- using a tested implementation greatly reduces the chance of errors.
 
+\section{Merging operators}
+First we will describe the effects of the operator merging optimization described in section \ref{sec:merging-operators}.
+Since it is less versatile and powerful than the \emph{Espresso} expression optimization described in the next section we will only evaluate it on one hash function, the \emph{SHA-1}.
+
+While there is a place in the \emph{SHA-3} hash function that could benefit from operator merging (the $\theta$ step, where exclusive or of five values is computed), the method used in section \ref{sec:sha3-espresso} is also faster.
+This is because the whole boolean circuit does not have to be traversed and modified.
+
+As for \emph{SHA-1} there are two places that can benefit from this optimization.
+First one is the computation of the extended chunk (\ref{eqn:sha1-extend} in section \ref{sec:hash-functions}).
+Here four values are combined using exclusive or.
+Second is the \emph{majority} round function where three values are again combined using exclusive or.
+
+On a full $80$ round \emph{SHA-1} instance this reduces the number of variables from \num{43232} to \num{37216} and increases the number of clauses from \num{212463} to \num{220655}.
+The reduction in number of variables is quite significant and could be thought to make solving faster.
+
+However, after measuring the running time to find an $8$-bit preimage with both with and without this optimization and performing the Games-Howell procedure gives us a very high p-value of $0.43$.
+Therefore we can't reject the null hypothesis that any difference in running times between these variants is not due to chance.
+
+From this we conclude that this operator merging optimization is neither helpful nor required, at least in cases such as cryptographic hash functions where repeated use of the same operator is rare.
+
 \section{Expression encoding evaluation}
 \label{sec:expression-encoding-eval}
 In this section we discuss the effect of expression encoding optimizations described in section \ref{sec:expression-encoding}.
