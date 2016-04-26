@@ -21,7 +21,7 @@ For this reason we also perform all such experiments on multiple instances that 
 
 \subsubsection{Censoring}
 Sometimes we might obtain an instance that takes very long time to solve.
-To ensure that experiments conclude in a reasonable time it is common to enforce a time limit and abort all computations that exceed it.
+To ensure that experiments finish in a reasonable time it is common to enforce a time limit and abort all computations that exceed it.
 Since in such cases we can not know the true running time we must discard these aborted measurements.
 
 Data sets with such discarded measurements are called \emph{censored}.
@@ -156,7 +156,7 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 For branching order optimization described in section \ref{sec:branching-order} we used the \emph{SHA-3} hash function for evaluation.
 
 \subsection{SHA-3 analysis}
-For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $0$ to $24$ (full SHA-3).
+For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $1$ to $24$ (the maximum for this hash function).
 For every number of rounds 10 different instances were generated and each was solved 10 times, for a total of 100 samples per round per strategy.
 We compared the following branching order strategies:
 

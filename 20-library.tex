@@ -141,7 +141,7 @@ We can add this additional constraint by setting
 X.bits = [True]
 \end{minted}
 
-before generating and solving the instance.
+\noindent before generating and solving the instance.
 Now we obtain the output \texttt{[[True], [False], [True], [True]]} which is another valid solution with the additional property that the value of $X$ is true.
 
 The entire program is less than ten lines long and very straightforward.
@@ -183,7 +183,7 @@ def sha1(message, rounds = 80):
 
 To modify this code to use our library and produce a SAT instance we need to perform only a few small changes.
 First of all, we need to convert all constants to \emph{BitVector} objects of the appropriate size:
-
+\pagebreak
 % Many spaces to overflow # outside of document...
 \begin{minted}[linenos,
 			   numbersep=5pt,
@@ -195,7 +195,7 @@ K = [intToVector(x) for x in [0x5A827999, ...]]                                 
 h0, h1, h2, h3, h4 = [intToVector(x) for x in [0x67452301, ...]]
 \end{minted}
 
-Next we replace the \texttt{leftrotate} function with the \emph{CyclicLeftShift} provided by our library\footnote{Since Python does not provide an operator for cyclic left shift we can't use operator overloading in this case}.
+Next we replace the \texttt{leftrotate} function with the \emph{CyclicLeftShift} provided by our library\footnote{Since Python does not provide an operator for cyclic left shift we can't use operator overloading in this case.}.
 Since addition on $32$-bit \emph{BitVector} objects is automatically done modulo $2^{32}$ we can remove the unnecessary \emph{and mask}:
 \begin{minted}[linenos,
 			   numbersep=5pt,
@@ -295,7 +295,7 @@ For example, for the \emph{choice} round function used in first $20$ rounds we s
 On the other hand, a set of six clauses to encode this function had to be found and used in the referenced work.
 
 As we will discuss in section \ref{sec:expression-encoding}, our approach does lead to a less efficient encoding (in terms of number of variable and clauses in the resulting instance).
-However, as experiments in \ref{sec:expression-encoding-eval} demonstrate, this does not have any significant effect on the solving time.
+However, as experiments in \ref{sec:expression-encoding-eval} demonstrate, this does not have any measurable effect on the solving time.
 Moreover, we added expression optimization support to our library that can be used to reduce the instances and in the case of the \emph{choice} function does in fact lead to an even more efficient encoding using just four clauses.
 
 \subsection{The N-Queens problem}
@@ -334,7 +334,7 @@ for row in board:
     rot.bits = [True]*N
 \end{minted}
 
-Next we need to make sure there is at most one true bit in each ro, which we do in a similar way.
+Next we need to make sure there is at most one true bit in each row, which we do in a similar way.
 Suppose there are two true bits in the row separated by $k$ false bits.
 If we take the binary \emph{and} of the row and the cyclic left shift of the row by $k$ bits we will obtain a vector with one true bit.
 Since we do not know the value of $k$ we will take the binary \emph{or} of all such vectors for all values of $0 < k < N$:
@@ -355,7 +355,7 @@ We will do a similar trick to make sure there is at most one queen on every diag
 We omit the code here for brevity.
 
 Lastly we need to make sure there is precisely one queen in every column.
-However since we already have rules to enforce precisely one queen in every row, it is enough to ensure \emph{at least one} queen in every row:
+However since we already have rules to enforce precisely one queen in every row, it is enough to ensure \emph{at least one} queen in every column:
 
 \begin{minted}[linenos,
 			   firstnumber=38,

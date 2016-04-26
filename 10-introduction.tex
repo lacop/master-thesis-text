@@ -1,11 +1,12 @@
 \chapter{Introduction}
 \section{SAT solvers}
-\emph{SAT solvers} (shortened from \emph{satisfiability}) are programs which take a boolean satisfiability problem and a find solution or solutions to this problem.
+\emph{SAT solvers} (shortened from \emph{satisfiability}) are programs which take a boolean satisfiability problem and find a solution or solutions to this problem.
 The problem, which we will call an \emph{instance}, consists of a number of variables and boolean clauses composed of these variables.
 The solution, if it exists, is an assignment of truth values to the variables such that the clauses are satisfied.
 If no such assignment exists the instance is called \emph{unsatisfiable}.
 
-Most modern SAT solvers expect input in \emph{conjunctive normal form} in which all clauses are disjunctions of literals (literal is either a variable or a negation of a variable, and at least one literal must be true) and the instance is a conjunction of such clauses (all clauses must be true).
+Most modern SAT solvers expect input in \emph{conjunctive normal form} in which all clauses are disjunctions of literals (a literal is either a variable or a negation of a variable) and the instance is a conjunction of such clauses.
+Thus all clauses must be true, and in each clause at least one literal must be true in order for the instance to be satisfied.
 As the name suggests this is a normal form, which means every boolean expression can be converted to an equivalent one that satisfies these requirements.
 Thus we will from now on only consider such instances without loss of generality.
 
@@ -14,15 +15,15 @@ Examples of such uses in practice include formal program verification, model che
 %TODO refs for use cases
 
 \subsection{Implementation}
-Since SAT is an $NP$-complete language and assuming $P \neq NP$ we can not in general find solutions in polynomial time.
+Since SAT is an $NP$-complete language and assuming $P \neq NP$ we can not in general find solutions in deterministic polynomial time.
 A simple exponential time algorithm is to try every possible boolean truth assignment.
 To remember which assignments have been tried and which have not we can implement this algorithm as a recursive backtracking, where for every input variable we try in turn both possible values.
 This will only require linear memory to implement.
 
-While there are no known algorithms that perform asymptotically better in he worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a partial assignment that can not be extended into any satisfying one.
+While there are no known algorithms that perform asymptotically better in he worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a clause in which all literals have been assigned to false.
 
 \subsubsection{DPLL algorithm}
-First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \citep{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by applying two rules at each step:
+First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \citep{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by first applying two rules at each step of the recursion:
 
 \begin{description}
 \item[Unit propagation] \hfill \\
@@ -32,10 +33,11 @@ Otherwise it can only be satisfied by assigning the necessary value to the remai
 This means there will be no branching for this literal and thus the search time will be reduced by avoiding the obviously wrong choice.
 
 \item[Pure literal elimination] \hfill \\
-We will call a variable \emph{pure} if it only occurs in the formula with a single polarity (that is, always negated or always non-negated).
+We will call a literal \emph{pure} if its variable only occurs in the formula with a single polarity (that is, always negated or always non-negated).
 All pure literals can be assigned the required value to make all clauses containing them true and these clauses can then also be ignored during further search.
 \end{description}
 
+After these rules are applied we continue as before by picking an unassigned variable and trying both possible truth value assignments recursively.
 These two simple rules will help to reduce the search space the algorithm has to look through and thus reduce the total running time.
 
 \subsubsection{Conflict-Driven Clause Learning}
@@ -73,7 +75,7 @@ This method is used in all modern SAT solvers and improves their performance sig
 
 \subsection{Interfacing with SAT solvers}
 \label{sec:dimacs}
-Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} CNF} format which we use.
+Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS CNF} format\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} which we use.
 Later in section \ref{sec:branching-order-impl} we will describe augmenting this format for optimization purposes.
 
 The file begins with a line in form
@@ -84,12 +86,12 @@ The file begins with a line in form
 
 The following lines are in the form
 
-\centerline{\texttt{$v_1$\dots$v_i$ 0}}
+\centerline{\texttt{$v_1 ~ v_2 ~ \ldots ~ v_i$ 0}}
 
 \noindent and each represents a single clause consisting of a disjunction of literals $v_1$ through $v_i$.
 Each literal $v_i$ is an integer between $1$ and $vars$ for a variable in positive polarity or an integer between $-1$ and $-vars$ for negative polarity.
 
-The output for a satisfiable instance is a list of $vars$ numbers.
+The output of a SAT solver for a satisfiable instance is a list of $vars$ numbers.
 For every $1 \le v_i \le vars$ either $v_i$ or $-v_i$ is present in the list, indicating the polarity of the $i$-th variable in some satisfying assignment. 
 
 \section{Cryptographic problems}
@@ -99,7 +101,7 @@ The clauses describe the behavior of the primitive as a relation between the var
 Solutions to such instances are pairs of inputs and corresponding outputs.
 
 By placing additional restrictions on the possible solutions (by introducing more clauses) we can find a truth assignment that gives us the desired inputs and outputs to the cryptographic primitive.
-With a cipher this can mean finding the secret key (input) by restricting the output to observed keystream.
+With a stream cipher this can mean finding the secret key (input) by restricting the output to observed keystream.
 With hash functions this can mean reversing the output for a \emph{preimage} attack or finding two different input with the same output (a \emph{collision}).
 
 In our work we will focus specifically on hash functions, which we describe in more detail in the following section.

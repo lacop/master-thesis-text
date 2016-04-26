@@ -2,7 +2,7 @@
 
 Modern SAT solvers use many advanced optimizations and heuristics to improve the solving time.
 However these are usually designed for general problem instances.
-With additional knowledge about a specific problem we can try to come up with better rules which lead to decrease of solving time.
+With additional knowledge about a specific problem we can try to come up with better heuristics which lead to decrease of solving time.
 
 In this chapter we will describe several optimizations that we implemented and evaluated.
 Some of these involve a simple change in output instance generation, others involve changes to the SAT solvers themselves.
@@ -133,5 +133,5 @@ Once all have been assigned we fall back to the standard branching order algorit
 
 We also made similar changes to the \emph{CryptoMiniSat} solver \cite{soos2009extending}, which is based on MiniSat.
 
-We have also added support for this to our modeling library.
+We have also added support for this feature to our modeling library.
 Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
