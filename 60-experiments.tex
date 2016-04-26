@@ -7,6 +7,7 @@ Each variant can be either a modification to the instance itself (by changing th
 \section{Methodology}
 Since the running time of a SAT solver is not deterministic it is not enough to simply perform a single run for every instance.
 In fact, given the same instance and the same SAT solver the running time can differ significantly, even by several orders of magnitude.
+This is because the random heuristic decisions can sometimes find the satisfying assignment by "luck" and other times keep exploring unsatisfiable parts of the search space for a long time.
 Multiple samples therefore have to be gathered and sound statistical methods used to discover patterns in this noisy data.
 
 \subsubsection{Sampling procedure}
@@ -14,8 +15,8 @@ To counter the high variability in time even for one instance we will solve each
 
 Additionally, not all instances for particular parameters (such as number of rounds) are equally hard.
 For example, reduced hash functions with significantly lower number of rounds than the full hash function do not behave sufficiently as random functions.
-Some output digests might be significantly less likely to be produced than other, or might not be even be possible.
-When we are performing a partial preimage attack by fixing several digest bits to be equal to a reference digest (obtained by first hashing a random message) some instances might have fewer solutions than others and be therefore harder.
+Some output digests might be significantly less likely to be produced than others, or might not be even be possible.
+When we are performing a partial preimage attack by fixing several digest bits to be equal to a reference digest (obtained by first hashing a random message) some instances might have fewer solutions than others.
 
 For this reason we also perform all such experiments on multiple instances that have identical parameters but the random reference messages are independently generated.
 
@@ -61,6 +62,10 @@ We performed this experiment on two hash functions, the \emph{SHA-1} and \emph{S
 
 \subsection{SHA-1 analysis}
 We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
+
+This reduces the number of clauses required for a full $80$ round instance by about ten thousand from approximately $210$ thousand in the unoptimized case.
+Similarly the number of variables is reduced by about four thousand from approximately $43$ thousand.
+
 We measured the running time of finding an $8$-bit preimage for $32$-bit input message.
 The preimage bits were obtained by hashing random messages to ensure a solution would exist even for instances with reduced number of rounds.
 We repeated the experiment multiple times for a total of $5670$ samples for each variant.
@@ -96,18 +101,18 @@ Using the Games-Howell post hoc test on instances with more than $20$ rounds (to
 %s3esxor:s3noxor 0.98 1891 0.7581
 %s3nono:s3noxor  3.21 1892 0.0075
 \begin{figure*}
-\centering \begin{tabular}{ccrccrr}
-\multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{1}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{2}{c}{\textbf{Time}} \\
-\textbf{$\chi$ step} & \textbf{$\theta$ step} & \multicolumn{1}{c}{\textbf{Mean}} & \textbf{$\chi$ step} & \textbf{$\theta$ step} & \textbf{t} & \textbf{p}\\ \hline
-\xmark & \xmark & $7.5$ & \xmark & \cmark & $3.21$ & $<0.01$ \\
-& & & \cmark & \xmark & $0.52$ & $0.95$ \\
-& & & \cmark & \cmark & $2.11$ & $0.15$ \\ \hline
-\xmark & \cmark & $8.5$ & \cmark & \xmark & $3.63$ & $<0.01$ \\
-& & & \cmark & \cmark & $0.98$ & $0.75$ \\ \hline
-\cmark & \xmark & $7.4$ & \cmark & \cmark & $2.56$ & $0.05$ \\ \hline
-\cmark & \cmark & $8.2$ & \\
+\centering \begin{tabular}{ccrccccrr}
+\multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{1}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Number of}} & \multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{2}{c}{\textbf{Time}} \\
+\textbf{$\chi$ step} & \textbf{$\theta$ step} & \multicolumn{1}{c}{\textbf{Mean}} & \textbf{Clauses} & \textbf{Variables} & \textbf{$\chi$ step} & \textbf{$\theta$ step} & \textbf{t} & \textbf{p}\\ \hline
+\xmark & \xmark & $7.5$ & \num{717865} & \num{243904} & \xmark & \cmark & $3.21$ & $<0.01$ \\
+& & & & & \cmark & \xmark & $0.52$ & $0.95$ \\
+& & & & & \cmark & \cmark & $2.11$ & $0.15$ \\ \hline
+\xmark & \cmark & $8.5$ & \num{828927} & \num{220864} & \cmark & \xmark & $3.63$ & $<0.01$ \\
+& & & & & \cmark & \cmark & $0.98$ & $0.75$ \\ \hline
+\cmark & \xmark & $7.4$ & \num{605805} & \num{167104} & \cmark & \cmark & $2.56$ & $0.05$ \\ \hline
+\cmark & \cmark & $8.2$ & \num{716867} & \num{144064} \\
 \end{tabular}
-\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy.}
+\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy. Numbers of clauses and variables are given for the full $24$ round instances.}
 \label{tbl:gh-sha3-opts}
 \end{figure*}
 
