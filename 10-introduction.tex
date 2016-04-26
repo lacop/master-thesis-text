@@ -15,12 +15,12 @@ Examples of such uses in practice include formal program verification \cite{chak
 %TODO refs for use cases
 
 \subsection{Implementation}
-Since SAT is an $NP$-complete language and assuming $P \neq NP$ we can not in general find solutions in deterministic polynomial time.
+Since SAT is an $NP$-complete language \cite{cook1971complexity} and assuming $P \neq NP$ we can not in general find solutions in deterministic polynomial time.
 A simple exponential time algorithm is to try every possible boolean truth assignment.
 To remember which assignments have been tried and which have not we can implement this algorithm as a recursive backtracking, where for every input variable we try in turn both possible values.
-This will only require linear memory to implement.
+This will only require linear memory to implement in terms of number of variables.
 
-While there are no known algorithms that perform asymptotically better in he worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a clause in which all literals have been assigned to false.
+While there are no known algorithms that perform asymptotically better in the worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a clause in which all literals have been assigned to false.
 
 \subsubsection{DPLL algorithm}
 First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \cite{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by first applying two rules at each step of the recursion:
@@ -68,7 +68,7 @@ L &:= (x_1^{(\overline{v_1})} \lor \dots \lor x_k^{(\overline{v_k})})
 
 The notation $x^{(v)}$ is used to represent $x$ if $v=1$ and $\overline{x}$ if $v=0$. Symbols $\top$ and $\bot$ represent tautology and contradiction, respectively.
 
-We can now add this learnt clause $L$ into the list of clauses we have to satisfy, since not satisfying it is guaranteed to lead to a conflict.
+We can now add this learnt clause $L$ into the list of clauses we have to satisfy, since not satisfying $L$ is guaranteed to lead to a conflict.
 In the next step of the backtracking algorithm we will not return only a single level up from the recursion (that is, removing the assigning of just a single variable) but all the way back until we reach the first point where one of the conflicting variables was assigned a value.
 
 This method is used in all modern SAT solvers and improves their performance significantly over the DPLL algorithm \cite{silva1997grasp}.
@@ -102,7 +102,7 @@ Solutions to such instances are pairs of inputs and corresponding outputs.
 
 By placing additional restrictions on the possible solutions (by introducing more clauses) we can find a truth assignment that gives us the desired inputs and outputs to the cryptographic primitive.
 With a stream cipher this can mean finding the secret key (input) by restricting the output to observed keystream.
-With hash functions this can mean reversing the output for a \emph{preimage} attack or finding two different input with the same output (a \emph{collision}).
+With hash functions this can mean reversing the output for a \emph{preimage} attack or finding two different inputs with the same output (a \emph{collision}).
 
 In our work we will focus specifically on hash functions, which we describe in more detail in the following section.
 
