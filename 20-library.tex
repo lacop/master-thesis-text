@@ -212,8 +212,8 @@ Since addition on $32$-bit \emph{BitVector} objects is automatically done modulo
 \end{minted}
 
 As we can see the changes required are minimal and trivial to perform.
-For brevity we have omitted details such as message padding -- the full source code can be found in the attachment \cite{papay2016code}.
-It is about 80 lines long and includes additional constraints on the output bits to find (partial) preimages.
+For brevity we have omitted details such as message padding -- the full source code can be found in the attachment \cite{papay2016code} in file \emph{samples/sha1\_instance\_test.py}.
+It also includes additional constraints on the output bits to find (partial) preimages.
 After obtaining a solution the message is extracted and hashed using a reference implementation to ensure its validity.
 
 \subsection{Comparison to existing work}
@@ -368,18 +368,16 @@ for row in board:
 row_or.bits = [True]*N
 \end{minted}
 
-Full source code for this sample is available in the attachment (see appendix \ref{apx:library}) and is just $47$ lines long including comments.
+Full source code for this sample is available in the attachment (see appendix \ref{apx:library}) in file \emph{samples/nqueens.py}.
 The output of the program shows the solution as a board, with the symbol \texttt{\#} representing a queen:
 
 \begin{Verbatim}
 $ python3 test_nqueens.py
-=======================[ Problem Statistics ]========================
-|  Number of variables:          5384                               |
-|  Number of clauses:           12104                               |
-=====================================================================
-CPU time              : 0.008 s
-
+Number of variables:          5384    
+Number of clauses:           12104     
+CPU time : 0.008 s
 SATISFIABLE
+
 ...#....
 .#......
 ......#.
