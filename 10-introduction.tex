@@ -11,7 +11,7 @@ As the name suggests this is a normal form, which means every boolean expression
 Thus we will from now on only consider such instances without loss of generality.
 
 By modeling a decision problem as a SAT instance we can take advantage of the advanced optimizations and heuristics employed by modern SAT solvers.
-Examples of such uses in practice include formal program verification, model checking or even routing of connections in microchips.
+Examples of such uses in practice include formal program verification \cite{chaki2004modular, cook2005cogent}, model checking \cite{biere1999symbolic, mcmillan2002applying} or even routing of connections in microchips \cite{nam1999satisfiability, nam2004comparative}.
 %TODO refs for use cases
 
 \subsection{Implementation}
@@ -23,7 +23,7 @@ This will only require linear memory to implement.
 While there are no known algorithms that perform asymptotically better in he worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a clause in which all literals have been assigned to false.
 
 \subsubsection{DPLL algorithm}
-First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \citep{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by first applying two rules at each step of the recursion:
+First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \cite{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by first applying two rules at each step of the recursion:
 
 \begin{description}
 \item[Unit propagation] \hfill \\
@@ -43,7 +43,7 @@ These two simple rules will help to reduce the search space the algorithm has to
 \subsubsection{Conflict-Driven Clause Learning}
 It can happen that after some partial assignment of variables there is already a conflict and it is not possible to extend this assignment to a satisfying one.
 However, the DPLL algorithm will continue to explore the entire search subspace.
-With \emph{conflict-driven clause learning} (CDCL, \citep{bayardo1997using,marques1999grasp}) we can avoid this by the use of \emph{implication graph} and \emph{learnt clauses}.
+With \emph{conflict-driven clause learning} (CDCL, \citep{bayardo1997using,silva1997grasp}) we can avoid this by the use of \emph{implication graph} and \emph{learnt clauses}.
 
 The \emph{implication graph} is a directed graph in which vertices are variables with their assignment.
 These will be marked as either \emph{decision} or \emph{forced}.
@@ -71,7 +71,7 @@ The notation $x^{(v)}$ is used to represent $x$ if $v=1$ and $\overline{x}$ if $
 We can now add this learnt clause $L$ into the list of clauses we have to satisfy, since not satisfying it is guaranteed to lead to a conflict.
 In the next step of the backtracking algorithm we will not return only a single level up from the recursion (that is, removing the assigning of just a single variable) but all the way back until we reach the first point where one of the conflicting variables was assigned a value.
 
-This method is used in all modern SAT solvers and improves their performance significantly over the DPLL algorithm.
+This method is used in all modern SAT solvers and improves their performance significantly over the DPLL algorithm \cite{silva1997grasp}.
 
 \subsection{Interfacing with SAT solvers}
 \label{sec:dimacs}
