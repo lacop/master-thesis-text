@@ -132,6 +132,20 @@ Then we modified the selection of next branching candidate to first pick all the
 Once all have been assigned we fall back to the standard branching order algorithm.
 
 We also made similar changes to the \emph{CryptoMiniSat} solver \cite{soos2009extending}, which is based on MiniSat.
+However since we got better performance from using MiniSat only this solver was used for further evaluation.
 
 We have also added support for this feature to our modeling library.
-Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive.
+Before the boolean circuit is transformed to a set of CNF clauses and written to a file, the user can specify arbitrary branching order using variables defined in the model of the cryptographic primitive:
+
+\begin{minted}[linenos,
+			   numbersep=5pt,
+               frame=lines,
+               framesep=2mm]{python}
+instance.assignVars(all_variables)
+
+for var in variables_for_branching:
+    instance.branch(var)
+
+instance.emit(all_variables)
+instance.solve(['minisat'])
+\end{minted}

@@ -143,17 +143,19 @@ Instead we will focus on \emph{partial} preimage attacks, where only a certain n
 We will briefly describe two hash functions on which we focus in our work and to whose internals we will be referring later.
 
 \textbf{SHA-1}, short for \emph{Secure Hash Algorithm} \cite{NIST1995FIPS180-1} is a widely used hash function based on the \emph{Merkle-Damg\aa rd} construction \cite{merkle1979secrecy} with output digest size of $160$ bits.
-The internal state consists of five $32$-bit words $A, B, C, D$ and $E$ which are updated in $80$ rounds.
+The internal state consists of five $32$-bit words $h_0, \ldots, h_4$ which are first initialized to some constant values.
 
-After padding the message to a length that is multiple of $512$ bits, it is processed in \emph{chunks} of that same size.
+After padding\footnote{Details of the padding are not important for our purposes and can be found in the specification.} the message to a length that is multiple of $512$ bits, it is processed in \emph{chunks} of that same size.
 Each chunk is broken into $16$ $32$-bit words $W_0, \dots, W_{15}$.
 From those $64$ additional words $W_{16}, \dots, W_{79}$ are created by \emph{extending} the chunk:
 \[
 W_i = (W_{i-3} \oplus W_{i-8} \oplus W_{i-14} \oplus W_{i-16}) \lll 1 ~~~ (16 \le i < 80)
 \]
-where $\lll$ means cyclic left shift on $32$-bit words.
+where $\lll$ means cyclic left shift on $32$-bit words and $\oplus$ means bitwise exclusive or.
 
-These words are then processed in $80$ rounds, during which the internal state is updated.
+These words are then processed in $80$ rounds, during which a set of five $32$-bit \emph{round words} $A, B, C, D$ and $E$ are updated.
+These are first initialized to the current values of $h_0$ through $h_4$ to make the result of every chunk depend on all previous chunks as well.
+
 In each round $i$, first the values $f$ and $k$ are computed based on the round number.
 Then $T$ is computed as
 \[
@@ -161,7 +163,7 @@ T = (A \lll 5) + f + E + k + W_i
 \]
 where addition is performed modulo $2^{32}$.
 
-Finally, the state is updated as follows
+Finally, the five round words are updated as follows
 \begin{align*}
 E \gets D& &D \gets C& &C \gets B \lll 30& &B \gets A& &A \gets T
 \end{align*}
@@ -176,7 +178,8 @@ f_2 &= Maj(B, C, D) = (B \land C) \oplus (B \land D) \oplus (C \land D)\\
 f &= f_{\lfloor \frac{i}{20} \rfloor}
 \end{align*}
 
-After processing all chunks the resulting state is the output digest.
+After the last round the values of the round words are added to the current state (modulo $2^{32}$).
+Once all chunks have been processed this way the resulting state is the output digest.
 
 ~\\
 

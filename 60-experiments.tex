@@ -61,6 +61,13 @@ In this section we discuss the effect of expression encoding optimizations descr
 We performed this experiment on two hash functions, the \emph{SHA-1} and \emph{SHA-3}.
 
 \subsection{SHA-1 analysis}
+
+\begin{figure*}	
+\centering \includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
+\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using Espresso minimization for rounds functions (red).}
+\label{fig:opt-sha1-cmp-espresso}
+\end{figure*}
+
 We evaluated the effectiveness of this optimization on preimage attacks on \emph{SHA-1} using the unmodified Tseitin encoding and using the \emph{Espresso} optimizer on both the \emph{choice} and \emph{majority} round functions.
 
 This reduces the number of clauses required for a full $80$ round instance by about ten thousand from approximately $210$ thousand in the unoptimized case.
@@ -100,7 +107,7 @@ Using the Games-Howell post hoc test on instances with more than $20$ rounds (to
 %s3esxor:s3nono  2.11 1878 0.1499
 %s3esxor:s3noxor 0.98 1891 0.7581
 %s3nono:s3noxor  3.21 1892 0.0075
-\begin{figure*}
+\begin{table*}
 \centering \begin{tabular}{ccrccccrr}
 \multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{1}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Number of}} & \multicolumn{2}{c}{\textbf{Optimizations}} & \multicolumn{2}{c}{\textbf{Time}} \\
 \textbf{$\chi$ step} & \textbf{$\theta$ step} & \multicolumn{1}{c}{\textbf{Mean}} & \textbf{Clauses} & \textbf{Variables} & \textbf{$\chi$ step} & \textbf{$\theta$ step} & \textbf{t} & \textbf{p}\\ \hline
@@ -112,9 +119,9 @@ Using the Games-Howell post hoc test on instances with more than $20$ rounds (to
 \cmark & \xmark & $7.4$ & \num{605805} & \num{167104} & \cmark & \cmark & $2.56$ & $0.05$ \\ \hline
 \cmark & \cmark & $8.2$ & \num{716867} & \num{144064} \\
 \end{tabular}
-\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy. Numbers of clauses and variables are given for the full $24$ round instances.}
+\caption{Pairwise comparison of four \emph{SHA-3-512} optimization combinations using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing, for a total of $n=949$ samples per strategy. Numbers of clauses and variables are given for the full $24$ round instances. Times are given in seconds.}
 \label{tbl:gh-sha3-opts}
-\end{figure*}
+\end{table*}
 
 We performed a similar experiment for the \emph{SHA-3} hash function, finding an $8$-bit preimage on $32$-bit message where the preimage bits again came from randomly generated messages.
 We considered two possible optimizations in the round function and tested four variants -- all combinations of turning on or off these two optimizations.
@@ -126,7 +133,7 @@ The second optimization was in the $\theta$ step, where the $C$ vector is filled
 Without optimization this leads to four extra variables and 16 extra clauses.
 Using the Espresso minimization will lead to 32 clauses but only one extra variable.
 
-Using the Games-Howell procedure again we obtain the pairwise comparison shown in figure \ref{tbl:gh-sha3-opts}.
+Using the Games-Howell procedure again we obtain the pairwise comparison shown in table \ref{tbl:gh-sha3-opts}.
 
 We can see that the \emph{xor} optimization -- which reduces the number of variables but requires twice as many clauses -- in fact leads to higher solving time (mean difference $t=3.21$) at significance level of $p < 0.01$.
 Thus the default behavior is more efficient.
@@ -138,12 +145,6 @@ From this we conclude that they do not provide significant benefits.
 
 While our library provides this optimization feature to users as we saw in our measurements it is not necessary to use it.
 Therefore minimal changes to existing, off-the-shelf implementations of hash functions (without the need to identify expressions with non-optimal Tseitin representation) are sufficient to match the hand-optimized instances such as in \cite{nossum2012sat}.
-
-\begin{figure*}	
-\centering \includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
-\caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using Espresso minimization for rounds functions (red).}
-\label{fig:opt-sha1-cmp-espresso}
-\end{figure*}
 
 \begin{figure*}
 \centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
@@ -216,7 +217,7 @@ From these plots we see that while the ratios for the number of conflict are mos
 %r0-S-y-x:rlast-S-x-y    0.755 957 0.94
 %r0-S-y-x:rlast-S-y-x    0.609 956 0.97
 %rlast-S-x-y:rlast-S-y-x 0.153 958 1.00
-\begin{figure*}
+\begin{table*}
 \centering \begin{tabular}{lrrlrrrr}
 \textbf{Strategy} & \textbf{Time} & \textbf{Conflicts} & \textbf{Strategy} & \multicolumn{2}{c}{\textbf{Time}} & \multicolumn{2}{c}{\textbf{Conflicts}} \\
 & \multicolumn{2}{c}{\textbf{Mean}} & & \textbf{t} & \textbf{p} & \textbf{t} & \textbf{p} \\ \hline
@@ -232,13 +233,13 @@ From these plots we see that while the ratios for the number of conflict are mos
 \emph{r0-last-x-y} & $7.8$ & $731$ & \emph{rlast-S-y-x} & $0.15$ & $>0.99$ & $0$ & $>0.99$ \\ \hline
 \emph{r0-last-y-x} & $7.8$ & $731$ & & & & &  \\
 \end{tabular}
-\caption{Pairwise comparison of various branching order strategies for \emph{SHA-3-512} using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy.}
+\caption{Pairwise comparison of various branching order strategies for \emph{SHA-3-512} using the Games-Howell procedure. Only measurements for more than $12$ rounds were used to avoid randomness in timing for a total of $n=480$ samples per strategy. Times are in seconds.}
 \label{tbl:gh-sha3-bos}
-\end{figure*}
+\end{table*}
 
 The Games-Howell procedure (figure \ref{tbl:gh-sha3-bos}) confirms these findings, with the mean difference for number of conflicts between the \emph{none} and \emph{r0-S-x-y} strategies of $t = 17$ at significance level $p < 0.01$.
 However, for the solving time the high p-value does not let us reject the hypothesis that any difference is due to chance.
-Note that once again only samples for more than $12$ rounds were included to avoid the strong effect of randomness for instances that solve in very short time.
+Note that once again only samples for more than $12$ rounds (out of maximum of $24$) were included to avoid the strong effect of randomness for instances that solve in very short time.
 
 The \emph{r0-S-y-x} strategy behaves the same as \emph{r0-S-x-y} -- the number of conflicts for every instance is identical and the differences in time are negligible.
 On the other hand the strategies starting with the last round's $S$ matrix lead to the same behavior as not providing any branch ordering at all (the \emph{none} strategy).
