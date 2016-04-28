@@ -90,19 +90,20 @@
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[backend=biber,
-			natbib=true,
+%			natbib=true,
 			sortcites,
 %			style=alphabetic,
 			style=numeric,
 			hyperref=true,
 			url=false,
-			isbn=false]{biblatex}
+			isbn=false,
+			maxbibnames=100]{biblatex}
 \addbibresource{research.bib}
 
 % Style tweaks
 \renewcommand*{\finalnamedelim}{\addcomma\addspace}
 \renewcommand*{\labelnamepunct}{\addcolon\addspace}
-\renewcommand*{\newunitpunct}{\addcomma\addspace}
+%\renewcommand*{\newunitpunct}{\addcomma\addspace}
 \DeclareFieldFormat[article,inbook,incollection,inproceedings,proceedings,patent,thesis,unpublished]{title}{\textit{#1}}
 % Add all bibliography uncited in text
 \nocite{*}
@@ -205,23 +206,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \frontmatter
-    %\input{cover}
+    \input{cover}
 
-    %\includepdf[pages=1]{\settingsAISfile}
-    %\newpage
+    \includepdf[pages=1]{\settingsAISfile}
+    \newpage
     
-    %\thispagestyle{plainright}
-    %\input{thanks}
-    %\newpage
-    %\thispagestyle{plainright}
-    %\input{disclaimer}
-    %\newpage
+    \thispagestyle{plainright}
+    \input{thanks-disclaimer}
+    \newpage
     
     
     \input{00-abstract}
-    %\newpage
+    \newpage
     
-    %\tableofcontents*
+    \tableofcontents*
     %\newpage
     %\listoffigures*
     
@@ -231,5 +229,5 @@
 \backmatter
     \printbibliography
     
-    %\input{colophon}
+    \input{colophon}
 \end{document}

@@ -43,7 +43,7 @@ These two simple rules will help to reduce the search space the algorithm has to
 \subsubsection{Conflict-Driven Clause Learning}
 It can happen that after some partial assignment of variables there is already a conflict and it is not possible to extend this assignment to a satisfying one.
 However, the DPLL algorithm will continue to explore the entire search subspace.
-With \emph{conflict-driven clause learning} (CDCL, \citep{bayardo1997using,silva1997grasp}) we can avoid this by the use of \emph{implication graph} and \emph{learnt clauses}.
+With \emph{conflict-driven clause learning} (CDCL, \cite{bayardo1997using,silva1997grasp}) we can avoid this by the use of \emph{implication graph} and \emph{learnt clauses}.
 
 The \emph{implication graph} is a directed graph in which vertices are variables with their assignment.
 These will be marked as either \emph{decision} or \emph{forced}.

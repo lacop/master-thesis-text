@@ -1,0 +1,44 @@
+\newcommand{\coverTop}{
+    \begin{center}
+        {\textbf \Large \textsc {\settingsSchool \\ \settingsFaculty}}
+        \vfill
+        {\LARGE \em \settingsTitle}
+        \\
+        \medskip
+        {\large \textsc{Master's Thesis}}
+    \end{center}
+}
+
+\newcommand{\coverCenter}{
+    \begin{tabular}{l l}
+        \textbf{Study programme:} & \settingsProgramme \\
+        \textbf{Study field:} & \settingsField \\
+        \textbf{Department:} & \settingsDepartment \\
+        \textbf{Supervisor:} &  \settingsAdvisor
+    \end{tabular}
+}
+
+\newcommand{\coverBottom}{
+    \begin{center}
+        {\settingsYear \hfill \settingsAuthor}
+    \end{center}
+}
+
+\thispagestyle{empty}
+\coverTop
+\vfill
+\begin{center}
+    {\settingsYear \hfill \settingsAuthor}
+\end{center}
+\newpage
+
+\thispagestyle{empty}
+\coverTop
+\vfill
+\coverCenter
+\vfill
+\begin{center}
+    {Bratislava, \settingsYear \hfill \settingsAuthor}
+\end{center}
+\newpage
+
