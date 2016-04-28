@@ -83,7 +83,7 @@ We performed this experiment on two hash functions, the \emph{SHA-1} and \emph{S
 \subsection{SHA-1 analysis}
 
 \begin{figure*}	
-\centering \includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}
+\centering {\hspace*{-20pt}\includegraphics{figures/opt-sha1/sha1-32bit-8bitref-cmp-espresso.pdf}}
 \caption{Mean running time and 95\% confidence intervals for $8$-bit preimage attack on \emph{SHA-1} without optimizations (black) and using Espresso minimization for rounds functions (red).}
 \label{fig:opt-sha1-cmp-espresso}
 \end{figure*}
@@ -167,13 +167,13 @@ While our library provides this optimization feature to users as we saw in our m
 Therefore minimal changes to existing, off-the-shelf implementations of hash functions (without the need to identify expressions with non-optimal Tseitin representation) are sufficient to match the hand-optimized instances such as in \cite{nossum2012sat}.
 
 \begin{figure*}
-\centering \includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}
+\centering {\hspace*{-20pt}\includegraphics{figures/bo-ex1/ratio-time-none-r0sxy.pdf}}
 \caption{Violin plot showing the ratios distribution of solving time for the \emph{none} and \emph{r0-S-x-y} strategies.}
 \label{fig:bo-ratio-time-none-r0sxy}
 \end{figure*}
 
 \begin{figure*}
-\centering \includegraphics{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}
+\centering {\hspace*{-20pt}\includegraphics{figures/bo-ex1/ratio-confl-none-r0sxy.pdf}}
 \caption{Violin plot showing the ratios distribution of number of conflicts for the \emph{none} and \emph{r0-S-x-y} strategies.}
 \label{fig:bo-ratio-confl-none-r0sxy}
 \end{figure*}
