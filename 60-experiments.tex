@@ -179,7 +179,49 @@ Therefore minimal changes to existing, off-the-shelf implementations of hash fun
 \end{figure*}
 
 \section{Branching order evaluation}
-For branching order optimization described in section \ref{sec:branching-order} we used the \emph{SHA-3} hash function for evaluation.
+For branching order optimization described in section \ref{sec:branching-order} we again used the \emph{SHA-1} and \emph{SHA-3} hash functions for evaluation.
+
+\subsection{SHA-1 analysis}
+We tested this optimization on an $8$-bit preimage attack on full $80$ rounds. 
+We compared the default MiniSat behavior to strategies where the variables corresponding to the value $F$ of the round function were branched on first.
+We first tested all $80$ possible rounds -- that is, for every $0 \le i < 80$ we tested a branching order strategy where the value of $F$ from the $i$-th round was branched on first.
+
+While with the default behavior these instances were solved in just a few seconds (with a mean time of \SI{2.7}{\second}) all strategies with $i \ge 5$ had instances which took more than two minutes to solve, after which we aborted the computation.
+As described in the methodology section of this chapter, we wish to avoid censoring for various reasons.
+Therefore only the default strategy and strategies with $0 \le i < 5$ were further evaluated.
+
+%> posthocTGH(y = raw$time, x = raw$label, method = 'Games-Howell')
+%       n means variances
+%none 256   2.7       4.4
+%r0-F 256   2.7       4.4
+%r1-F 256   2.7       4.5
+%r2-F 256   2.8       4.6
+%r3-F 256   2.6       5.6
+%r4-F 256   3.1       8.3
+%
+%               t  df    p
+%none:r0-F 0.0355 510 1.00
+%none:r1-F 0.0031 510 1.00
+%none:r2-F 0.5148 510 1.00
+%none:r3-F 0.8959 503 0.95
+%none:r4-F 1.5498 466 0.63
+%r0-F:r1-F 0.0323 510 1.00
+%r0-F:r2-F 0.5492 510 0.99
+%r0-F:r3-F 0.8615 503 0.96
+%r0-F:r4-F 1.5778 466 0.61
+%r1-F:r2-F 0.5164 510 1.00
+%r1-F:r3-F 0.8906 503 0.95
+%r1-F:r4-F 1.5491 467 0.63
+%r2-F:r3-F 1.3713 505 0.74
+%r2-F:r4-F 1.1091 471 0.88
+%r3-F:r4-F 2.2408 491 0.22
+
+For these strategies we collected $n=256$ samples each.
+We observed the biggest difference in mean solving time between the strategy with $i=3$ and $i=4$ which took \SI{2.6}{\second} and \SI{3.1}{\second} to solve on average respectively.
+However the variance in running time is too high and performing the Games-Howell pairwise test on this data gives no statistically significant results.
+In fact even for the two strategies mentioned here the significance level is $p=0.22$.
+
+Therefore we can't reject the hypothesis that this kind of optimization does not lead to faster solving times.
 
 \subsection{SHA-3 analysis}
 For \emph{SHA-3-512} we tested various branching orders on $8$-bit reference preimage attack with number of rounds ranging from $1$ to $24$ (the maximum for this hash function).
@@ -268,5 +310,5 @@ Similar experiments were performed with the auxiliary vectors and matrices $B, C
 
 \subsection{Discussion}
 
-The fact that these branching order do not change the solving time significantly must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default MiniSat heuristic is also picking them for branching first.
+The fact that these branching orders do not change the solving time significantly must mean that either their choice does not lead to any forced assignments and conflicts (which is highly unlikely) or that the default MiniSat heuristic is also picking them for branching first.
 The second case means that this optimization is unnecessary and that the default SAT solver heuristic is sufficient in this case.
