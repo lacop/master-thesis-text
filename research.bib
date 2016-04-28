@@ -4,44 +4,51 @@
 
 % First use of SAT solvers for crypto problems
 @article{massacci2000logical,
-  title={Logical cryptanalysis as a {SAT} problem},
-  author={Massacci, Fabio and Marraro, Laura},
-  journal={Journal of Automated Reasoning},
-  pages={165--203},
-  year={2000},
-  publisher={Springer}
+  author    = {Fabio Massacci and
+               Laura Marraro},
+  title     = {Logical Cryptanalysis as a {SAT} Problem},
+  journal   = {J. Autom. Reasoning},
+  volume    = {24},
+  number    = {1/2},
+  pages     = {165--203},
+  year      = {2000},
+  url       = {http://dx.doi.org/10.1023/A:1006326723002},
+  doi       = {10.1023/A:1006326723002},
 }
 
 % Operator overloading in C++
-@inbook{jovanovic2005logical,
-  author="Jovanovi{\'{c}}, Dejan
-  and Jani{\v{c}}i{\'{c}}, Predrag",
-  chapter="Logical Analysis of Hash Functions",
-  title="Frontiers of Combining Systems: 5th International Workshop, FroCoS 2005, Vienna, Austria, September 19-21, 2005. Proceedings",
-  year="2005",
-  publisher="Springer Berlin Heidelberg",
-  pages="200--215",
-  doi="10.1007/11559306_11",
-  url="http://dx.doi.org/10.1007/11559306_11"
+@inproceedings{jovanovic2005logical,
+  author    = {Dejan Jovanovic and
+               Predrag Janicic},
+  title     = {Logical Analysis of Hash Functions},
+  booktitle = {Frontiers of Combining Systems, 5th International Workshop, FroCoS
+               2005, Vienna, Austria, September 19-21, 2005, Proceedings},
+  pages     = {200--215},
+  year      = {2005},
+  url       = {http://dx.doi.org/10.1007/11559306_11},
+  doi       = {10.1007/11559306_11},
 }
 
 % CryptLogVer, Verilog -> CNF
 @article{morawiecki2013sat,
-  title={A {SAT-based} preimage analysis of reduced {KECCAK} hash functions},
-  author={Morawiecki, Pawe{\l} and Srebrny, Marian},
-  journal={Information Processing Letters},
-  volume={113},
-  number={10},
-  pages={392--397},
-  year={2013},
-  publisher={Elsevier}
+  author    = {Pawel Morawiecki and
+               Marian Srebrny},
+  title     = {A SAT-based preimage analysis of reduced Keccak hash functions},
+  journal   = {Inf. Process. Lett.},
+  volume    = {113},
+  number    = {10-11},
+  pages     = {392--397},
+  year      = {2013},
+  url       = {http://dx.doi.org/10.1016/j.ipl.2013.03.004},
+  doi       = {10.1016/j.ipl.2013.03.004},
 }
 
 % SHA-1 preimage via custom instance generation
-@article{nossum2012sat,
+@thesis{nossum2012sat,
   title={{SAT-based} preimage attacks on {SHA-1}},
-  author={Nossum, Vegard},
-  year={2012}
+  author={Vegard Nossum},
+  year={2012},
+  type={mathesis}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -59,11 +66,17 @@
 }
 
 % Tseitin transformation
-@incollection{tseitin1983complexity,
-  title={On the complexity of derivation in propositional calculus},
-  author={Tseitin, Grigori S},
-  booktitle={Automation of Reasoning},
-  year={1983},
+@inbook{tseitin1983complexity,
+  author="Tseitin, G. S.",
+  chapter="On the Complexity of Derivation in Propositional Calculus",
+  title="Automation of Reasoning: 2: Classical Papers on Computational Logic 1967--1970",
+  year="1983",
+  publisher="Springer Berlin Heidelberg",
+  address="Berlin, Heidelberg",
+  pages="466--483",
+  isbn="978-3-642-81955-1",
+  doi="10.1007/978-3-642-81955-1_28",
+  url="http://dx.doi.org/10.1007/978-3-642-81955-1_28"
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,49 +85,66 @@
 
 % DPLL
 @article{davis1960computing,
-  title={A computing procedure for quantification theory},
-  author={Davis, Martin and Putnam, Hilary},
-  journal={Journal of the ACM (JACM)},
-  volume={7},
-  number={3},
-  pages={201--215},
-  year={1960},
-  publisher={ACM}
+  author    = {Martin Davis and
+               Hilary Putnam},
+  title     = {A Computing Procedure for Quantification Theory},
+  journal   = {J. {ACM}},
+  volume    = {7},
+  number    = {3},
+  pages     = {201--215},
+  year      = {1960},
+  url       = {http://doi.acm.org/10.1145/321033.321034},
+  doi       = {10.1145/321033.321034},
 }
 @article{davis1962machine,
-  title={A machine program for theorem-proving},
-  author={Davis, Martin and Logemann, George and Loveland, Donald},
-  journal={Communications of the ACM},
-  volume={5},
-  number={7},
-  pages={394--397},
-  year={1962},
-  publisher={ACM}
+  author    = {Martin Davis and
+               George Logemann and
+               Donald W. Loveland},
+  title     = {A machine program for theorem-proving},
+  journal   = {Commun. {ACM}},
+  volume    = {5},
+  number    = {7},
+  pages     = {394--397},
+  year      = {1962},
+  url       = {http://doi.acm.org/10.1145/368273.368557},
+  doi       = {10.1145/368273.368557},
 }
 
 % CDCL
 @inproceedings{bayardo1997using,
-  title={Using CSP look-back techniques to solve real-world SAT instances},
-  author={Bayardo Jr, Roberto J and Schrag, Robert},
-  booktitle={AAAI/IAAI},
-  pages={203--208},
-  year={1997}
+  author    = {Roberto J. Bayardo Jr. and
+               Robert Schrag},
+  title     = {Using {CSP} Look-Back Techniques to Solve Real-World {SAT} Instances},
+  booktitle = {Proceedings of the Fourteenth National Conference on Artificial Intelligence
+               and Ninth Innovative Applications of Artificial Intelligence Conference,
+               {AAAI} 97, {IAAI} 97, July 27-31, 1997, Providence, Rhode Island.},
+  pages     = {203--208},
+  year      = {1997},
+  url       = {http://www.aaai.org/Library/AAAI/1997/aaai97-032.php},
 }
 @inproceedings{silva1997grasp,
-  title={GRASP—a new search algorithm for satisfiability},
-  author={Silva, Jo{\~a}o P Marques and Sakallah, Karem A},
-  booktitle={Proceedings of the 1996 IEEE/ACM international conference on Computer-aided design},
-  pages={220--227},
-  year={1997},
-  organization={IEEE Computer Society}
+  author    = {Jo{\~{a}}o P. Marques Silva and
+               Karem A. Sakallah},
+  title     = {{GRASP} - a new search algorithm for satisfiability},
+  booktitle = {{ICCAD}},
+  pages     = {220--227},
+  year      = {1996},
+  url       = {http://dx.doi.org/10.1109/ICCAD.1996.569607},
+  doi       = {10.1109/ICCAD.1996.569607},
 }
 
 % Espresso logic minimizer
 @techreport{rudell1986multiple,
-  title={Multiple-valued logic minimization for {PLA} synthesis},
-  author={Rudell, Richard L},
-  year={1986},
-  institution={DTIC Document}
+  author    = {Richard L. Rudell and
+               Alberto L. Sangiovanni{-}Vincentelli},
+  title     = {Multiple-Valued Minimization for {PLA} Optimization},
+  journal   = {{IEEE} Trans. on {CAD} of Integrated Circuits and Systems},
+  volume    = {6},
+  number    = {5},
+  pages     = {727--750},
+  year      = {1987},
+  url       = {http://dx.doi.org/10.1109/TCAD.1987.1270318},
+  doi       = {10.1109/TCAD.1987.1270318},
 }
 
 % MiniSat
@@ -127,26 +157,37 @@
 }
 
 % Merkle-Damgard
-@article{merkle1979secrecy,
+@phdthesis{merkle1979secrecy,
   title={Secrecy, authentication, and public key systems},
   author={Merkle, Ralph Charles and Charles, Ralph and others},
   year={1979},
-  publisher={Citeseer}
+  publisher = {Stanford University},
 }
 
 % Games-Howell procedure
 @article{games1976pairwise,
-  title={Pairwise multiple comparison procedures with unequal n’s and/or variances: a {Monte} {Carlo} study},
+  title={Pairwise multiple comparison procedures with unequal n’s and/or variances: a Monte Carlo study},
   author={Games, Paul A and Howell, John F},
   journal={Journal of Educational and Behavioral Statistics},
+  volume={1},
+  number={2},
+  pages={113--125},
   year={1976},
+  publisher={Sage Publications}
 }
 
 % SAT solver running time distribution
 @article{bard2007efficient,
-  title={Efficient methods for conversion and solution of sparse systems of low-degree multivariate polynomials over GF (2) via SAT-solvers},
-  author={Bard, Gregory V and Courtois, Nicolas T and Jefferson, Chris},
-  year={2007}
+  author    = {Gregory V. Bard and
+               Nicolas Courtois and
+               Chris Jefferson.},
+  title     = {Efficient Methods for Conversion and Solution of Sparse Systems of
+               Low-Degree Multivariate Polynomials over {GF(2)} via SAT-Solvers},
+  journal   = {{IACR} Cryptology ePrint Archive},
+  volume    = {2007},
+  pages     = {24},
+  year      = {2007},
+  url       = {http://eprint.iacr.org/2007/024},
 }
 
 % BCa bootstrap
@@ -182,7 +223,8 @@
 @article{NIST2015FIPS202,
   title={SHA-3 Standard: Permutation-Based Hash and Extendable-Output Functions},
   author={Dworkin, Morris J},
-  journal={Federal Inf. Process. Stds.(NIST FIPS)-202 (August 2015)}
+  journal={Federal Inf. Process. Stds. NIST FIPS-202},
+  year={2015}
 }
 
 % Keccak reference
@@ -190,18 +232,22 @@
   title={The keccak reference},
   author={Bertoni, Guido and Daemen, Joan and Peeters, Micha{\"e}l and Assche, GV},
   journal={Submission to NIST (Round 3)},
-  volume={13},
   year={2011}
 }
 
 % Hash functions
 @inproceedings{rogaway2004cryptographic,
-  title={Cryptographic hash-function basics: Definitions, implications, and separations for preimage resistance, second-preimage resistance, and collision resistance},
-  author={Rogaway, Phillip and Shrimpton, Thomas},
-  booktitle={Fast Software Encryption},
-  pages={371--388},
-  year={2004},
-  organization={Springer}
+  author    = {Phillip Rogaway and
+               Thomas Shrimpton},
+  title     = {Cryptographic Hash-Function Basics: Definitions, Implications, and
+               Separations for Preimage Resistance, Second-Preimage Resistance, and
+               Collision Resistance},
+  booktitle = {Fast Software Encryption, 11th International Workshop, {FSE} 2004,
+               Delhi, India, February 5-7, 2004, Revised Papers},
+  pages     = {371--388},
+  year      = {2004},
+  url       = {http://dx.doi.org/10.1007/978-3-540-25937-4_24},
+  doi       = {10.1007/978-3-540-25937-4_24},
 }
 
 % SHA-1 Python implementation
@@ -216,192 +262,280 @@
 }
 
 % CryptoMiniSat
-@incollection{soos2009extending,
-  title={Extending {SAT} solvers to cryptographic problems},
- author={Soos, Mate and Nohl, Karsten and Castelluccia, Claude},
-  booktitle={Theory and Applications of Satisfiability Testing-SAT 2009},
-  pages={244--257},
-  year={2009},
-  publisher={Springer}
+@inproceedings{soos2009extending,
+  author    = {Mate Soos and
+               Karsten Nohl and
+               Claude Castelluccia},
+  title     = {Extending {SAT} Solvers to Cryptographic Problems},
+  booktitle = {Theory and Applications of Satisfiability Testing - {SAT} 2009, 12th
+               International Conference, {SAT} 2009, Swansea, UK, June 30 - July
+               3, 2009. Proceedings},
+  pages     = {244--257},
+  year      = {2009},
+  url       = {http://dx.doi.org/10.1007/978-3-642-02777-2_24},
+  doi       = {10.1007/978-3-642-02777-2_24},
 }
 
 % Program verification using SAT solvers
 @inproceedings{cook2005cogent,
-  title={Cogent: Accurate theorem proving for program verification},
-  author={Cook, Byron and Kroening, Daniel and Sharygina, Natasha},
-  booktitle={Computer Aided Verification},
-  pages={296--300},
-  year={2005},
-  organization={Springer}
+  author    = {Byron Cook and
+               Daniel Kroening and
+               Natasha Sharygina},
+  title     = {Cogent: Accurate Theorem Proving for Program Verification},
+  booktitle = {Computer Aided Verification, 17th International Conference, {CAV}
+               2005, Edinburgh, Scotland, UK, July 6-10, 2005, Proceedings},
+  pages     = {296--300},
+  year      = {2005},
+  url       = {http://dx.doi.org/10.1007/11513988_30},
+  doi       = {10.1007/11513988_30},
 }
 @article{chaki2004modular,
-  title={Modular verification of software components in C},
-  author={Chaki, Sagar and Clarke, Edmund M and Groce, Alex and Jha, Somesh and Veith, Helmut},
-  journal={Software Engineering, IEEE Transactions on},
-  volume={30},
-  number={6},
-  pages={388--402},
-  year={2004},
-  publisher={IEEE}
+  author    = {Sagar Chaki and
+               Edmund M. Clarke and
+               Alex Groce and
+               Somesh Jha and
+               Helmut Veith},
+  title     = {Modular Verification of Software Components in {C}},
+  journal   = {{IEEE} Trans. Software Eng.},
+  volume    = {30},
+  number    = {6},
+  pages     = {388--402},
+  year      = {2004},
+  url       = {http://dx.doi.org/10.1109/TSE.2004.22},
+  doi       = {10.1109/TSE.2004.22},
 }
 
 % Model checking
 @inproceedings{biere1999symbolic,
-  title={Symbolic model checking using SAT procedures instead of BDDs},
-  author={Biere, Armin and Cimatti, Alessandro and Clarke, Edmund M and Fujita, Masahiro and Zhu, Yunshan},
-  booktitle={Proceedings of the 36th annual ACM/IEEE Design Automation Conference},
-  pages={317--320},
-  year={1999},
-  organization={ACM}
+  author    = {Armin Biere and
+               Alessandro Cimatti and
+               Edmund M. Clarke and
+               Yunshan Zhu},
+  title     = {Symbolic Model Checking without BDDs},
+  booktitle = {Tools and Algorithms for Construction and Analysis of Systems, 5th
+               International Conference, {TACAS} '99, Held as Part of the European
+               Joint Conferences on the Theory and Practice of Software, ETAPS'99,
+               Amsterdam, The Netherlands, March 22-28, 1999, Proceedings},
+  pages     = {193--207},
+  year      = {1999},
+  url       = {http://dx.doi.org/10.1007/3-540-49059-0_14},
+  doi       = {10.1007/3-540-49059-0_14},
 }
 @inproceedings{mcmillan2002applying,
-  title={Applying SAT methods in unbounded symbolic model checking},
-  author={McMillan, Ken L},
-  booktitle={Computer Aided Verification},
-  pages={250--264},
-  year={2002},
-  organization={Springer}
+  author    = {Kenneth L. McMillan},
+  title     = {Applying {SAT} Methods in Unbounded Symbolic Model Checking},
+  booktitle = {Computer Aided Verification, 14th International Conference, {CAV}
+               2002,Copenhagen, Denmark, July 27-31, 2002, Proceedings},
+  pages     = {250--264},
+  year      = {2002},
+  url       = {http://dx.doi.org/10.1007/3-540-45657-0_19},
+  doi       = {10.1007/3-540-45657-0_19},
 }
 
 % SAT-based FPGA connection routing
 @inproceedings{nam1999satisfiability,
-  title={Satisfiability-based layout revisited: detailed routing of complex FPGAs via search-based Boolean SAT},
-  author={Nam, Gi-Joon and Sakallah, Karem A and Rutenbar, Rob A},
-  booktitle={Proceedings of the 1999 ACM/SIGDA seventh international symposium on Field programmable gate arrays},
-  pages={167--175},
-  year={1999},
-  organization={ACM}
+  author    = {Gi{-}Joon Nam and
+               Karem A. Sakallah and
+               Rob A. Rutenbar},
+  title     = {Satisfiability-Based Layout Revisited: Detailed Routing of Complex
+               FPGAs vis Search-Based Boolean {SAT}},
+  booktitle = {{FPGA}},
+  pages     = {167--175},
+  year      = {1999},
+  url       = {http://doi.acm.org/10.1145/296399.296450},
+  doi       = {10.1145/296399.296450},
 }
 @article{nam2004comparative,
-  title={A comparative study of two Boolean formulations of FPGA detailed routing constraints},
-  author={Nam, Gi-Joon and Aloul, Fadi and Sakallah, Karem A and Rutenbar, Rob A},
-  journal={Computers, IEEE Transactions on},
-  volume={53},
-  number={6},
-  pages={688--696},
-  year={2004},
-  publisher={IEEE}
+  author    = {Gi{-}Joon Nam and
+               Fadi A. Aloul and
+               Karem A. Sakallah and
+               Rob A. Rutenbar},
+  title     = {A Comparative Study of Two Boolean Formulations of {FPGA} Detailed
+               Routing Constraints},
+  journal   = {{IEEE} Trans. Computers},
+  volume    = {53},
+  number    = {6},
+  pages     = {688--696},
+  year      = {2004},
+  url       = {http://dx.doi.org/10.1109/TC.2004.1},
+  doi       = {10.1109/TC.2004.1},
 }
 
 % SAT is NP-complete
 @inproceedings{cook1971complexity,
-  title={The complexity of theorem-proving procedures},
-  author={Cook, Stephen A},
-  booktitle={Proceedings of the third annual ACM symposium on Theory of computing},
-  pages={151--158},
-  year={1971},
-  organization={ACM}
+  author    = {Stephen A. Cook},
+  title     = {The Complexity of Theorem-Proving Procedures},
+  booktitle = {Proceedings of the 3rd Annual {ACM} Symposium on Theory of Computing,
+               May 3-5, 1971, Shaker Heights, Ohio, {USA}},
+  pages     = {151--158},
+  year      = {1971},
+  url       = {http://doi.acm.org/10.1145/800157.805047},
+  doi       = {10.1145/800157.805047},
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% UNCITED IN TEXT, JUST RELEVANT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 @incollection{nocite-mironov2006applications,
-  title={Applications of {SAT} solvers to cryptanalysis of hash functions},
-  author={Mironov, Ilya and Zhang, Lintao},
-  booktitle={Theory and Applications of Satisfiability Testing-SAT 2006},
-  pages={102--115},
-  year={2006},
-  publisher={Springer}
+  author    = {Ilya Mironov and
+               Lintao Zhang},
+  title     = {Applications of {SAT} Solvers to Cryptanalysis of Hash Functions},
+  booktitle = {Theory and Applications of Satisfiability Testing - {SAT} 2006, 9th
+               International Conference, Seattle, WA, USA, August 12-15, 2006, Proceedings},
+  pages     = {102--115},
+  year      = {2006},
+  url       = {http://dx.doi.org/10.1007/11814948_13},
+  doi       = {10.1007/11814948_13},
 }
+
 @incollection{nocite-eibach2008attacking,
-  title={Attacking {Bivium} using {SAT} solvers},
-  author={Eibach, Tobias and Pilz, Enrico and V{\"o}lkel, Gunnar},
-  booktitle={Theory and Applications of Satisfiability Testing--SAT 2008},
-  pages={63--76},
-  year={2008},
-  publisher={Springer}
+  author    = {Tobias Eibach and
+               Enrico Pilz and
+               Gunnar V{\"{o}}lkel},
+  title     = {Attacking Bivium Using {SAT} Solvers},
+  booktitle = {Theory and Applications of Satisfiability Testing - {SAT} 2008, 11th
+               International Conference, {SAT} 2008, Guangzhou, China, May 12-15,
+               2008. Proceedings},
+  pages     = {63--76},
+  year      = {2008},
+  url       = {http://dx.doi.org/10.1007/978-3-540-79719-7_7},
+  doi       = {10.1007/978-3-540-79719-7_7},
 }
+
 @inproceedings{nocite-li2004novel,
-  title={A novel {SAT} all-solutions solver for efficient preimage computation},
-  author={Li, Bin and Hsiao, Michael S and Sheng, Shuo},
-  booktitle={Design, Automation and Test in Europe Conference and Exhibition, 2004. Proceedings},
-  volume={1},
-  pages={272--277},
-  year={2004},
-  organization={IEEE}
+  author    = {Bin Li and
+               Michael S. Hsiao and
+               Shuo Sheng},
+  title     = {A Novel {SAT} All-Solutions Solver for Efficient Preimage Computation},
+  booktitle = {2004 Design, Automation and Test in Europe Conference and Exposition
+               {(DATE} 2004), 16-20 February 2004, Paris, France},
+  pages     = {272--279},
+  year      = {2004},
+  url       = {http://doi.ieeecomputersociety.org/10.1109/DATE.2004.1268860},
+  doi       = {10.1109/DATE.2004.1268860},
 }
+
 @article{nocite-patsakis2013rsa,
-  title={{RSA} private key reconstruction from random bits using {SAT} solvers},
-  author={Patsakis, Constantinos},
-  journal={IACR Cryptology ePrint Archive},
-  volume={2013},
-  pages={26},
-  year={2013},
-  publisher={Citeseer},
-  url={https://eprint.iacr.org/2013/026}
+  author    = {Constantinos Patsakis},
+  title     = {{RSA} private key reconstruction from random bits using {SAT} solvers},
+  journal   = {{IACR} Cryptology ePrint Archive},
+  volume    = {2013},
+  pages     = {26},
+  year      = {2013},
+  url       = {http://eprint.iacr.org/2013/026},
 }
+
 @incollection{nocite-homsirikamol2012security,
-  title={Security margin evaluation of SHA-3 contest finalists through {SAT-based} attacks},
-  author={Homsirikamol, Ekawat and Morawiecki, Pawe{\l} and Rogawski, Marcin and Srebrny, Marian},
-  booktitle={Computer Information Systems and Industrial Management},
-  pages={56--67},
-  year={2012},
-  publisher={Springer}
+  author    = {Ekawat Homsirikamol and
+               Pawel Morawiecki and
+               Marcin Rogawski and
+               Marian Srebrny},
+  title     = {Security Margin Evaluation of {SHA-3} Contest Finalists through SAT-Based
+               Attacks},
+  booktitle = {Computer Information Systems and Industrial Management - 11th {IFIP}
+               {TC} 8 International Conference, {CISIM} 2012, Venice, Italy, September
+               26-28, 2012. Proceedings},
+  pages     = {56--67},
+  year      = {2012},
+  url       = {http://dx.doi.org/10.1007/978-3-642-33260-9_4},
+  doi       = {10.1007/978-3-642-33260-9_4},
 }
+
 @article{nocite-faizullin2009sat,
-  title={The {SAT} solving method as applied to cryptographic analysis of asymmetric ciphers},
-  author={Faizullin, RT and Khnykin, IG and Dylkeyt, VI},
-  journal={arXiv preprint arXiv:0907.1755},
-  year={2009}
+  author    = {R. T. Faizullin and
+               I. G. Khnykin and
+               V. I. Dylkeyt},
+  title     = {The {SAT} solving method as applied to cryptographic analysis of asymmetric
+               ciphers},
+  journal   = {CoRR},
+  volume    = {abs/0907.1755},
+  year      = {2009},
+  url       = {http://arxiv.org/abs/0907.1755},
 }
+
 @article{nocite-jovanovic2010algebraic,
-  title={Algebraic attacks using SAT-solvers},
-  author={Jovanovic, Philipp and Kreuzer, Martin},
-  journal={Groups--Complexity--Cryptology},
-  volume={2},
-  number={2},
-  pages={247--259},
-  year={2010}
+  author    = {Philipp Jovanovic and
+               Martin Kreuzer},
+  title     = {Algebraic attacks using SAT-solvers},
+  journal   = {Groups Complexity Cryptology},
+  volume    = {2},
+  number    = {2},
+  pages     = {247--259},
+  year      = {2010},
+  url       = {http://dx.doi.org/10.1515/gcc.2010.016},
+  doi       = {10.1515/gcc.2010.016},
 }
+
 @inproceedings{nocite-claessen2008sat,
-  title={SAT-solving in practice},
-  author={Claessen, Koen and Een, Niklas and Sheeran, Mary and Sorensson, N},
-  booktitle={Discrete Event Systems, 2008. WODES 2008. 9th International Workshop on},
-  pages={61--67},
-  year={2008},
-  organization={IEEE}
+  author    = {Koen Claessen and
+               Niklas E{\'{e}}n and
+               Mary Sheeran and
+               Niklas S{\"{o}}rensson and
+               Alexey Voronov and
+               Knut {\AA}kesson},
+  title     = {SAT-Solving in Practice, with a Tutorial Example from Supervisory
+               Control},
+  journal   = {Discrete Event Dynamic Systems},
+  volume    = {19},
+  number    = {4},
+  pages     = {495--524},
+  year      = {2009},
+  url       = {http://dx.doi.org/10.1007/s10626-009-0081-8},
+  doi       = {10.1007/s10626-009-0081-8},
 }
-@article{nocite-sennton2014conflict,
+
+@thesis{nocite-sennton2014conflict,
   title={On conflict driven clause learning--a comparison between theory and practice},
   author={Sennton, Gustav},
-  year={2014}
+  year={2014},
+  type={mathesis}
 }
-@article{nocite-bard2007efficient,
-  title={Efficient methods for conversion and solution of sparse systems of low-degree multivariate polynomials over GF (2) via SAT-solvers},
-  author={Bard, Gregory V and Courtois, Nicolas T and Jefferson, Chris},
-  year={2007}
-}
+
 @book{nocite-schneier2007applied,
-  title={Applied cryptography: protocols, algorithms, and source code in C},
-  author={Schneier, Bruce},
-  year={2007},
-  publisher={john wiley \& sons}
+  author    = {Bruce Schneier},
+  title     = {Applied cryptography - protocols, algorithms, and source code in {C}
+               {(2.} ed.)},
+  publisher = {Wiley},
+  year      = {1996},
+  isbn      = {978-0-471-11709-4},
 }
 @book{nocite-ferguson2012cryptography,
-  title={Cryptography engineering: design principles and practical applications},
-  author={Ferguson, Niels and Schneier, Bruce and Kohno, Tadayoshi},
-  year={2012},
-  publisher={John Wiley \& Sons}
+  author    = {Niels Ferguson and
+               Bruce Schneier and
+               Tadayoshi Kohno},
+  title     = {Cryptography Engineering - Design Principles and Practical Applications},
+  publisher = {Wiley},
+  year      = {2010},
+  url       = {http://www.wiley-vch.de/publish/dt/books/ISBN978-0-470-47424-2/},
+  isbn      = {978-0-470-47424-2},
 }
 @book{nocite-katz2007introduction,
-  title={Introduction to modern cryptography: principles and protocols},
-  author={Katz, Jonathan and Lindell, Yehuda},
-  year={2007},
-  publisher={CRC Press}
+  author    = {Jonathan Katz and
+               Yehuda Lindell},
+  title     = {Introduction to Modern Cryptography},
+  publisher = {Chapman and Hall/CRC Press},
+  year      = {2007},
+  isbn      = {978-1-58488-551-1},
 }
 @book{nocite-menezes2010handbook,
-  title={Handbook of applied cryptography},
-  author={Menezes, Alfred J and Van Oorschot, Paul C and Vanstone, Scott A},
-  year={2010},
-  publisher={CRC press}
+  author    = {Alfred Menezes and
+               Paul C. van Oorschot and
+               Scott A. Vanstone},
+  title     = {Handbook of Applied Cryptography},
+  publisher = {{CRC} Press},
+  year      = {1996},
+  isbn      = {0-8493-8523-7},
 }
-@book{nocite-biere2009handbook,
-  title={Handbook of satisfiability},
-  author={Biere, Armin and Heule, Marijn and van Maaren, Hans},
-  volume={185},
-  year={2009},
-  publisher={IOS press}
+@proceedings{nocite-biere2009handbook,
+  editor    = {Armin Biere and
+               Marijn Heule and
+               Hans van Maaren and
+               Toby Walsh},
+  title     = {Handbook of Satisfiability},
+  series    = {Frontiers in Artificial Intelligence and Applications},
+  volume    = {185},
+  publisher = {{IOS} Press},
+  year      = {2009},
+  isbn      = {978-1-58603-929-5},
 }

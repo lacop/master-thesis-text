@@ -89,14 +89,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Bibliography
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[backend=biber, natbib=true, sortcites, style=alphabetic]{biblatex}
+\usepackage[backend=biber,
+			natbib=true,
+			sortcites,
+%			style=alphabetic,
+			style=numeric,
+			hyperref=true,
+			url=false,
+			isbn=false]{biblatex}
 \addbibresource{research.bib}
 
 % Style tweaks
 \renewcommand*{\finalnamedelim}{\addcomma\addspace}
 \renewcommand*{\labelnamepunct}{\addcolon\addspace}
 \renewcommand*{\newunitpunct}{\addcomma\addspace}
-\DeclareFieldFormat[article,inbook,incollection,inproceedings,patent,thesis,unpublished]{title}{\textit{#1}}
+\DeclareFieldFormat[article,inbook,incollection,inproceedings,proceedings,patent,thesis,unpublished]{title}{\textit{#1}}
 % Add all bibliography uncited in text
 \nocite{*}
 
