@@ -2,8 +2,9 @@
 SAT solvery sú univerzálny nástroj pre hľadanie riešení boolovských problémov spl\-ni\-teľ\-no\-sti.
 V minulosti boli používané aj na kryptografické problémy, ako napríklad hľadanie vzoru hašovacích funkcií alebo kľúča prúdových šifier.
 Avšak tieto prístupy a riešenia nie je možné ľahko upraviť a opätovne využiť.
+Taktiež vyžadujú značnú prácu na tvorbu programov, ktoré vytvárajú požadované SAT inštancie.
 
-V našej práci sme vytvorili knižnicu pre jednoduché modelovanie SAT inštancií.
+Na odstránenie týchto problémov sme v našej práci vytvorili knižnicu pre jednoduché modelovanie SAT inštancií.
 Sústredili sme sa špeciálne na rôzne problémy súvisiace s kryptografickými hašovacími funkciami, ale vytvorená knižnica je dostatočne všeobecná a je ju možné použiť aj na iné účely.
 
 S pomocou tejto knižnice sme vytvorili modely pre niekoľko kryptografických hašovacích funkcií.
@@ -13,9 +14,9 @@ Okrem iného sme využívali logický minimalizér \emph{Espresso} na redukciu v
 \chapter*{Abstract}
 SAT solvers are a universal tool for finding solutions to boolean satisfiability problems.
 In the past they have also been used for cryptographic problems, such as finding preimages for hash functions or obtaining the key for stream ciphers.
-However these solutions are not easily reusable or modifiable.
+However these solutions are not easily reusable or modifiable and require significant effort to produce the programs that create the SAT instances.
 
-In our work we create a modeling library that allows simple creation of SAT instances.
+To avoid these issues we create a modeling library that allows simple creation of SAT instances.
 We specifically focus on various problems related to cryptographic hash functions, however the library is generic enough that it can be used for other purposes as well.
 
 Using this library we create models for several cryptographic hash functions.
