@@ -1,23 +1,23 @@
 \unnumberedchapter{Introduction}
 
-\emph{SAT solvers} are programs for finding solutions to instances of boolean satisfiability problems, which consist of some boolean variables and clauses.
+\emph{SAT solvers} are programs for finding solutions to instances of boolean satisfiability problems, which consist of boolean variables and clauses.
 Using backtracking and various heuristics these programs explore the space of all possible truth assignments of the variables and look for one which leads to all clauses being satisfied.
-Since the SAT language is $NP$-complete, SAT solvers can be used to model and solve any problem which itself is in $NP$.
+Since the SAT language is $NP$-complete, SAT solvers can be used to model and solve any problem which itself is in the $NP$ class.
 
-This is not only a theoretical observation -- they are commonly used for a wide variety of areas including formal program verification, model checking or finding solutions to difficult problems such as routing connections in microchips.
+This is not only a theoretical observation -- SAT solvers are commonly used for a wide variety of areas including formal program verification, model checking or finding solutions to difficult problems such as routing connections in microchips.
 
 Cryptographic \emph{hash functions} are functions that are easily computable but which are computationally hard to invert.
-This process of finding an input to hash function that produces a desired output is called a \emph{preimage attack}.
+The process of finding an input to hash function that produces a desired output is called a \emph{preimage attack}.
 
 There are several works that use the power of SAT solvers to solve instances modeling such preimage attacks.
-These instances have been created by special handcrafted programs which generated the required variables and clauses based on some input parameters.
+These instances were created by special handcrafted programs which generated the required variables and clauses based on some input parameters.
 
 However this approach requires the creation of such programs, a process which is both time consuming and error-prone.
-Furthermore, once such a program is created for one hash function it is not easily modifiable for a different one and much of the work needs to be repeated.
+Furthermore, once such a program is created for one hash function, it is not easily modifiable for a different one and much of the work needs to be repeated.
 
-We propose a solution based on \emph{operator overloading} and \emph{dynamic typing}, features of the \emph{Python} programming language, which allows modeling problems for SAT with minimal work.
+We propose a solution based on \emph{operator overloading} and \emph{dynamic typing} (features of the \emph{Python} programming language) which allows modeling problems for SAT with minimal work.
 We create a library for this purpose that can be used together with off-the-shelf implementations of hash functions available online.
-As we demonstrate only minimal changes to such implementation are required to turn them into programs capable of generating SAT instances.
+As we demonstrate, only minimal changes to such implementation are required to turn them into programs capable of generating SAT instances.
 
-While this automatic and transparent process is very convenient it gives us less control over the generated instances which might lead to inefficiencies.
+While this automatic and transparent process is very convenient, it gives us less control over the generated instances which might lead to inefficiencies.
 To help reduce them we implement some optimizations and also evaluate whether they are even required.
