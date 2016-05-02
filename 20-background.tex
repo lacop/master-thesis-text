@@ -23,7 +23,7 @@ This will only require linear memory to implement in terms of number of variable
 While there are no known algorithms that perform asymptotically better in the worst case, we can still improve on this simple exponential time algorithm significantly by avoiding paths that are guaranteed to lead to a \emph{conflict} -- a clause in which all literals have been assigned to false.
 
 \subsubsection{DPLL algorithm}
-First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \cite{davis1960computing,davis1962machine}) which improves upon the naive backtracking algorithm by first applying two rules at each step of the recursion:
+First such improvement is the \emph{DPLL algorithm} (Davis-Putnam-Logemann-Loveland, \cite{davis1960computing,davis1962machine}) which enhances the na\"{\i}ve backtracking algorithm by first applying two rules at each step of the recursion:
 
 \begin{description}
 \item[Unit propagation] \hfill \\
@@ -75,7 +75,7 @@ This method is used in all modern SAT solvers and improves their performance sig
 
 \subsection{Interfacing with SAT solvers}
 \label{sec:dimacs}
-Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS CNF} format\footnote{As in the case of \emph{JPEG} the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} which we use.
+Since our work depends on providing a suitable input to SAT solvers we will briefly describe the widely supported \emph{DIMACS CNF} format\footnote{As in the case of \emph{JPEG}, the acronym refers to the institute that created the format -- the \emph{Center for Discrete Mathematics and Theoretical Computer Science.}} which we use.
 Later in section \ref{sec:branching-order-impl} we will describe augmenting this format for optimization purposes.
 
 The file begins with a line in form

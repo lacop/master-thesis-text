@@ -8,7 +8,7 @@ Previous works in this area used handwritten code to generate instances of a spe
 On the other hand, this allowed them to optimize the resulting instances by reducing the number of variables and clauses required compared to a na\"{\i}ve Tseitin transformation.
 To also benefit from such optimizations in our library, we added an option to optimize specific expression and evaluated the effects of such optimizations.
 
-While we found that the optimized instances can lead to smaller instances (in terms of number of variables and clauses) and fewer conflicts, the solving time was not improved in any statistically significant way.
+While we found that the optimized instances can be smaller (in terms of number of variables and clauses) and lead to fewer conflicts, the solving time was not improved in any statistically significant way.
 This leads us to conclude that these optimizations are not required and therefore the minimal changes to existing implementations mentioned above are sufficient to create a reasonable instance.
 
 We then modified the MiniSat solver to see if overriding the default branching order heuristic with the help of additional information about the problem structure will lead to speed improvements.
