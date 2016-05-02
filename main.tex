@@ -185,27 +185,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Overlay date and git metadata
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\immediate\write18{git log -1 --pretty=format:"\string\newcommand{\string\gitrev}{\%H}" HEAD > gitinfo.tex}
-\input{gitinfo}
-\usepackage[all]{background}
-\usepackage[yyyymmdd,hhmmss]{datetime}
-\newcommand{\backgroundcontent}{
-\begin{tikzpicture}
-\node [text=black] at (0, 1.5) {Compiled \today\ at \currenttime\ from \texttt{\gitrev}};
-\draw (0,0) circle (0.1);
-\end{tikzpicture}
-}
-\SetBgContents{\backgroundcontent}
-\SetBgPosition{current page.south}
-\SetBgOpacity{1.0}
-\SetBgAngle{0.0}
-\SetBgScale{1.0}
-% TikZ and something don't play nice together and give errors, supress (check output!)
-% https://tex.stackexchange.com/questions/165929/semiverbatim-with-tikz-in-beamer/165937#165937
-\makeatletter
-\global\let\tikz@ensure@dollar@catcode=\relax
-\makeatother
-
+\iffalse
+    \immediate\write18{git log -1 --pretty=format:"\string\newcommand{\string\gitrev}{\%H}" HEAD > gitinfo.tex}
+    \input{gitinfo}
+    \usepackage[all]{background}
+    \usepackage[yyyymmdd,hhmmss]{datetime}
+    \newcommand{\backgroundcontent}{
+    \begin{tikzpicture}
+    \node [text=black] at (0, 1.5) {Compiled \today\ at \currenttime\ from \texttt{\gitrev}};
+    \draw (0,0) circle (0.1);
+    \end{tikzpicture}
+    }
+    \SetBgContents{\backgroundcontent}
+    \SetBgPosition{current page.south}
+    \SetBgOpacity{1.0}
+    \SetBgAngle{0.0}
+    \SetBgScale{1.0}
+    % TikZ and something don't play nice together and give errors, supress (check output!)
+    % https://tex.stackexchange.com/questions/165929/semiverbatim-with-tikz-in-beamer/165937#165937
+    \makeatletter
+    \global\let\tikz@ensure@dollar@catcode=\relax
+    \makeatother
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Include document settings (title, name, ...)
@@ -233,7 +234,9 @@
 \frontmatter
     \input{cover}
 
-    \includepdf[pages=1]{\settingsAISfile}
+%    \includepdf[pages=1]{\settingsAISfile}
+%    \newpage
+    \includepdf[pages=1]{\settingsAISfileEN}
     \newpage
     
     \thispagestyle{plainright}
